@@ -1,4 +1,4 @@
-package assignment4;
+package useless;
 
 import java.util.Objects;
 

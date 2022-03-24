@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import useless.Nonterminal;
+import useless.Rule;
 
 public class JsonReader {
   private final String[] nonRuleFields = {"grammarTitle","grammarDesc"};
@@ -41,19 +41,8 @@ public class JsonReader {
     }
   }
 
-  /*
-  parser the rule and add to the hashmap(Only add the terminal rule)
- for nonterimial, adding a list of list rule)   */
-  public void ruleParser(){
 
-  }
 
-  public Rule startRuleGenerator(Map<String, Object> map){
-    Rule startRule = new Nonterminal(startField,)
-
-  }
-
-  public
 
 
 }

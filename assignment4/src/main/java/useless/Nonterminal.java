@@ -1,4 +1,4 @@
-package assignment4;
+package useless;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,18 +6,18 @@ import java.util.Objects;
 
 public class Nonterminal extends Rule{
 
-  private List<List<Rule>> associatedRule = new ArrayList<>();
+  private List<List<String>> associatedRule = new ArrayList<>();
 
-  public Nonterminal(String word, List<List<Rule>> associatedRule) {
+  public Nonterminal(String word, List<List<String>> associatedRule) {
     super(word);
     this.associatedRule = associatedRule;
   }
 
-  public List<List<Rule>> getAssociatedRule() {
+  public List<List<String>> getAssociatedRule() {
     return associatedRule;
   }
 
-  public void setAssociatedRule(List<List<Rule>> associatedRule) {
+  public void setAssociatedRule(List<List<String>> associatedRule) {
     this.associatedRule = associatedRule;
   }
 

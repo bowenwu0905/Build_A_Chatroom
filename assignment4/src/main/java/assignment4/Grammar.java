@@ -4,32 +4,36 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class Grammar {
-  private Rule start;
-  private HashMap<String,Rule> rules;
+  private String start;
+  private HashMap<String,Object> rules;
 
 
-  public Grammar(Rule start, HashMap<String, Rule> rules) {
+  public Grammar(String start, HashMap<String, Object> rules) {
     this.start = start;
     this.rules = rules;
   }
 
-  public Rule getStart() {
+  public String getStart() {
     return start;
   }
 
-  public void setStart(Rule start) {
+  public void setStart(String start) {
     this.start = start;
   }
 
-  public HashMap<String, Rule> getRules() {
+  public HashMap<String, Object> getRules() {
     return rules;
   }
 
-  public void setRules(HashMap<String, Rule> rules) {
+  public void setRules(HashMap<String, Object> rules) {
     this.rules = rules;
   }
 
-  public String textGenerator(Rule start, HashMap<String, Rule> rules) throws UndefinedTerminalException {
+  public String textGenerator(String start, HashMap<String, Object> rules) throws UndefinedTerminalException {
+    /*
+    base: <> not found return string
+    Else: dfs iterate all <>
+     */
 //    if (jsonMap.isEmpty()) {
 //      throw new UndefinedTerminalException();
 //    }
