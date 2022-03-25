@@ -7,6 +7,10 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.TreeMap;
 
+/**
+ * Json reader file
+ * @author xiaochong and zitao
+ */
 public class JsonReader {
   private static final String[] nonRuleFields = {"grammarTitle","grammarDesc"};
   private static final String startField = "start";

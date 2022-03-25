@@ -7,6 +7,10 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * generate a random sentence
+ * @author xiaochong and zitao
+ */
 public class Grammar {
   private String attribute;
   private TreeMap<String,List<String>> rules;
@@ -37,6 +41,13 @@ public class Grammar {
     this.rules = rules;
   }
 
+  /**
+   * random select a word from TreeMap
+   * @param attribute String from attribute select word
+   * @param rules TreeMap
+   * @return String selected word
+   * @throws Exception UndefinedTerminalException and Exception
+   */
   public String textGenerator(String attribute, TreeMap<String, List<String>> rules) throws Exception {
     if (rules.isEmpty()) {
       throw new UndefinedTerminalException();
@@ -62,6 +73,11 @@ public class Grammar {
     }
   }
 
+  /**
+   * generate random number from upper bound
+   * @param size upper bound
+   * @return a random number
+   */
   public int numberGenerator(int size) {
     Random random = new Random();
     return random.nextInt(size);
