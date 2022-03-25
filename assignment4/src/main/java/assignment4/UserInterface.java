@@ -8,7 +8,7 @@ import java.util.Scanner;
 /**
  * user interface class
  *
- * @author xiaochong
+ * @author bowen
  */
 public class UserInterface {
   private static final String json = "json";
