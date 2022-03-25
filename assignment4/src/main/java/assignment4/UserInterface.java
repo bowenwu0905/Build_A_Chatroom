@@ -2,6 +2,8 @@ package assignment4;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,17 +15,15 @@ import java.util.Scanner;
 public class UserInterface {
   private static final String json = ".json";
   private static final String templateFolder = "/templates";
-
-
   private List<String> fileDictionary;
-
-  private Template template;
+  private Map<Integer, String> fileMap;
+  private JsonReader jsonReader;
 
   /**
    * Constructor for UserInterface
    */
   public UserInterface() {
-    template = new Template();
+    jsonReader = new JsonReader();
   }
 
   /**
@@ -37,15 +37,17 @@ public class UserInterface {
   /**
    * Get all the json file and add them to fileDictionary
    */
-  public void setfileDictionary() {
+  public void setFileDictionary() {
     this.fileDictionary = new ArrayList<>();
+    this.fileMap = new HashMap<>();
     File f = new File(absolutePath("").concat(templateFolder));
-    File[] listofFiles = f.listFiles();
+    File[] listOfFiles = f.listFiles();
 
-    for (int i = 0; i < listofFiles.length; i++) {
-      if (listofFiles[i].getName().endsWith(json)) {
-        String fileName = listofFiles[i].getName();
+    for (int i = 0; i < listOfFiles.length; i++) {
+      if (listOfFiles[i].getName().endsWith(json)) {
+        String fileName = listOfFiles[i].getName();
         this.fileDictionary.add(fileName.replaceAll(json, ""));
+        this.fileMap.put(i+1, listOfFiles[i].getPath());
       }
     }
   }
@@ -58,11 +60,18 @@ public class UserInterface {
   }
 
   /**
+   * @return FilePathDictionary, with key: index of the file, value: path of the file
+   */
+  public Map<Integer, String> getFileMap() {
+    return fileMap;
+  }
+
+  /**
    * display the UserInterface
    */
   public void display(){
     Scanner in = new Scanner(System.in);
-    setfileDictionary();
+    setFileDictionary();
     System.out.println("Loading grammars...");
 
     while (true) {
@@ -77,15 +86,17 @@ public class UserInterface {
         System.exit(0);
       }
       else{
+        String tmp = new String();
         for(int i =0; i< this.fileDictionary.size(); i++){
           if(line.equals(Integer.toString(i+1))){
-            // TODO: generate the grammar of certain file
+            tmp = fileMap.get(i + 1);
+            System.out.println(jsonReader.jsonProcessor(tmp));
           }
         }
         System.out.println("Would you like another? (y/n)");
         line = in.nextLine();
         while(line.equals("y")){
-          // TODO: generate the same grammar of certain file
+          System.out.println(jsonReader.jsonProcessor(tmp));
           System.out.println("Would you like another? (y/n)");
           line = in.nextLine();
         }
@@ -93,11 +104,6 @@ public class UserInterface {
           continue;
         }
       }
-
-
-      //template.jsonReader();
-      //template.converter();
-      //template.textGenerator();
     }
   }
 
