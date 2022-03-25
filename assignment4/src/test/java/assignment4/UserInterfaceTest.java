@@ -3,6 +3,8 @@ package assignment4;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,8 +45,18 @@ class UserInterfaceTest {
   }
 
   @Test
+  void getfileMap() {
+    ui.setfileDictionary();
+    Map<Integer, String> a = new HashMap<>();
+    a.put(1, "/Users/bowenwu0826/Desktop/Group_zitao_bowenwu0826_xcjiang/assignment4/templates/insult_grammar.json");
+    a.put(2, "/Users/bowenwu0826/Desktop/Group_zitao_bowenwu0826_xcjiang/assignment4/templates/poem_grammar.json");
+    a.put(3, "/Users/bowenwu0826/Desktop/Group_zitao_bowenwu0826_xcjiang/assignment4/templates/term_paper_grammar.json");
+    Assertions.assertEquals(a, ui.getfileMap());
+  }
+
+  @Test
   void display() {
-    ui.display();
+    //ui.display();
   }
 
 }

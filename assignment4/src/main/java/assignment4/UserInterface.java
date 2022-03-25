@@ -2,6 +2,8 @@ package assignment4;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,10 +15,8 @@ import java.util.Scanner;
 public class UserInterface {
   private static final String json = ".json";
   private static final String templateFolder = "/templates";
-
-
   private List<String> fileDictionary;
-
+  private Map<Integer, String> fileMap;
   private Template template;
 
   /**
@@ -39,6 +39,7 @@ public class UserInterface {
    */
   public void setfileDictionary() {
     this.fileDictionary = new ArrayList<>();
+    this.fileMap = new HashMap<>();
     File f = new File(absolutePath("").concat(templateFolder));
     File[] listofFiles = f.listFiles();
 
@@ -46,6 +47,7 @@ public class UserInterface {
       if (listofFiles[i].getName().endsWith(json)) {
         String fileName = listofFiles[i].getName();
         this.fileDictionary.add(fileName.replaceAll(json, ""));
+        this.fileMap.put(i+1, listofFiles[i].getPath());
       }
     }
   }
@@ -55,6 +57,13 @@ public class UserInterface {
    */
   public List<String> getFileDictionary() {
     return fileDictionary;
+  }
+
+  /**
+   * @return FilePathDictionary, with key: index of the file, value: path of the file
+   */
+  public Map<Integer, String> getfileMap() {
+    return fileMap;
   }
 
   /**
