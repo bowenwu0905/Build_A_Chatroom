@@ -44,8 +44,7 @@ class UserInterfaceTest {
 
   @Test
   void display() {
-
+    ui.display();
   }
-
 
 }

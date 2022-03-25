@@ -11,7 +11,7 @@ import java.util.Scanner;
  * @author bowen
  */
 public class UserInterface {
-  private static final String json = "json";
+  private static final String json = ".json";
   private static final String templateFolder = "/templates";
 
 
@@ -45,7 +45,7 @@ public class UserInterface {
     for (int i = 0; i < listofFiles.length; i++) {
       if (listofFiles[i].getName().endsWith(json)) {
         String fileName = listofFiles[i].getName();
-        this.fileDictionary.add(fileName.replaceAll(".json", ""));
+        this.fileDictionary.add(fileName.replaceAll(json, ""));
       }
     }
   }
@@ -64,8 +64,9 @@ public class UserInterface {
     Scanner in = new Scanner(System.in);
     setfileDictionary();
     System.out.println("Loading grammars...");
-    String line;
+
     while (true) {
+      String line;
       System.out.println("The following grammars are available: ");
       for (int i = 0; i < this.fileDictionary.size(); i++) {
         System.out.println(Integer.toString(i + 1) + ". " + this.fileDictionary.get(i));
