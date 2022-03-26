@@ -69,7 +69,7 @@ public class UserInterface {
   /**
    * display the UserInterface
    */
-  public void display(){
+  public void display() throws Exception {
     Scanner in = new Scanner(System.in);
     setFileDictionary();
     System.out.println("Loading grammars...");
@@ -84,8 +84,7 @@ public class UserInterface {
       line = in.nextLine();
       if(line.equalsIgnoreCase("q")){
         System.exit(0);
-      }
-      else{
+      } else if (Integer.parseInt(line) >= 1 && Integer.parseInt(line) <= this.fileDictionary.size()) {
         String tmp = new String();
         for(int i =0; i< this.fileDictionary.size(); i++){
           if(line.equals(Integer.toString(i+1))){
@@ -95,14 +94,16 @@ public class UserInterface {
         }
         System.out.println("Would you like another? (y/n)");
         line = in.nextLine();
-        while(line.equals("y")){
+        while(line.equalsIgnoreCase("y")){
           System.out.println(jsonReader.jsonProcessor(tmp));
           System.out.println("Would you like another? (y/n)");
           line = in.nextLine();
         }
-        if(line.equals("n")){
+        if(line.equalsIgnoreCase("n")){
           continue;
         }
+      } else {
+        throw new Exception("input is invalid");
       }
     }
   }

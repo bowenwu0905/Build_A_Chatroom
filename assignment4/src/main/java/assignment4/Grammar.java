@@ -69,7 +69,7 @@ public class Grammar {
       }
       return afterReplace;
     } else {
-      throw new Exception("Json don't have the " + attribute);
+      throw new UndefinedTerminalException("Json don't have the " + attribute);
     }
   }
 
