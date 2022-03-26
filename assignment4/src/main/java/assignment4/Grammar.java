@@ -17,26 +17,49 @@ public class Grammar {
 
   private static final String regex = "(?<=\\<).*?(?=\\>)";
 
+  /**
+   * create a new construct
+   * @param attribute String
+   * @param rules TreeMap<String, List<String>>
+   */
   public Grammar(String attribute, TreeMap<String, List<String>> rules) {
     this.attribute = attribute;
     this.rules = rules;
   }
-
+  /**
+   * create a new construct
+   */
   public Grammar() {
   }
 
+  /**
+   * get attribute
+   * @return String
+   */
   public String getAttribute() {
     return attribute;
   }
 
+  /**
+   * set attribute
+   * @param attribute String
+   */
   public void setAttribute(String attribute) {
     this.attribute = attribute;
   }
 
+  /**
+   * get rules
+   * @return TreeMap<String, List<String>>
+   */
   public TreeMap<String, List<String>> getRules() {
     return rules;
   }
 
+  /**
+   * set rules
+   * @param rules TreeMap<String, List<String>>
+   */
   public void setRules(TreeMap<String, List<String>> rules) {
     this.rules = rules;
   }
