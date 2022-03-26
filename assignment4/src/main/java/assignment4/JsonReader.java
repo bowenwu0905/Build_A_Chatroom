@@ -5,6 +5,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 import java.util.TreeMap;
 
 /**
@@ -17,11 +18,19 @@ public class JsonReader {
 
   private Grammar grammar;
 
+  /**
+   * The constructor
+   */
   public JsonReader(){
     grammar = new Grammar();
   }
 
-  public String jsonProcessor(String path) {
+  /**
+   * Reading the json and return the transfered text
+   * @param path the json file path
+   * @return the generated tex
+   */
+  public String jsonProcess(String path) {
     TreeMap<String, List<String>> map;
     try {
       Gson gson = new Gson();
@@ -32,7 +41,6 @@ public class JsonReader {
           map.remove(field);
         }
       }
-      // close reader
       reader.close();
       return grammar.textGenerator(startField, map);
     } catch (Exception ex) {
@@ -41,4 +49,40 @@ public class JsonReader {
     }
   }
 
+  /**
+   * check if two objects are equal
+   * @param o the other object
+   * @return boolean
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    JsonReader that = (JsonReader) o;
+    return Objects.equals(grammar, that.grammar);
+  }
+
+  /**
+   * calculate the hashcode of the object
+   * @return the hashcode for object
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(grammar);
+  }
+
+  /**
+   * generate the string of the object
+   * @return the string
+   */
+  @Override
+  public String toString() {
+    return "JsonReader{" +
+        "grammar=" + grammar +
+        '}';
+  }
 }

@@ -7,13 +7,28 @@ package assignment4;
  */
 public class Main {
 
-  public static void main(String[] args) throws Exception {
+  /**
+   * the main function
+   * @param args the inputs
+   */
+  public static void main(String[] args){
     run();
   }
 
-  public static void run() throws Exception {
+  /**
+   * The function for running the UI
+   */
+  public static void run(){
     UserInterface userInterface = new UserInterface();
     userInterface.display();
   }
 
+  /**
+   * generate the string of the object
+   * @return the string
+   */
+  @Override
+  public String toString() {
+    return "Main{}";
+  }
 }
