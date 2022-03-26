@@ -16,9 +16,10 @@ and "The slugs portend like waves tonight.".
 
 ## User Interface
 When the program starts, a directory name will be provided as an argument. This directory will include several grammar files.
-The program will allow the user to choose one of these grammars. 
-When a grammar is chosen, a generated sentence will be displayed.
+
+The program will allow the user to choose one of these grammars. When a grammar is chosen, a generated sentence will be displayed.
 Ask the user if they would like another one, and continue generating and printing sentences until the user says "n".
+
 Then, go back to the main menu, and allow the user to choose another grammar if they would like. 
 If user says "q", exit the program.
 
