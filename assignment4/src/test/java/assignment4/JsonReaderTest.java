@@ -12,8 +12,8 @@ class JsonReaderTest {
     js = new JsonReader();
   }
 
-  @Test
-  void jsonToHashMap() {
-    js.jsonToHashMap("/home/zitao/Dropbox/homework/pdp/Group_zitao_bowenwu0826_xcjiang/assignment4/templates/insult_grammar.json");
-  }
+//  @Test
+//  void jsonToHashMap() {
+//    js.jsonToHashMap("/home/zitao/Dropbox/homework/pdp/Group_zitao_bowenwu0826_xcjiang/assignment4/templates/insult_grammar.json");
+//  }
 }
