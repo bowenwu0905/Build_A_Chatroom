@@ -7,13 +7,13 @@ package assignment4;
  */
 public class Main {
 
-//  public static void main(String[] args) {
-//    run();
-//  }
-//
-//  public static void run() {
-//    UserInterface userInterface = new UserInterface();
-//    userInterface.display();
-//  }
+  public static void main(String[] args) {
+    run();
+  }
+
+  public static void run() {
+    UserInterface userInterface = new UserInterface();
+    userInterface.display();
+  }
 
 }

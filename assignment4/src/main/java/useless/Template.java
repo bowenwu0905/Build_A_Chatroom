@@ -1,5 +1,6 @@
-package assignment4;
+package useless;
 
+import assignment4.UndefinedTerminalException;
 import java.util.HashMap;
 
 /**

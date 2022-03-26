@@ -4,45 +4,41 @@ import com.google.gson.Gson;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Map;
-import useless.Nonterminal;
-import useless.Rule;
+import java.util.List;
+import java.util.TreeMap;
 
+/**
+ * Json reader file
+ * @author xiaochong and zitao
+ */
 public class JsonReader {
-  private final String[] nonRuleFields = {"grammarTitle","grammarDesc"};
-  private final String startField = "start";
+  private static final String[] nonRuleFields = {"grammarTitle","grammarDesc"};
+  private static final String startField = "start";
+
+  private Grammar grammar;
 
   public JsonReader(){
-
+    grammar = new Grammar();
   }
 
-  public Map<String,Object> jsonToHashMap(String path) {
-    Map<String, Object> map;
+  public String jsonProcessor(String path) {
+    TreeMap<String, List<String>> map;
     try {
       Gson gson = new Gson();
       Reader reader = Files.newBufferedReader(Paths.get(path));
-      map = gson.fromJson(reader, Map.class);
+      map = gson.fromJson(reader, TreeMap.class);
       for(String field: nonRuleFields){
         if(map.keySet().contains(field)) {
           map.remove(field);
         }
       }
-
-//      for (Map.Entry<?, ?> entry : map.entrySet()) {
-//        System.out.println(entry.getKey() + "=" + entry.getValue());
-//      }
-
       // close reader
       reader.close();
-      return map;
+      return grammar.textGenerator(startField, map);
     } catch (Exception ex) {
       ex.printStackTrace();
       return null;
     }
   }
-
-
-
-
 
 }
