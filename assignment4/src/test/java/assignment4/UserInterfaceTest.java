@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Random;
+//import org.junit.Rule;
+//import org.junit.contrib.java.lang.system.Assertion;
+//import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,6 +85,10 @@ class UserInterfaceTest {
   Assertions.assertEquals("Input is out of range!",thrown2.getMessage());
 
   }
+
+
+//  @Rule
+//  public final ExpectedSystemExit exit = ExpectedSystemExit.none();
 
   @Test
   void display2() {
