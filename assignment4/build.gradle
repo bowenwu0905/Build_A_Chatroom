@@ -6,30 +6,20 @@ plugins {
 // https://docs.gradle.org/current/userguide/jacoco_plugin.html
     id 'jacoco'
 }
-
-group 'org.example'
-version '1.0-SNAPSHOT'
-
+group 'cs5010seaS22'
+version '1.0'
 repositories {
     mavenCentral()
 }
-
 dependencies {
-    implementation 'org.projectlombok:lombok:1.18.20'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    // https://mvnrepository.com/artifact/commons-cli/commons-cli
-    implementation group: 'commons-cli', name: 'commons-cli', version: '1.5.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+    implementation 'commons-cli:commons-cli:1.5.0'
     implementation 'com.google.code.gson:gson:2.9.0'
-
-
-
 }
-
-
 pmd {
-    ignoreFailures = true
-    pmdTest.enabled = false
+    ignoreFailures=true
+    pmdTest.enabled=false
     ruleSets = [
             "category/java/bestpractices.xml",
             "category/java/errorprone.xml",
