@@ -125,7 +125,7 @@ class UserInterfaceTest {
   void testEquals3() {
     UserInterface ui2 = new UserInterface();
 
-    Assertions.assertTrue(ui.equals(ui2));
+    Assertions.assertFalse(ui.equals(ui2));
   }
 
   @Test
@@ -144,7 +144,7 @@ class UserInterfaceTest {
 
   @Test
   void testToString() {
-    String ans = "UserInterface{fileDictionary=null, fileMap=null, jsonReader=JsonReader{grammar=Grammar{attribute=null, rules=null}}}";
+    String ans = "UserInterface{fileDictionary=null, fileMap=null, jsonReader=JsonReader{grammar=Grammar{}}}";
     Assertions.assertEquals(ans,ui.toString());
   }
 }
