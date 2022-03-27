@@ -1,7 +1,5 @@
 package assignment4;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.TreeMap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,8 +26,7 @@ class GrammarTest {
 
   @Test
   void numberGenerator() {
-
-    Assertions.assertNotNull(grammar.numberGenerator(10));
+    Assertions.assertNotEquals(grammar.numberGenerator(10), 20);
   }
 
   @Test
