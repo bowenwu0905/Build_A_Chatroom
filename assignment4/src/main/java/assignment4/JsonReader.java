@@ -26,7 +26,7 @@ public class JsonReader {
   }
 
   /**
-   * Reading the json and return the transfered text
+   * Reading the json and return the transferred text
    * @param path the json file path
    * @return the generated tex
    */
