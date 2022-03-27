@@ -19,13 +19,16 @@ public class UserInterface {
   private List<String> fileDictionary;
   private Map<Integer, String> fileMap;
   private JsonReader jsonReader;
+  private Grammar grammar;
   private static final int startIndex = 1;
+  private static final String startField = "start";
 
   /**
    * Constructor for UserInterface
    */
   public UserInterface() {
     jsonReader = new JsonReader();
+    grammar = new Grammar();
   }
 
   /**
@@ -98,7 +101,7 @@ public class UserInterface {
           for (int i = 0; i < this.fileDictionary.size(); i++) {
             if (line.equals(Integer.toString(i + 1))) {
               tmp = fileMap.get(i + startIndex);
-              System.out.println(jsonReader.jsonProcess(tmp)+"\n");
+              System.out.println(grammar.textGenerator(startField, jsonReader.jsonProcess(tmp)) + "\n");
             }
           }
 
@@ -106,7 +109,7 @@ public class UserInterface {
             System.out.println("\nWould you like another? (y/n)");
             line = in.nextLine();
             if (line.equalsIgnoreCase("y")) {
-              System.out.println(jsonReader.jsonProcess(tmp));
+              System.out.println(grammar.textGenerator(startField, jsonReader.jsonProcess(tmp)));
             }
             else if(line.equalsIgnoreCase("n")) {
               break;
@@ -124,47 +127,38 @@ public class UserInterface {
       }
       catch (NumberFormatException e){
         e.printStackTrace();
+      } catch (Exception e) {
+        e.printStackTrace();
       }
     }
   }
 
-  /**
-   * check if two objects are equal
-   * @param o the other object
-   * @return boolean
-   */
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    UserInterface that = (UserInterface) o;
-    return Objects.equals(fileDictionary, that.fileDictionary) && Objects.equals(
-        fileMap, that.fileMap) && Objects.equals(jsonReader, that.jsonReader);
-  }
-
-  /**
-   * calculate the hashcode of the object
-   * @return the hashcode for object
-   */
-  @Override
-  public int hashCode() {
-    return Objects.hash(fileDictionary, fileMap, jsonReader);
-  }
-
-  /**
-   * generate the string of the object
-   * @return the string
-   */
   @Override
   public String toString() {
     return "UserInterface{" +
         "fileDictionary=" + fileDictionary +
         ", fileMap=" + fileMap +
         ", jsonReader=" + jsonReader +
+        ", grammar=" + grammar +
         '}';
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof UserInterface)) {
+      return false;
+    }
+    UserInterface that = (UserInterface) o;
+    return Objects.equals(getFileDictionary(), that.getFileDictionary())
+        && Objects.equals(getFileMap(), that.getFileMap()) && Objects.equals(
+        jsonReader, that.jsonReader) && Objects.equals(grammar, that.grammar);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getFileDictionary(), getFileMap(), jsonReader, grammar);
   }
 }

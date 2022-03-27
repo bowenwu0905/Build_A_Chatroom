@@ -2,6 +2,8 @@ package assignment4;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+import java.util.TreeMap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,19 +17,8 @@ class JsonReaderTest {
 
   @Test
   void jsonProcess() {
-    Assertions.assertNotNull(js.jsonProcess("./templates/insult_grammar.json"));
-  }
-
-  @Test
-  void testEquals() {
-    JsonReader jsonReader2 = new JsonReader();
-    Assertions.assertNotEquals(js, jsonReader2);
-  }
-
-  @Test
-  void testHashCode() {
-    JsonReader jsonReader2 = new JsonReader();
-    Assertions.assertNotEquals(js.hashCode(), jsonReader2.hashCode());
+    TreeMap<String, List<String>> map = js.jsonProcess("./templates/insult_grammar.json");
+    Assertions.assertEquals("<adj1>", map.get("adj").get(0));
   }
 
   @Test
