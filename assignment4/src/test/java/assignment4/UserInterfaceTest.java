@@ -144,7 +144,7 @@ class UserInterfaceTest {
 
   @Test
   void testToString() {
-    String ans = "UserInterface{fileDictionary=null, fileMap=null, jsonReader=JsonReader{grammar=Grammar{}}}";
+    String ans = "UserInterface{fileDictionary=null, fileMap=null, jsonReader=JsonReader{}, grammar=Grammar{}}";
     Assertions.assertEquals(ans,ui.toString());
   }
 }

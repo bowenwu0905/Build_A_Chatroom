@@ -1,5 +1,6 @@
 package assignment4;
 
+import java.util.List;
 import java.util.TreeMap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,12 +21,14 @@ class GrammarTest {
   @Test
   void textGenerator() throws Exception {
     JsonReader jsonReader = new JsonReader();
-    Assertions.assertNotNull(jsonReader.jsonProcess("./templates/insult_grammar.json"));
-    Assertions.assertThrows(UndefinedTerminalException.class, () -> grammar.textGenerator("start", new TreeMap<>()));
+    TreeMap<String, List<String>> map = jsonReader.jsonProcess("./templates/insult_grammar.json");
+    Assertions.assertNotEquals(grammar.textGenerator("start", map), grammar.textGenerator("adj", map));
+    Assertions.assertThrows(UndefinedTerminalException.class, () -> grammar.textGenerator("abc", map));
   }
 
   @Test
   void numberGenerator() {
+    Assertions.assertEquals(0, grammar.numberGenerator(1));
     Assertions.assertNotEquals(grammar.numberGenerator(10), 20);
   }
 
