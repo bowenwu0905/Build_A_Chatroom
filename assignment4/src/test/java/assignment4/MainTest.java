@@ -29,6 +29,7 @@ class MainTest {
   @Test
   void testToString() {
     Main main1 = new Main();
+    Assertions.assertEquals(main1.toString(), main.toString());
     Assertions.assertNotEquals(main, main1);
   }
 }

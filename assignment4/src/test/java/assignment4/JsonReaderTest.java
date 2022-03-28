@@ -27,4 +27,15 @@ class JsonReaderTest {
     Assertions.assertEquals(js.toString(), jsonReader2.toString());
   }
 
+  @Test
+  void testHashCode() {
+    JsonReader jsonReader = new JsonReader();
+    Assertions.assertNotEquals(js.hashCode(), jsonReader.hashCode());
+  }
+
+  @Test
+  void testEquals() {
+    JsonReader jsonReader = new JsonReader();
+    Assertions.assertNotEquals(js, jsonReader);
+  }
 }
