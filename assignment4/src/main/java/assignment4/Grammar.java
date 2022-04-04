@@ -79,7 +79,6 @@ public class Grammar {
    * </ul>
    *
    * @return a hash code value for this object.
-   * @implSpec As far as is reasonably practical, the {@code hashCode} method defined by class
    * {@code Object} returns distinct integers for distinct objects.
    * @see Object#equals(Object)
    * @see System#identityHashCode
@@ -125,8 +124,6 @@ public class Grammar {
    *
    * @param obj the reference object with which to compare.
    * @return {@code true} if this object is the same as the obj argument; {@code false} otherwise.
-   * @implSpec The {@code equals} method for class {@code Object} implements the most discriminating
-   * possible equivalence relation on objects; that is, for any non-null reference values {@code x}
    * and {@code y}, this method returns {@code true} if and only if {@code x} and {@code y} refer to
    * the same object ({@code x == y} has the value {@code true}).
    * <p>
