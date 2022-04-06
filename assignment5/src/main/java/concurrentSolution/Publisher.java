@@ -22,7 +22,7 @@ public class Publisher {
 
   public Publisher(String courseFilePath) {
     this.courseFilePath = courseFilePath;
-    this.fileDestination = this.processor.absolutePathChanger(fileDestination);
+    this.fileDestination = this.processor.absolutePathChange(fileDestination);
     new File(this.fileDestination).mkdirs();
 
   }
@@ -40,7 +40,7 @@ public class Publisher {
   public void setFileName() {
     String line;
     try {
-      BufferedReader br = new BufferedReader(new FileReader(this.processor.absolutePathChanger(this.courseFilePath)));
+      BufferedReader br = new BufferedReader(new FileReader(this.processor.absolutePathChange(this.courseFilePath)));
       String[] fieldList = br.readLine().split(this.processor.csvSplit);
       while ((line = br.readLine()) != null) {
         Map<String,String> record = this.processor.csvToHashMap(line, fieldList);

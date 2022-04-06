@@ -1,7 +1,6 @@
 package concurrentSolution;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Map;
@@ -28,7 +27,7 @@ public class Producer implements Runnable{
   public void run() {
     String line;
     try {
-      BufferedReader br = new BufferedReader(new FileReader(this.processor.absolutePathChanger(this.studentFilePath)));
+      BufferedReader br = new BufferedReader(new FileReader(this.processor.absolutePathChange(this.studentFilePath)));
       String[] fieldList = br.readLine().split(this.processor.csvSplit);
       while ((line = br.readLine()) != null) {
         Map<String,String> record = this.processor.csvToHashMap(line, fieldList);

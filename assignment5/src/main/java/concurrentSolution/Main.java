@@ -12,8 +12,8 @@ public class Main {
   private static final int queueLength = 5;
   private ConcurrentMap<String, ConcurrentMap<String,Integer>>data = new ConcurrentHashMap<>();
   private BlockingQueue<Map<String,String>> buffer = new LinkedBlockingQueue<>(queueLength);
-  private static final int consumerNum = 5;
-  private static final int threadNum = 6;
+  private static final int consumerNum = 2;
+  private static final int threadNum = 3;
 
   public Main(){
   }
@@ -32,9 +32,11 @@ public class Main {
       executor.execute(new Consumer(this.buffer,this.data));
     }
 
-    executor.shutdown();
+
     Publisher publisher = new Publisher(courseFilePath);
+    publisher.setFileName();
     publisher.generateFiles(this.data);
+    executor.shutdown();
   }
 
   @Override

@@ -24,9 +24,10 @@ public class Consumer implements Runnable{
     String key = record.get(courseModule)+"_"+record.get(coursePresentation);
     String date = record.get(time);
     int click = Integer.parseInt(record.get(sumClick));
-    if(this.data.containsKey(key)){
+    if(!this.data.containsKey(key)){
       ConcurrentHashMap<String,Integer> dayCount = new ConcurrentHashMap<>();
       dayCount.put(date, click);
+      this.data.put(key,dayCount);
 
     }else{
       ConcurrentMap<String,Integer> dayCount = this.data.get(key);

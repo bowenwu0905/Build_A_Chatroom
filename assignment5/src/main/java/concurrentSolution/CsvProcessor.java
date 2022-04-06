@@ -2,10 +2,7 @@ package concurrentSolution;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 public class CsvProcessor {
@@ -42,7 +39,7 @@ public class CsvProcessor {
   }
 
 
-  public String absolutePathChanger(String path) {
+  public String absolutePathChange(String path) {
     File file = new File(path);
     if (file.isAbsolute()) {
       return path;
