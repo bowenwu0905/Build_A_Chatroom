@@ -15,7 +15,7 @@ public class Main {
   private ConcurrentMap<String, ConcurrentMap<String,Integer>>data = new ConcurrentHashMap<>();
   private BlockingQueue<Map<String,String>> buffer = new LinkedBlockingQueue<>(queueLength);
   private final Lock lock = new ReentrantLock(true);
-  private static final int consumerNum = 5;
+  private static final int consumerNum = 1;
   private static final int threadNum = 6;
 
   public Main(){
@@ -23,15 +23,17 @@ public class Main {
 
   public static void main(String[] args){
     Main main = new Main();
+
     main.run(args);
   }
 
   public void run(String[] args){
     String studentFilePath = args[0];
     String courseFilePath = args[1];
-    //    Publisher publisher = new Publisher(courseFilePath);
-//    publisher.setFileName();
-//    publisher.generateFiles(this.data);
+    Publisher publisher = new Publisher(courseFilePath);
+    publisher.setFileName();
+    publisher.generateFiles(this.data);
+
     ExecutorService executor = Executors.newFixedThreadPool(threadNum);
     executor.execute(new Producer(this.buffer, this.data, studentFilePath));
     for (int i = 0; i < consumerNum; i++) {
