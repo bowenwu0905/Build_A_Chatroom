@@ -38,6 +38,7 @@ public class Producer implements Runnable{
         }
 
       }
+
     } catch (IOException e) {
       e.printStackTrace();
     }
