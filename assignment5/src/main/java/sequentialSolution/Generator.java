@@ -5,10 +5,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -80,5 +79,30 @@ public class Generator {
 
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Generator)) {
+      return false;
+    }
+    Generator generator = (Generator) o;
+    return Objects.equals(fileDestination, generator.fileDestination)
+        && Objects.equals(csvMap, generator.csvMap);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(fileDestination, csvMap);
+  }
+
+  @Override
+  public String toString() {
+    return "Generator{" +
+        "fileDestination='" + fileDestination + '\'' +
+        ", csvMap=" + csvMap +
+        '}';
+  }
 }
 

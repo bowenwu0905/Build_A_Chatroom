@@ -12,6 +12,8 @@ import java.util.Objects;
 
 /**
  * Processor class of sequential solution
+ *
+ * @author bowen
  */
 public class Processor {
   private final static String courseName = "courses.csv";

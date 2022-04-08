@@ -1,10 +1,8 @@
 package sequentialSolution;
 
 import com.opencsv.exceptions.CsvValidationException;
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Scanner;
 
 /**
  * Main class of sequential solution
