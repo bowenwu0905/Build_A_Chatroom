@@ -18,9 +18,8 @@ public class Main {
     String inputPath = args[0].trim();
     Processor processor = new Processor(inputPath);
     Map<String, Map<String, Integer>> csvMap = processor.process();
-
-
-
+    Generator generator = new Generator();
+    generator.generateFiles(csvMap);
 
   }
 

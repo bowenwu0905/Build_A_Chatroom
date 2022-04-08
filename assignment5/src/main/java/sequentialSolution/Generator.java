@@ -28,13 +28,17 @@ public class Generator {
       write(row, data, outputFile);
     }
   }
-  public void write(Map<String, Integer> row, List<String[]> data, FileWriter outputFile){
+  public void write(Map<String, Integer> row, List<String[]> data, FileWriter outputFile)
+      throws IOException {
     CSVWriter writer = new CSVWriter(outputFile);
     for(String date: row.keySet()){
       String[] output = new String[SIZE];
       output[0] = date;
       output[1] = String.valueOf(row.get(date));
+      data.add(output);
     }
+    writer.writeAll(data);
+    writer.close();
 
   }
 
