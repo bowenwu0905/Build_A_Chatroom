@@ -14,11 +14,11 @@ public class Processor {
   private final static String courseName = "courses.csv";
   private final static String studentVle = "studentVle.csv";
   String inputPath;
-  private Map<String, Map<Integer, Integer>> ans;
+  private Map<String, Map<String, Integer>> ans;
 
   public Processor(String inputPath) {
     this.inputPath = inputPath;
-    this.ans = new HashMap<String, Map<Integer, Integer>>();
+    this.ans = new HashMap<String, Map<String, Integer>>();
   }
 
 
@@ -31,12 +31,12 @@ public class Processor {
   }
 
 
-  public Map<String, Map<Integer, Integer>> getAns() {
+  public Map<String, Map<String, Integer>> getAns() {
     return ans;
   }
 
   public void setAns(
-      Map<String, Map<Integer, Integer>> ans) {
+      Map<String, Map<String, Integer>> ans) {
     this.ans = ans;
   }
 
@@ -61,7 +61,7 @@ public class Processor {
     return student;
   }
 
-  public Map<String, Map<Integer,Integer>> process() throws CsvValidationException, IOException {
+  public Map<String, Map<String,Integer>> process() throws CsvValidationException, IOException {
     readCourse();
     countCourse();
     return ans;
@@ -73,7 +73,7 @@ public class Processor {
     String[] nextLine;
     while((nextLine = csvReader.readNext()) != null){
       String key = nextLine[0]+"_"+nextLine[1];
-      ans.put(key, new HashMap<Integer, Integer>());
+      ans.put(key, new HashMap<String, Integer>());
     }
   }
 
@@ -83,8 +83,8 @@ public class Processor {
     String[] nextLine;
     while((nextLine = csvReader.readNext()) != null){
       String key = nextLine[0] + "_" + nextLine[1];
-      Map<Integer, Integer> record = ans.get(key);
-      int date = Integer.parseInt(nextLine[4]);
+      Map<String, Integer> record = ans.get(key);
+      String date = nextLine[4];
       record.put(date, record.getOrDefault(date, 0) + Integer.parseInt(nextLine[5]));
     }
   }

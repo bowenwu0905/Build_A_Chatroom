@@ -9,14 +9,18 @@ import java.util.Scanner;
 public class Main {
 
   public static void main(String[] args) throws IOException, CsvValidationException {
+    Main main = new Main();
+    main.run(args);
+
+  }
+
+  private void run(String[] args) throws CsvValidationException, IOException {
     String inputPath = args[0].trim();
-    System.out.println("Please enter the output directory: ");
-    Scanner sc = new Scanner(System.in);
-    String outputDir = sc.nextLine();
     Processor processor = new Processor(inputPath);
-    Map<String, Map<Integer, Integer>> csvMap = processor.process();
-    Generator g = new Generator(inputPath);
-    g.generate(csvMap, outputDir);
+    Map<String, Map<String, Integer>> csvMap = processor.process();
+
+
+
 
   }
 
