@@ -13,42 +13,32 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
-public class Publisher {
-  private String courseFilePath;
-  private Set<String> fileName= new HashSet<>();
+public class FilePublisher {
   private CsvProcessor processor = new CsvProcessor();
   private String fileDestination ="output";
   private final static String eol = System.getProperty("line.separator");
 
-  public Publisher(String courseFilePath) {
-    this.courseFilePath = courseFilePath;
+  public FilePublisher() {
     this.fileDestination = this.processor.absolutePathChange(fileDestination);
     new File(this.fileDestination).mkdirs();
 
   }
 
 
-
-  public Set<String> getFileName() {
-    return fileName;
-  }
-
-  public void setFileName(Set<String> fileName) {
-    this.fileName = fileName;
-  }
-
-  public void setFileName() {
+  public Set<String> fileNameGenerator(String courseFilePath) {
     String line;
+    Set<String> fileName= new HashSet<>();
     try {
-      BufferedReader br = new BufferedReader(new FileReader(this.processor.absolutePathChange(this.courseFilePath)));
+      BufferedReader br = new BufferedReader(new FileReader(this.processor.absolutePathChange(courseFilePath)));
       String[] fieldList = br.readLine().split(this.processor.csvSplit);
       while ((line = br.readLine()) != null) {
         Map<String,String> record = this.processor.csvToHashMap(line, fieldList);
-        this.fileName.add(record.get(this.processor.courseModule)+"_"+record.get(this.processor.coursePresentation));
+        fileName.add(record.get(this.processor.courseModule)+"_"+record.get(this.processor.coursePresentation));
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
+    return fileName;
   }
 
   public void saveFileToAddress(String fileName, Map<String,Integer> dayCount) {
@@ -70,25 +60,26 @@ public class Publisher {
       }
   }
 
-  public void generateFiles(ConcurrentMap<String, ConcurrentMap<String,Integer>>data){
-    Iterator<String> namesIterator = this.fileName.iterator();
+  public void generateFiles(ConcurrentMap<String, ConcurrentMap<String,Integer>>data,Set<String> fileNameSet){
+    Iterator<String> namesIterator = fileNameSet.iterator();
     while(namesIterator.hasNext()) {
       String fileName = namesIterator.next();
       if(data.containsKey(fileName)){
         saveFileToAddress(fileName,data.get(fileName));
       }else{
-        saveFileToAddress(fileName,new HashMap<String,Integer>());
+        saveFileToAddress(fileName,new HashMap<>());
       }
     }
 
   }
 
-  public String getCourseFilePath() {
-    return courseFilePath;
+
+  public CsvProcessor getProcessor() {
+    return processor;
   }
 
-  public void setCourseFilePath(String courseFilePath) {
-    this.courseFilePath = courseFilePath;
+  public void setProcessor(CsvProcessor processor) {
+    this.processor = processor;
   }
 
   public String getFileDestination() {
@@ -107,24 +98,20 @@ public class Publisher {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Publisher publisher = (Publisher) o;
-    return Objects.equals(courseFilePath, publisher.courseFilePath)
-        && Objects.equals(fileName, publisher.fileName) && Objects.equals(
-        processor, publisher.processor) && Objects.equals(fileDestination,
-        publisher.fileDestination);
+    FilePublisher publisher = (FilePublisher) o;
+    return Objects.equals(processor, publisher.processor) && Objects.equals(
+        fileDestination, publisher.fileDestination);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(courseFilePath, fileName, processor, fileDestination);
+    return Objects.hash(processor, fileDestination);
   }
 
   @Override
   public String toString() {
     return "Publisher{" +
-        "courseFilePath='" + courseFilePath + '\'' +
-        ", fileName=" + fileName +
-        ", processor=" + processor +
+        "processor=" + processor +
         ", fileDestination='" + fileDestination + '\'' +
         '}';
   }
