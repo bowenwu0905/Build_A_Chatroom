@@ -10,36 +10,61 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Processor class of sequential solution
+ */
 public class Processor {
   private final static String courseName = "courses.csv";
   private final static String studentVle = "studentVle.csv";
   String inputPath;
   private Map<String, Map<String, Integer>> ans;
 
+  /**
+   *
+   * @param inputPath, the path taken in as a string
+   */
   public Processor(String inputPath) {
     this.inputPath = inputPath;
     this.ans = new HashMap<String, Map<String, Integer>>();
   }
 
-
+  /**
+   *
+   * @return inputPath as String
+   */
   public String getPath() {
     return inputPath;
   }
 
+  /**
+   *
+   * @param inputPath, set the inputPath
+   */
   public void setPath(String inputPath) {
     this.inputPath = inputPath;
   }
 
-
+  /**
+   *
+   * @return csvMap generated
+   */
   public Map<String, Map<String, Integer>> getAns() {
     return ans;
   }
 
+  /**
+   *
+   * @param ans, set csvMap
+   */
   public void setAns(
       Map<String, Map<String, Integer>> ans) {
     this.ans = ans;
   }
 
+  /**
+   *
+   * @return the courseFile in certain path
+   */
   public File getCourseFile(){
     File dir = new File(inputPath);
     File course = null;
@@ -50,6 +75,10 @@ public class Processor {
     return course;
   }
 
+  /**
+   *
+   * @return the studentFile in certain path
+   */
   public File getStudentFile(){
     File dir = new File(inputPath);
     File student = null;
@@ -61,12 +90,23 @@ public class Processor {
     return student;
   }
 
+  /**
+   *
+   * @return Map as the csvMap generated
+   * @throws CsvValidationException when the csv is not valid
+   * @throws IOException when certain error happens
+   */
   public Map<String, Map<String,Integer>> process() throws CsvValidationException, IOException {
     readCourse();
     countCourse();
     return ans;
   }
 
+  /**
+   * read the course file and generate the key of csvMap
+   * @throws IOException when certain error happens
+   * @throws CsvValidationException when the csv file is not valid
+   */
   public void readCourse() throws IOException, CsvValidationException {
     FileReader fileReader = new FileReader(this.getCourseFile());
     CSVReader csvReader = new CSVReaderBuilder(fileReader).withSkipLines(1).build();
@@ -77,6 +117,11 @@ public class Processor {
     }
   }
 
+  /**
+   * count the courseFile and generate the key of the csvMap
+   * @throws IOException when certain error happens
+   * @throws CsvValidationException when the csv file is not valid
+   */
   public void countCourse() throws IOException, CsvValidationException {
     FileReader fileReader = new FileReader(this.getStudentFile());
     CSVReader csvReader = new CSVReaderBuilder(fileReader).withSkipLines(1).build();
@@ -88,6 +133,7 @@ public class Processor {
       record.put(date, record.getOrDefault(date, 0) + Integer.parseInt(nextLine[5]));
     }
   }
+
 
   @Override
   public boolean equals(Object o) {

@@ -9,25 +9,63 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 
+
+/**
+ * Generator class of sequential solution
+ *
+ * @author bowen
+ */
 public class Generator {
 
-  private final static String fileDestination = "output";
+  private String fileDestination = "output";
   private Map<String, Map<String, Integer>> csvMap;
   private final static int SIZE = 2;
 
+  /**
+   *
+   * @param path, the path of the parameter taken in
+   * @return absolutePath, string
+   */
+  public String absolutePathChange(String path) {
+    File file = new File(path);
+    if (file.isAbsolute()) {
+      return path;
+    } else {
+      String filePath = new File("").getAbsolutePath();
+
+      return filePath.concat("/" + path);
+    }
+  }
+
+  /**
+   *
+   * @param csvMap, the csvMap generated
+   * @throws IOException when certain error happens of the FileWriter
+   * Generate files with the information in csvMap
+   */
   public void generateFiles(Map<String, Map<String, Integer>> csvMap) throws IOException {
+    this.fileDestination = absolutePathChange(fileDestination);
+    new File(this.fileDestination).mkdirs();
+
     for(String key: csvMap.keySet()){
       String fileName = key + ".csv";
       String finalDestination = this.fileDestination + "/" + fileName;
       FileWriter outputFile = new FileWriter(finalDestination);
-      Map<String, Integer> row= csvMap.get(key);
+      Map<String, Integer> row = csvMap.get(key);
       List<String[]> data = new ArrayList<>();
       data.add(new String[] { "Date","Total_click" });
       write(row, data, outputFile);
     }
   }
+
+  /**
+   *
+   * @param row, the value of the csvMap
+   * @param data, the content of the file
+   * @param outputFile, the file generated as the output
+   * @throws IOException when certain error happens of the CSVWriter
+   */
   public void write(Map<String, Integer> row, List<String[]> data, FileWriter outputFile)
       throws IOException {
     CSVWriter writer = new CSVWriter(outputFile);
