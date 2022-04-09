@@ -11,11 +11,11 @@ import java.util.Objects;
 
 
 /**
- * Generator class of sequential solution
+ * CSVGenerator class of sequential solution, generate the file as requested
  *
  * @author bowen
  */
-public class Generator {
+public class CSVGenerator {
 
   private String fileDestination = "output";
   private Map<String, Map<String, Integer>> csvMap;
@@ -43,7 +43,7 @@ public class Generator {
    * @throws IOException when certain error happens of the FileWriter
    * Generate files with the information in csvMap
    */
-  public void generateFiles(Map<String, Map<String, Integer>> csvMap) throws IOException {
+  public void generateCSVFiles(Map<String, Map<String, Integer>> csvMap) throws IOException {
     this.fileDestination = absolutePathChange(fileDestination);
     new File(this.fileDestination).mkdirs();
 
@@ -84,10 +84,10 @@ public class Generator {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof Generator)) {
+    if (!(o instanceof CSVGenerator)) {
       return false;
     }
-    Generator generator = (Generator) o;
+    CSVGenerator generator = (CSVGenerator) o;
     return Objects.equals(fileDestination, generator.fileDestination)
         && Objects.equals(csvMap, generator.csvMap);
   }
@@ -99,7 +99,7 @@ public class Generator {
 
   @Override
   public String toString() {
-    return "Generator{" +
+    return "CSVGenerator{" +
         "fileDestination='" + fileDestination + '\'' +
         ", csvMap=" + csvMap +
         '}';

@@ -11,23 +11,23 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Processor class of sequential solution
+ * CSVProcessor class of sequential solution, process the existed CVS files and generate a hashMap
  *
  * @author bowen
  */
-public class Processor {
+public class CSVProcessor {
   private final static String courseName = "courses.csv";
   private final static String studentVle = "studentVle.csv";
   String inputPath;
-  private Map<String, Map<String, Integer>> ans;
+  private Map<String, Map<String, Integer>> res;
 
   /**
    *
    * @param inputPath, the path taken in as a string
    */
-  public Processor(String inputPath) {
+  public CSVProcessor(String inputPath) {
     this.inputPath = inputPath;
-    this.ans = new HashMap<String, Map<String, Integer>>();
+    this.res = new HashMap<String, Map<String, Integer>>();
   }
 
   /**
@@ -48,19 +48,19 @@ public class Processor {
 
   /**
    *
-   * @return csvMap generated
+   * @return CSVMap generated
    */
-  public Map<String, Map<String, Integer>> getAns() {
-    return ans;
+  public Map<String, Map<String, Integer>> getRes() {
+    return res;
   }
 
   /**
    *
-   * @param ans, set csvMap
+   * @param res, set csvMap
    */
-  public void setAns(
-      Map<String, Map<String, Integer>> ans) {
-    this.ans = ans;
+  public void setRes(
+      Map<String, Map<String, Integer>> res) {
+    this.res = res;
   }
 
   /**
@@ -101,7 +101,7 @@ public class Processor {
   public Map<String, Map<String,Integer>> process() throws CsvValidationException, IOException {
     readCourse();
     countCourse();
-    return ans;
+    return res;
   }
 
   /**
@@ -115,7 +115,7 @@ public class Processor {
     String[] nextLine;
     while((nextLine = csvReader.readNext()) != null){
       String key = nextLine[0]+"_"+nextLine[1];
-      ans.put(key, new HashMap<String, Integer>());
+      res.put(key, new HashMap<String, Integer>());
     }
   }
 
@@ -130,7 +130,7 @@ public class Processor {
     String[] nextLine;
     while((nextLine = csvReader.readNext()) != null){
       String key = nextLine[0] + "_" + nextLine[1];
-      Map<String, Integer> record = ans.get(key);
+      Map<String, Integer> record = res.get(key);
       String date = nextLine[4];
       record.put(date, record.getOrDefault(date, 0) + Integer.parseInt(nextLine[5]));
     }
@@ -142,24 +142,24 @@ public class Processor {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof Processor)) {
+    if (!(o instanceof CSVProcessor)) {
       return false;
     }
-    Processor processor = (Processor) o;
+    CSVProcessor processor = (CSVProcessor) o;
     return Objects.equals(getPath(), processor.getPath()) && Objects.equals(
-        getAns(), processor.getAns());
+        getRes(), processor.getRes());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getPath(), getAns());
+    return Objects.hash(getPath(), getRes());
   }
 
   @Override
   public String toString() {
-    return "Processor{" +
+    return "CSVProcessor{" +
         "inputPath='" + inputPath + '\'' +
-        ", ans=" + ans +
+        ", res=" + res +
         '}';
   }
 }

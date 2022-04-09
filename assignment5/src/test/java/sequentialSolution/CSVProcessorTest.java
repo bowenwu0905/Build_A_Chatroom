@@ -5,10 +5,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ProcessorTest {
+class CSVProcessorTest {
+  CSVProcessor processor;
 
   @BeforeEach
   void setUp() {
+    processor = new CSVProcessor();
   }
 
   @Test
@@ -20,11 +22,11 @@ class ProcessorTest {
   }
 
   @Test
-  void getAns() {
+  void getRes() {
   }
 
   @Test
-  void setAns() {
+  void setRes() {
   }
 
   @Test

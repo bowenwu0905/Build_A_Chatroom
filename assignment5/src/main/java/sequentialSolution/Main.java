@@ -26,10 +26,10 @@ public class Main {
 
   private void run(String[] args) throws CsvValidationException, IOException {
     String inputPath = args[0].trim();
-    Processor processor = new Processor(inputPath);
+    CSVProcessor processor = new CSVProcessor(inputPath);
     Map<String, Map<String, Integer>> csvMap = processor.process();
-    Generator generator = new Generator();
-    generator.generateFiles(csvMap);
+    CSVGenerator generator = new CSVGenerator();
+    generator.generateCSVFiles(csvMap);
 
   }
 
