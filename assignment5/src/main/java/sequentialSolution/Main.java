@@ -25,12 +25,15 @@ public class Main {
   }
 
   private void run(String[] args) throws CsvValidationException, IOException {
-    String inputPath = args[0].trim();
-    CSVProcessor processor = new CSVProcessor(inputPath);
+    CSVProcessor processor = new CSVProcessor(args);
     Map<String, Map<String, Integer>> csvMap = processor.process();
     CSVGenerator generator = new CSVGenerator();
     generator.generateCSVFiles(csvMap);
 
   }
 
+  @Override
+  public String toString() {
+    return "Main{}";
+  }
 }

@@ -17,7 +17,7 @@ import java.util.Objects;
  */
 public class CSVGenerator {
 
-  private String fileDestination = "output";
+  private String fileDestination = "output_part1";
   private Map<String, Map<String, Integer>> csvMap;
   private final static int SIZE = 2;
 

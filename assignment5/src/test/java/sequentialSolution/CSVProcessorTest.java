@@ -7,26 +7,12 @@ import org.junit.jupiter.api.Test;
 
 class CSVProcessorTest {
   CSVProcessor processor;
+  String filePath;
+
 
   @BeforeEach
   void setUp() {
-    processor = new CSVProcessor();
-  }
 
-  @Test
-  void getPath() {
-  }
-
-  @Test
-  void setPath() {
-  }
-
-  @Test
-  void getRes() {
-  }
-
-  @Test
-  void setRes() {
   }
 
   @Test

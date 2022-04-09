@@ -45,6 +45,6 @@ class CSVGeneratorTest {
 
   @Test
   void testToString() {
-    Assertions.assertEquals("CSVGenerator{fileDestination='output', csvMap=null}", generator.toString());
+    Assertions.assertEquals("CSVGenerator{fileDestination='output_part1', csvMap=null}", generator.toString());
   }
 }
