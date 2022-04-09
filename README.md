@@ -18,7 +18,7 @@ code_module, code_presentation, code_presentation_length
 The format of the data in studentVle is:
 code_module, code_presentation, id_student, id_site, date, sum_click
 
-part1 and part2 of the project write a program that will read in these files and use them
+Part1 and Part2 of the project write a program that will read in these files and use them
 to create new summary files so that each individual code_presentation of a code_module has a file
 listing the total number of clicks that occurred on a particular day. Each new file should be
 named code_presentation_code_module.csv and should contain two columns: date, and
@@ -33,8 +33,13 @@ clicks in this course presentation on day -10.
 ## part1_Sequential_solution
 
 The sequential solution accept the directory containing the OULAD csv files as a command line 
-argument. 
+argument. It consists of three classes in total.
 
+The Main class takes in args, and generate file in destinationPath.
+
+The CSVProcesser class takes in inputArgs as fields. The class is used to process the course.csv and studentVle.csv file and generated a hashmap<String, Map<String, Integer>>. 
+
+The CSVGenerator class is used to generate the csv file with the information contained in hashmap.
 
 
 
