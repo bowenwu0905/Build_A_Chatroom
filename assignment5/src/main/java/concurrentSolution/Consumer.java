@@ -94,7 +94,7 @@ public class Consumer implements Runnable{
 
   @Override
   public void run() {
-    while (true) {
+    while (!this.buffer.isEmpty()) {
       try {
 
           Map<String, String> record = buffer.take();

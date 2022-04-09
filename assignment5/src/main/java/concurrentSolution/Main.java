@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -21,24 +22,27 @@ public class Main {
   public Main(){
   }
 
-  public static void main(String[] args){
+  public static void main(String[] args) throws InterruptedException {
     Main main = new Main();
 
     main.run(args);
   }
 
-  public void run(String[] args){
+  public void run(String[] args) throws InterruptedException {
     String studentFilePath = args[0];
     String courseFilePath = args[1];
     Publisher publisher = new Publisher(courseFilePath);
     publisher.setFileName();
     publisher.generateFiles(this.data);
 
+    CountDownLatch latch = new CountDownLatch(threadNum);
     ExecutorService executor = Executors.newFixedThreadPool(threadNum);
     executor.execute(new Producer(this.buffer, this.data, studentFilePath));
     for (int i = 0; i < consumerNum; i++) {
       executor.execute(new Consumer(this.buffer,this.data,this.lock));
+      latch.countDown();
     }
+    latch.await();
 //    Thread p1  =  new Thread(new Producer(this.buffer, this.data, studentFilePath));
 //    Thread c1 = new Thread(new Consumer(this.buffer,this.data));
 //    Thread c2 = new Thread(new Consumer(this.buffer,this.data));
