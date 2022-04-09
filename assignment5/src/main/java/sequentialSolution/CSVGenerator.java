@@ -104,5 +104,21 @@ public class CSVGenerator {
         ", csvMap=" + csvMap +
         '}';
   }
+
+  /**
+   *
+   * @return fileDestination as String
+   */
+  public String getFileDestination() {
+    return fileDestination;
+  }
+
+  /**
+   *
+   * @param fileDestination as String taken in
+   */
+  public void setFileDestination(String fileDestination) {
+    this.fileDestination = fileDestination;
+  }
 }
 
