@@ -34,7 +34,7 @@ class CSVGeneratorTest {
   @Test
   void testEquals() {
     CSVGenerator generator1 = new CSVGenerator();
-    Assertions.assertEquals(generator1, generator);
+    Assertions.assertTrue(generator.equals(generator1));
   }
 
   @Test

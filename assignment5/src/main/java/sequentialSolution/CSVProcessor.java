@@ -33,6 +33,23 @@ public class CSVProcessor {
 
   /**
    *
+   * @return the hashmap generated as result
+   */
+  public Map<String, Map<String, Integer>> getRes() {
+    return res;
+  }
+
+  /**
+   *
+   * @param res, set the hashmap
+   */
+  public void setRes(
+      Map<String, Map<String, Integer>> res) {
+    this.res = res;
+  }
+
+  /**
+   *
    * @param path, the path of the parameter taken in
    * @return absolutePath, string
    */
@@ -120,4 +137,5 @@ public class CSVProcessor {
         ", res=" + res +
         '}';
   }
+
 }
