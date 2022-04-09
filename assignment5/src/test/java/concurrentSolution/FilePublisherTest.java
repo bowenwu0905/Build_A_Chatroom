@@ -28,7 +28,7 @@ class FilePublisherTest {
   void setup(){
     p1 = new FilePublisher();
     c1 = new CsvProcessor();
-    fileAddress = c1.absolutePathChange("src/test/java/testCourses.csv");
+    fileAddress = c1.absolutePathChange("src/test/java/concurrentSolution/testCourses.csv");
   }
 
 
@@ -45,7 +45,7 @@ class FilePublisherTest {
     dayCount.put("h2",2);
     p1.saveFileToAddress("test",dayCount);
     String filePath = new File("").getAbsolutePath();
-    String path = filePath.concat("/" +"output/test.csv");
+    String path = filePath.concat("/" +"output_part2/test.csv");
     String content = new Scanner(new File(path)).useDelimiter("\\Z").next();
     assertEquals("Date,Total_click\n"
         + "h1,1\n"
@@ -58,7 +58,7 @@ class FilePublisherTest {
     ConcurrentMap<String, ConcurrentMap<String,Integer>> data  = new ConcurrentHashMap<>();
     p1.generateFiles(data,fileNameSet);
     String filePath = new File("").getAbsolutePath();
-    String path = filePath.concat("/" +"output/testGenerateFiles.csv");
+    String path = filePath.concat("/" +"output_part2/testGenerateFiles.csv");
     String content = new Scanner(new File(path)).useDelimiter("\\Z").next();
     assertEquals("Date,Total_click",content);
   }
@@ -66,21 +66,21 @@ class FilePublisherTest {
 
   @Test
   void getFileDestination() {
-    String ans = this.c1.absolutePathChange("output");
+    String ans = this.c1.absolutePathChange("output_part2");
     assertEquals(ans,p1.getFileDestination());
   }
 
   @Test
   void setFileDestination() {
-    this.p1.setFileDestination("output1");
-    String ans = this.c1.absolutePathChange("output1");
+    this.p1.setFileDestination("output1_part2");
+    String ans = this.c1.absolutePathChange("output1_part2");
     assertEquals(ans,p1.getFileDestination());
   }
 
   @Test
   void testEquals() {
     FilePublisher p2 = new FilePublisher();
-    p2.setFileDestination("output1");
+    p2.setFileDestination("output1_part2");
     assertFalse(p1.equals(p2));
   }
 
@@ -103,7 +103,7 @@ class FilePublisherTest {
   @Test
   void testHashCode() {
     FilePublisher p2 = new FilePublisher();
-    p2.setFileDestination("output1");
+    p2.setFileDestination("output1_part2");
     assertFalse(p1.hashCode() == p2.hashCode());
   }
 
@@ -117,7 +117,7 @@ class FilePublisherTest {
   @Test
   void testToString() {
     String processor = c1.toString();
-    String fileDestination = c1.absolutePathChange("output");
+    String fileDestination = c1.absolutePathChange("output_part2");
     String ans = "Publisher{" +
         "processor=" + processor +
         ", fileDestination='" + fileDestination + '\'' +

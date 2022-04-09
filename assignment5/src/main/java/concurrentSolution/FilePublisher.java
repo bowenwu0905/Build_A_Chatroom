@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public class FilePublisher {
   private CsvProcessor processor = new CsvProcessor();
-  private String fileDestination ="output";
+  private String fileDestination ="output_part2";
   private final static String eol = System.getProperty("line.separator");
 
   public FilePublisher() {

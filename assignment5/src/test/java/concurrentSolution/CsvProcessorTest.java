@@ -18,7 +18,7 @@ class CsvProcessorTest {
   @BeforeEach
   void setUp() {
     filePath = new File("").getAbsolutePath();
-    fileDestination = filePath.concat("/output");
+    fileDestination = filePath.concat("/output_part2");
     c1 = new CsvProcessor();
   }
 
@@ -43,7 +43,7 @@ class CsvProcessorTest {
   }
   @Test
   void testAbsolutePathChange1(){
-    String path = filePath.concat("/output");
+    String path = filePath.concat("/output_part2");
     assertEquals(fileDestination,c1.absolutePathChange(path));
   }
 

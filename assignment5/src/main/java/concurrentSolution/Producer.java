@@ -28,12 +28,8 @@ public class Producer implements Runnable{
     this.studentFilePath = studentFilePath;
   }
 
-  public CsvProcessor getProcessor() {
-    return processor;
-  }
-
-  public void setProcessor(CsvProcessor processor) {
-    this.processor = processor;
+  public BlockingQueue<Map<String, String>> getBuffer() {
+    return buffer;
   }
 
   @Override

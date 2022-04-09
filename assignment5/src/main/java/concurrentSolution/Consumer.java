@@ -19,7 +19,7 @@ public class Consumer implements Runnable{
   private BlockingQueue<Map<String,String>> buffer;
   private ConcurrentMap<String, ConcurrentMap<String,Integer>> data;
   private CsvProcessor processor = new CsvProcessor();
-  private String fileDestination ="output";
+  private String fileDestination ="output_part2";
 //  private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
   private final static String eol = System.getProperty("line.separator");
   private Lock lock;
@@ -63,7 +63,6 @@ public class Consumer implements Runnable{
     } finally {
       lock.unlock();
     }
-
   }
 
 
@@ -76,9 +75,7 @@ public class Consumer implements Runnable{
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-
     }
-
   }
 
   @Override
