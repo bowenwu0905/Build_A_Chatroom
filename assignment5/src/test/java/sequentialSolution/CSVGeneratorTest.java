@@ -4,22 +4,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class CSVGeneratorTest {
   CSVGenerator generator;
-  String[] inputArgs;
-  CSVProcessor c1;
   String rootPath = new File("").getAbsolutePath();
 
   @BeforeEach
   void setUp() {
     generator = new CSVGenerator();
-    inputArgs = new String[1];
-    c1 = new CSVProcessor(inputArgs);
-    inputArgs[0] = "src/test/java/sequentialSolution";
   }
 
   @Test
@@ -42,7 +40,17 @@ class CSVGeneratorTest {
 
   @Test
   void generateCSVFiles() throws IOException {
-
+    Map<String, Map<String, Integer>> map = new HashMap<>();
+    Map<String, Integer> map1= new HashMap<>();
+    map1.put("10", 1);
+    map.put("abc", map1);
+    generator.setFileDestination("output_part1/test");
+    generator.generateCSVFiles(map);
+    String filePath = new File("").getAbsolutePath();
+    String path = filePath.concat("/output_part1/test/abc.csv");
+    String content = new Scanner(new File(path)).useDelimiter("\\Z").next();
+    Assertions.assertEquals("\"Date\",\"Total_click\"\n"
+        + "\"10\",\"1\"", content);
   }
 
   @Test
