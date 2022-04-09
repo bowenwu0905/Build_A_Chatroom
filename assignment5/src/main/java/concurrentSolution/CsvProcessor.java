@@ -13,8 +13,6 @@ public class CsvProcessor {
   public  static final String sumClick = "sum_click";
   private static final String removeQuotation = "^\"|\"$";
 
-
-
   /**
    * constructor for the class
    */
@@ -45,7 +43,6 @@ public class CsvProcessor {
       return path;
     } else {
       String filePath = new File("").getAbsolutePath();
-
       return filePath.concat("/" + path);
     }
   }
@@ -55,4 +52,5 @@ public class CsvProcessor {
   public String toString() {
     return "CsvProcessor{}";
   }
+
 }
