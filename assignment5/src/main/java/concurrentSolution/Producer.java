@@ -41,7 +41,7 @@ public class Producer implements Runnable{
     String line;
     try {
       BufferedReader br = new BufferedReader(new FileReader(this.processor.absolutePathChange(this.studentFilePath)));
-      String[] fieldList = br.readLine().split(this.processor.csvSplit);
+      String[] fieldList = br.readLine().split(CsvProcessor.csvSplit);
       while ((line = br.readLine()) != null) {
         Map<String,String> record = this.processor.csvToHashMap(line, fieldList);
         try {

@@ -12,8 +12,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
-  private static final int queueLength = 5;
-  private static final int consumerNum = 1;
+  private static final int queueLength = 20;
+  private static final int consumerNum = 5;
   private static final int threadNum = 6;
   private static final String studetFileName = "small.csv";
   private static final String courseFileName = "courses.csv";

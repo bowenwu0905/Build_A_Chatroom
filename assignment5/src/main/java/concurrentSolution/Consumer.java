@@ -44,12 +44,10 @@ public class Consumer implements Runnable{
     try {
         if (!this.data.containsKey(key)) {
           dayCount = new ConcurrentHashMap<>();
-
           dayCount.put(date, click);
           this.data.put(key, dayCount);
         } else {
           dayCount = this.data.get(key);
-
           dayCount.put(date, dayCount.getOrDefault(date, 0) + click);
           this.data.put(key, dayCount);
 

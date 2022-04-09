@@ -30,10 +30,11 @@ public class FilePublisher {
     Set<String> fileName= new HashSet<>();
     try {
       BufferedReader br = new BufferedReader(new FileReader(this.processor.absolutePathChange(courseFilePath)));
-      String[] fieldList = br.readLine().split(this.processor.csvSplit);
+      String[] fieldList = br.readLine().split(CsvProcessor.csvSplit);
       while ((line = br.readLine()) != null) {
         Map<String,String> record = this.processor.csvToHashMap(line, fieldList);
-        fileName.add(record.get(this.processor.courseModule)+"_"+record.get(this.processor.coursePresentation));
+        fileName.add(record.get(CsvProcessor.courseModule)+"_"+record.get(
+            CsvProcessor.coursePresentation));
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -74,20 +75,14 @@ public class FilePublisher {
   }
 
 
-  public CsvProcessor getProcessor() {
-    return processor;
-  }
-
-  public void setProcessor(CsvProcessor processor) {
-    this.processor = processor;
-  }
-
   public String getFileDestination() {
     return fileDestination;
   }
 
   public void setFileDestination(String fileDestination) {
     this.fileDestination = fileDestination;
+    this.fileDestination = this.processor.absolutePathChange(fileDestination);
+    new File(this.fileDestination).mkdirs();
   }
 
   @Override
