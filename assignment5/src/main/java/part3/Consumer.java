@@ -8,6 +8,7 @@ import static concurrentSolution.CsvProcessor.time;
 
 import java.io.File;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -24,6 +25,10 @@ public class Consumer implements Runnable{
   private final static String eol = System.getProperty("line.separator");
   private Lock lock;
   private FilePublisher publisher = new FilePublisher();
+
+  private static final String TOTAL_CLICK = "Total_click";
+  private static int THRESHOLD;
+  private BlockingQueue<BlockingQueue<String>> activityDays;
 
   public Consumer(BlockingQueue<Map<String,String>> buffer, ConcurrentMap<String, ConcurrentMap<String,Integer>> data, Lock lock ){
     this.buffer = buffer;
@@ -71,7 +76,10 @@ public class Consumer implements Runnable{
     while (!this.buffer.isEmpty()) {
       try {
           Map<String, String> record = buffer.take();
-          hashMapSummarizer(record);
+          if (Integer.parseInt(record.get(TOTAL_CLICK)) > THRESHOLD) {
+            activityDays.add(new ArrayBlockingQueue<String>().add())
+          }
+
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
