@@ -6,31 +6,30 @@ import static concurrentSolution.CsvProcessor.coursePresentation;
 import static concurrentSolution.CsvProcessor.sumClick;
 import static concurrentSolution.CsvProcessor.time;
 
-import java.io.File;
+
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Lock;
-//import java.util.concurrent.locks.ReadWriteLock;
-//import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 
 public class Consumer implements Runnable{
   private BlockingQueue<Map<String,String>> buffer;
   private ConcurrentMap<String, ConcurrentMap<String,Integer>> data;
   private CsvProcessor processor = new CsvProcessor();
-  private String fileDestination ="output_part2";
-//  private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-  private final static String eol = System.getProperty("line.separator");
-  private Lock lock;
-  private FilePublisher publisher = new FilePublisher();
+  private Map<String,Lock> lockTable;
+  private CountDownLatch consumerLatch;
+  private CountDownLatch producerLatch;
 
-  public Consumer(BlockingQueue<Map<String,String>> buffer, ConcurrentMap<String, ConcurrentMap<String,Integer>> data, Lock lock ){
+  public Consumer(BlockingQueue<Map<String,String>> buffer, ConcurrentMap<String, ConcurrentMap<String,Integer>> data,Map<String,Lock> lockTable,CountDownLatch consumerLatch, CountDownLatch producerLatch){
     this.buffer = buffer;
     this.data = data;
-    this.lock = lock;
-    this.fileDestination = this.processor.absolutePathChange(fileDestination);
-    new File(this.fileDestination).mkdirs();
+    this.lockTable = lockTable;
+    this.consumerLatch = consumerLatch;
+    this.producerLatch = producerLatch;
   }
 
   public void hashMapSummarizer(Map<String,String> record){
@@ -38,9 +37,11 @@ public class Consumer implements Runnable{
     String key = record.get(courseModule)+"_"+record.get(coursePresentation);
     String date = record.get(time);
     ConcurrentMap<String,Integer> dayCount;
+
+    //Find the related lock based on file name
+    Lock fileLock = lockTable.get(key);
     int click = Integer.parseInt(record.get(sumClick));
-    lock.lock();
-    //Update the concurrent Hashmap
+    fileLock.lock();
     try {
         if (!this.data.containsKey(key)) {
           dayCount = new ConcurrentHashMap<>();
@@ -52,30 +53,34 @@ public class Consumer implements Runnable{
           this.data.put(key, dayCount);
 
         }
-//      readWriteLock.writeLock().lock();
-//      try {
-        publisher.saveFileToAddress(key, dayCount);
-//      } finally {
-//        readWriteLock.writeLock().unlock();
-//      }
     } catch (Exception e) {
-      // handle the exception
-    } finally {
-      lock.unlock();
+      e.printStackTrace();
     }
+    fileLock.unlock();
   }
 
 
   @Override
   public void run() {
-    while (true) {
-      try {
-          Map<String, String> record = buffer.take();
+    synchronized(this.buffer) {
+      //Keep processing while producer still work or buffer isn't empty
+      while ((producerLatch.getCount() > 0) || (!this.buffer.isEmpty())) {
+        if (!this.buffer.isEmpty()) {
+          Map<String, String> record = null;
+          try {
+            record = buffer.take();
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
           hashMapSummarizer(record);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
+        }
       }
     }
+    consumerLatch.countDown();
+//    System.out.println("------from consumer--------------");
+//    System.out.println(data.toString());
+//    System.out.println("here"+latch.getCount());
+
   }
 
   @Override
@@ -83,6 +88,42 @@ public class Consumer implements Runnable{
     return "Consumer{" +
         "buffer=" + buffer +
         ", data=" + data +
+        ", processor=" + processor +
+        ", lockTable=" + lockTable +
+        ", consumerLatch=" + consumerLatch +
+        ", producerLatch=" + producerLatch +
         '}';
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Consumer consumer = (Consumer) o;
+    return Objects.equals(buffer, consumer.buffer) && Objects.equals(data,
+        consumer.data) && Objects.equals(processor, consumer.processor)
+        && Objects.equals(lockTable, consumer.lockTable) && Objects.equals(
+        consumerLatch, consumer.consumerLatch) && Objects.equals(producerLatch,
+        consumer.producerLatch);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(buffer, data, processor, lockTable, consumerLatch,
+        producerLatch);
+  }
+
+  public Map<String, Lock> getLockTable() {
+    return lockTable;
+  }
+
+  public void setLockTable(Map<String, Lock> lockTable) {
+    this.lockTable = lockTable;
+  }
+
+
 }

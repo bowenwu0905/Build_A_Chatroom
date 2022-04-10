@@ -7,11 +7,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class FilePublisher {
   private CsvProcessor processor = new CsvProcessor();
@@ -62,16 +63,22 @@ public class FilePublisher {
   }
 
   public void generateFiles(ConcurrentMap<String, ConcurrentMap<String,Integer>>data,Set<String> fileNameSet){
-    Iterator<String> namesIterator = fileNameSet.iterator();
-    while(namesIterator.hasNext()) {
-      String fileName = namesIterator.next();
-      if(data.containsKey(fileName)){
-        saveFileToAddress(fileName,data.get(fileName));
-      }else{
-        saveFileToAddress(fileName,new HashMap<>());
+    for (String fileName : fileNameSet) {
+      if (data.containsKey(fileName)) {
+        saveFileToAddress(fileName, data.get(fileName));
+      } else {
+        saveFileToAddress(fileName, new HashMap<>());
       }
     }
 
+  }
+
+  public Map<String, Lock> lockMapGenerator(Set<String> fileNameSet){
+    Map<String,Lock> lockTable = new HashMap<>();
+    for (String fileName : fileNameSet) {
+      lockTable.put(fileName, new ReentrantLock(true));
+    }
+    return lockTable;
   }
 
 
