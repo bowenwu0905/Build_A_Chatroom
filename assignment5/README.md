@@ -80,4 +80,4 @@ You will see the ouput in output_part2
 ## Note
  - The directory containing the OULAD csv files are "data". "data" will be the input for part 1 and part 2 problem
  - The output folder are named in the fashion in "output_part#"
- - For unl, the files end with "_complete" are the final version in UML folder
+ - For UMl, the files end with "_complete" are the final version in UML folder
