@@ -12,31 +12,55 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Lock;
 
 
+/**
+ * The main class for implementation. It will maintain a blocking queue and passing between
+ * consumers and a producer. All data is maintained in CourrentHasmap. The concurrency is controlled
+ * through locks
+ */
 public class Main {
+
   private static final int capacity = 10;
   private static final int consumerNum = 5;
   private static final int producerNum = 1;
   private static final String studetFileName = "studentVle.csv";
   private static final String courseFileName = "courses.csv";
-  private ConcurrentMap<String, ConcurrentMap<String,Integer>>data = new ConcurrentHashMap<>();
-  private BlockingQueue<Map<String,String>> buffer = new LinkedBlockingQueue<>(this.capacity);
+  private ConcurrentMap<String, ConcurrentMap<String, Integer>> data = new ConcurrentHashMap<>();
+  private BlockingQueue<Map<String, String>> buffer = new LinkedBlockingQueue<>(this.capacity);
 
-  public Main(){
+
+  /**
+   * The constructor
+   */
+  public Main() {
   }
 
+  /**
+   * The main function, which you can run
+   *
+   * @param args the first arg should be the folder name which you put the data. Here, you can put
+   *             "data"
+   * @throws InterruptedException for any interruption, the exception will be thrown
+   */
   public static void main(String[] args) throws InterruptedException {
     Main main = new Main();
     main.run(args);
   }
 
+  /**
+   * The run function
+   *
+   * @param args the first arg should be the folder name which you put the data. Here, you can put
+   *             "data"
+   * @throws InterruptedException for any interruption, the exception will be thrown
+   */
   public void run(String[] args) throws InterruptedException {
-    String studentFilePath = args[0]+"/"+this.studetFileName;
-    String courseFilePath = args[0]+"/"+this.courseFileName;
+    String studentFilePath = args[0] + "/" + this.studetFileName;
+    String courseFilePath = args[0] + "/" + this.courseFileName;
     FilePublisher publisher = new FilePublisher();
 
     //Generate Lock table
     Set<String> fileNameSet = publisher.fileNameGenerator(courseFilePath);
-    Map<String,Lock> lockTable = publisher.lockMapGenerator(fileNameSet);
+    Map<String, Lock> lockTable = publisher.lockMapGenerator(fileNameSet);
 
     //Generate the producer and consumer lock
     CountDownLatch producerLatch = new CountDownLatch(producerNum);
@@ -44,20 +68,26 @@ public class Main {
     ExecutorService executor = Executors.newFixedThreadPool(consumerNum);
 
     //Start the producer
-    executor.execute(new Producer(this.buffer, studentFilePath,producerLatch,this.capacity));
+    executor.execute(new Producer(this.buffer, studentFilePath, producerLatch, this.capacity));
 
     //Start the consumer
     for (int i = 0; i < consumerNum; i++) {
-      executor.execute(new Consumer(this.buffer,this.data,lockTable,consumerLatch,producerLatch));
+      executor.execute(
+          new Consumer(this.buffer, this.data, lockTable, consumerLatch, producerLatch));
     }
 
     //Wait for all consumer to complete
     consumerLatch.await();
-    publisher.generateFiles(this.data,fileNameSet);
+    publisher.generateFiles(this.data, fileNameSet);
     executor.shutdown();
 
   }
 
+  /**
+   * print main object to string
+   *
+   * @return the string
+   */
   @Override
   public String toString() {
     return "Main{" +
