@@ -45,7 +45,6 @@ public class Main {
     executor.execute(new Producer(this.buffer, studentFilePath));
     for (int i = 0; i < consumerNum; i++) {
       executor.execute(new Consumer(this.buffer,this.data,this.lock));
-      latch.countDown();
     }
     executor.shutdown();
   }

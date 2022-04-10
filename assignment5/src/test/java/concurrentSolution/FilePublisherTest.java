@@ -2,10 +2,8 @@ package concurrentSolution;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import part3.Publisher;
 
 class FilePublisherTest {
   FilePublisher p1;
