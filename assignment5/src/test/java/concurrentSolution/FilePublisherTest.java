@@ -14,6 +14,8 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import part3.Publisher;
@@ -123,5 +125,13 @@ class FilePublisherTest {
         ", fileDestination='" + fileDestination + '\'' +
         '}';
     assertEquals(ans,p1.toString());
+  }
+
+  @Test
+  void testLockMapGenerator(){
+    Set<String> expected = new HashSet<>(Arrays.asList("AAA_2013J"));
+    Map<String, Lock> dic = new HashMap<>();
+    dic.put("AAA_2013J",new ReentrantLock(true));
+    assertEquals(dic.keySet(),p1.lockMapGenerator(expected).keySet());
   }
 }

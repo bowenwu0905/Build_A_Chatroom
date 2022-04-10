@@ -80,7 +80,6 @@ public class Consumer implements Runnable{
 //    System.out.println("------from consumer--------------");
 //    System.out.println(data.toString());
 //    System.out.println("here"+latch.getCount());
-
   }
 
   @Override
@@ -104,11 +103,8 @@ public class Consumer implements Runnable{
       return false;
     }
     Consumer consumer = (Consumer) o;
-    return Objects.equals(buffer, consumer.buffer) && Objects.equals(data,
-        consumer.data) && Objects.equals(processor, consumer.processor)
-        && Objects.equals(lockTable, consumer.lockTable) && Objects.equals(
-        consumerLatch, consumer.consumerLatch) && Objects.equals(producerLatch,
-        consumer.producerLatch);
+    return Objects.equals(data,
+        consumer.data) && Objects.equals(processor, consumer.processor);
   }
 
   @Override
@@ -125,5 +121,12 @@ public class Consumer implements Runnable{
     this.lockTable = lockTable;
   }
 
+  public ConcurrentMap<String, ConcurrentMap<String, Integer>> getData() {
+    return data;
+  }
 
+  public void setData(
+      ConcurrentMap<String, ConcurrentMap<String, Integer>> data) {
+    this.data = data;
+  }
 }

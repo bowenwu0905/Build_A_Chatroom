@@ -76,10 +76,9 @@ public class Producer implements Runnable{
       return false;
     }
     Producer producer = (Producer) o;
-    return bufferSize == producer.bufferSize && Objects.equals(buffer, producer.buffer)
+    return bufferSize == producer.bufferSize
         && Objects.equals(studentFilePath, producer.studentFilePath)
-        && Objects.equals(processor, producer.processor) && Objects.equals(latch,
-        producer.latch);
+        && Objects.equals(processor, producer.processor);
   }
 
   @Override
@@ -105,4 +104,6 @@ public class Producer implements Runnable{
   public void setBufferSize(int bufferSize) {
     this.bufferSize = bufferSize;
   }
+
+
 }

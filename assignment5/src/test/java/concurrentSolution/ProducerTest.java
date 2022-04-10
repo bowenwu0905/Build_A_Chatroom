@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -15,15 +16,18 @@ class ProducerTest {
   String studentFilePath;
   Producer p1;
   CsvProcessor c1;
+  CountDownLatch latch;
+  int bufferSize;
 
 
   @BeforeEach
   void setUp() {
-    int queueLength = 5;
-    buffer = new LinkedBlockingQueue<>(queueLength);
+    bufferSize = 5;
+    buffer = new LinkedBlockingQueue<>(bufferSize);
     c1 = new CsvProcessor();
+    latch = new CountDownLatch(1);
     studentFilePath = c1.absolutePathChange("src/test/java/concurrentSolution/testProducer.csv");
-    p1 = new Producer(buffer,studentFilePath);
+    p1 = new Producer(buffer,studentFilePath,latch,bufferSize);
   }
 
   @Test
@@ -60,10 +64,13 @@ class ProducerTest {
 
   @Test
   void testToString() {
+    CsvProcessor processor = new CsvProcessor();
     String ans ="Producer{" +
         "buffer=" + buffer +
         ", studentFilePath='" + studentFilePath + '\'' +
-        ", processor=" + c1.toString() +
+        ", processor=" + processor +
+        ", latch=" + latch +
+        ", bufferSize=" + bufferSize +
         '}';
     assertEquals(ans,p1.toString());
   }
@@ -71,13 +78,13 @@ class ProducerTest {
   @Test
   void testEquals() {
     studentFilePath = c1.absolutePathChange("src/test/java/concurrentSolution/testProducer1.csv");
-    Producer p2 = new Producer(buffer,studentFilePath);
+    Producer p2 = new Producer(buffer,studentFilePath,latch,bufferSize);
     assertFalse(p1.equals(p2));
   }
 
   @Test
   void testEquals1() {
-    Producer p3 = new Producer(buffer,studentFilePath);
+    Producer p3 = new Producer(buffer,studentFilePath,latch,bufferSize);
     assertFalse(p1.equals(p3));
   }
 
@@ -101,7 +108,7 @@ class ProducerTest {
   @Test
   void testHashCode() {
     studentFilePath = c1.absolutePathChange("src/test/java/concurrentSolution/testProducer1.csv");
-    Producer p2 = new Producer(buffer,studentFilePath);
+    Producer p2 = new Producer(buffer,studentFilePath,latch,bufferSize);
     assertFalse(p1.hashCode()==p2.hashCode());
   }
 
@@ -110,4 +117,14 @@ class ProducerTest {
     assertFalse(p1.hashCode()!=p1.hashCode());
   }
 
+  @Test
+  void testGetBufferSize(){
+    assertEquals(bufferSize,p1.getBufferSize());
+  }
+
+  @Test
+  void testSetBufferSize(){
+    p1.setBufferSize(7);
+    assertEquals(7,p1.getBufferSize());
+  }
 }

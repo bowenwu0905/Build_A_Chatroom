@@ -4,11 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -23,6 +25,9 @@ class ConsumerTest {
   ConcurrentMap<String, ConcurrentMap<String,Integer>> data;
   Consumer c1;
   Map<String, String> record;
+  Map<String,Lock> lockTable;
+  CountDownLatch consumerLatch;
+  CountDownLatch producerLatch;
 
   @BeforeEach
   void setUp() throws InterruptedException {
@@ -37,39 +42,133 @@ class ConsumerTest {
     }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
     buffer.put(record);
     data = new ConcurrentHashMap<>();
-    c1 = new Consumer(buffer,data,lock);
+    lockTable = new HashMap<>();
+    lockTable.put("test_testJ",new ReentrantLock(true));
+    consumerLatch = new CountDownLatch(5);
+    producerLatch = new CountDownLatch(1);
+    c1 = new Consumer(buffer,data,lockTable,consumerLatch,producerLatch);
 
   }
 
   @Test
   void hashMapSummarizer() throws FileNotFoundException {
     c1.hashMapSummarizer(record);
-    String filePath = new File("").getAbsolutePath();
-    String path = filePath.concat("/" +"output_part2/test_testJ.csv");
-    String content = new Scanner(new File(path)).useDelimiter("\\Z").next();
-    assertEquals("Date,Total_click\n"
-        + "-10,4",content);
+    ConcurrentMap <String,Integer> insideMap = new ConcurrentHashMap<>();
+    insideMap.put("-10",4);
+    ConcurrentMap<String, ConcurrentMap<String,Integer>> data = new ConcurrentHashMap<>();
+    data.put("test_testJ",insideMap);
+    assertEquals(data,c1.getData());
   }
 
-//  @Test
-//  void run() throws FileNotFoundException {
-//    c1.run();
-//    String filePath = new File("").getAbsolutePath();
-//    String path = filePath.concat("/" +"output_part2/test_testJ.csv");
-//    String content = new Scanner(new File(path)).useDelimiter("\\Z").next();
-//    assertEquals("Date,Total_click\n"
-//        + "h1,1\n"
-//        + "h2,2",content);
-//  }
+  @Test
+  void hashMapSummarizer2() throws FileNotFoundException {
+    c1.hashMapSummarizer(record);
+    c1.hashMapSummarizer(record);
+    ConcurrentMap <String,Integer> insideMap = new ConcurrentHashMap<>();
+    insideMap.put("-10",8);
+    ConcurrentMap<String, ConcurrentMap<String,Integer>> data = new ConcurrentHashMap<>();
+    data.put("test_testJ",insideMap);
+    assertEquals(data,c1.getData());
+  }
+
 
 
 
   @Test
   void testToString() {
+    CsvProcessor processor = new CsvProcessor();
     String ans = "Consumer{" +
         "buffer=" + buffer +
         ", data=" + data +
+        ", processor=" + processor +
+        ", lockTable=" + lockTable +
+        ", consumerLatch=" + consumerLatch +
+        ", producerLatch=" + producerLatch +
         '}';
     assertEquals(ans, c1.toString());
   }
+
+  @Test
+  void testGetLockTable(){
+    assertEquals(lockTable,c1.getLockTable());
+  }
+
+  @Test
+  void setLockTable(){
+    lockTable = new HashMap<>();
+    lockTable.put("test_testJ1",new ReentrantLock(true));
+    c1.setLockTable(lockTable);
+    assertEquals(lockTable,c1.getLockTable());
+  }
+
+  @Test
+  void testHashCode(){
+    assertEquals(c1.hashCode(),c1.hashCode());
+  }
+
+  @Test
+  void testHashCode1(){
+    lockTable = new HashMap<>();
+    lockTable.put("test_testJ1",new ReentrantLock(true));
+    Consumer c2 = new Consumer(buffer,data,lockTable,consumerLatch,producerLatch);
+    assertTrue(c1.hashCode()!=c2.hashCode());
+  }
+
+  @Test
+  void testEquals(){
+    assertTrue(c1.equals(c1));
+  }
+
+  @Test
+  void testEquals1(){
+    assertFalse(c1.equals(1));
+  }
+
+  @Test
+  void testEquals2(){
+    assertFalse(c1.equals(null));
+  }
+
+  @Test
+  void test3(){
+    lockTable = new HashMap<>();
+    lockTable.put("test_testJ1",new ReentrantLock(true));
+    Consumer c2 = new Consumer(buffer,data,lockTable,consumerLatch,producerLatch);
+    assertFalse(c1.equals(c2));
+  }
+
+  @Test
+  void test4(){
+    consumerLatch = new CountDownLatch(8);
+    Consumer c2 = new Consumer(buffer,data,lockTable,consumerLatch,producerLatch);
+    assertFalse(c1.equals(c2));
+  }
+
+
+  @Test
+  void test5(){
+    CountDownLatch producerLatch1 = producerLatch;
+    Consumer c2 = new Consumer(buffer,data,lockTable,consumerLatch,producerLatch1);
+    assertFalse(c1.equals(c2));
+  }
+
+  @Test
+  void test6(){
+    Consumer c2 = new Consumer(buffer,data,lockTable,consumerLatch,producerLatch);
+    assertFalse(c1.equals(c2));
+  }
+
+
+
+  @Test
+  void testGetData(){
+    assertEquals(data,c1.getData());
+  }
+
+  @Test
+  void testSetData(){
+    c1.setData(null);
+    assertEquals(null,c1.getData());
+  }
+
 }
