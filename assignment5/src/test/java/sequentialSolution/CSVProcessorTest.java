@@ -87,6 +87,16 @@ class CSVProcessorTest {
   }
 
   @Test
+  void testEquals1() {
+    assertFalse(c1.equals(null));
+  }
+
+  @Test
+  void testEquals2() {
+    assertTrue(c1.equals(c1));
+  }
+
+  @Test
   void testHashCode() {
     CSVProcessor c2 = new CSVProcessor(courseFilePath, studentFilePath, inputArgs);
     Assertions.assertEquals(c1.hashCode(), c2.hashCode());

@@ -64,6 +64,16 @@ class CSVGeneratorTest {
   }
 
   @Test
+  void testEquals1() {
+    assertFalse(generator.equals(null));
+  }
+
+  @Test
+  void testEquals2() {
+    assertTrue(generator.equals(generator));
+  }
+
+  @Test
   void testHashCode() {
     CSVGenerator generator1 = new CSVGenerator();
     Assertions.assertEquals(generator1.hashCode(), generator.hashCode());
