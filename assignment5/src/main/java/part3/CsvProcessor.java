@@ -6,12 +6,12 @@ import java.util.Map;
 
 
 public class CsvProcessor {
+
   public static final String csvSplit = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
-  public  static final String courseModule = "code_module";
-  public static final String coursePresentation= "code_presentation";
-  public  static final String time = "date";
-  public  static final String sumClick = "sum_click";
+  public static final String courseModule = "code_module";
+  public static final String coursePresentation = "code_presentation";
   private static final String removeQuotation = "^\"|\"$";
+
 
   /**
    * constructor for the class
@@ -26,13 +26,27 @@ public class CsvProcessor {
    * @param csvLine   the row of csv file
    * @param fieldList the top row of the csv file
    */
-  public Map<String,String> csvToHashMap(String csvLine, String[] fieldList) {
+  public Map<String, String> csvToHashMap(String csvLine, String[] fieldList) {
     String[] recordInfo = csvLine.split(csvSplit, -1);
-    Map<String, String> record= new HashMap<>();
+    Map<String, String> record = new HashMap<>();
     for (int i = 0; i < fieldList.length; i++) {
       record.put(fieldList[i].replaceAll(removeQuotation, ""),
           recordInfo[i].replaceAll(removeQuotation, ""));
     }
+    return record;
+  }
+
+  /**
+   * transform the csv to Hashmap
+   *
+   * @param csvLine   the row of csv file
+   */
+  public Map<String, String> csvToHashMap(String fileName, String csvLine) {
+    String[] recordInfo = csvLine.split(csvSplit, -1);
+    Map<String, String> record = new HashMap<>();
+    record.put(FilePublisher.MODULE_PRESENTATION, fileName);
+    record.put(FilePublisher.DATE, recordInfo[0].replaceAll(removeQuotation, ""));
+    record.put(FilePublisher.TOTAL_CLICK, recordInfo[1].replaceAll(removeQuotation, ""));
     return record;
   }
 
