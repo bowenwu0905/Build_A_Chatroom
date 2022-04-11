@@ -72,8 +72,19 @@ You will see the ouput in output_part2
 
 
 ## part3_indentify_high_activity_days
+How to run: The part3 using the output of part2, which is the days' activity record of courses.
+The program needs three arguments as input, the first is the path of course.csv, which
+is default set as "data". The second set is the output of part2, which is "output_part2".
+And, the third one is threshold, for example, 5000.
 
-
+* Main. It will maintain two blocking queue and passing between consumers and producers. one is store 
+all data, and another one is store data which meets the threshold.
+* CSVprocessor: processing the CSV
+*FilePublisher: It is for generating the text file based on the hashmap. Also, it generating the files' names
+* The producer class. It is for read all files in the output folder of part2, and put into blockingQueue
+* The consumer class. It is for updtaing the blockingQueue. It will keep running until the producer terminates and the buffer is empty
+ 
+You will see the ouput in output_part3
 
 
 

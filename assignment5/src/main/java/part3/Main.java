@@ -8,24 +8,32 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
-
+/**
+ * The main class for implementation. It will maintain a blocking queue and passing between
+ * consumers and a producer.
+ */
 public class Main {
-  private static final int consumerNum = 5;
-  private static final int producerNum = 1;
-  private static final String courseFileName = "courses.csv";
-  private BlockingQueue<Map<String,String>> buffer = new LinkedBlockingQueue<>();
 
-  private BlockingQueue<Map<String, String>> activityDays = new LinkedBlockingQueue<>();
-  private static final String ACTIVITY_THRESHOLD = "activity-threshold";
-
+  /**
+   * The main function, which you can run
+   *
+   * @param args the first arg should be the folder name which you put the data. Here, you can put
+   *             "data"
+   *             the second arg is the output folder of assignment2
+   *             the third arg is the threshold
+   * @throws InterruptedException for any interruption, the exception will be thrown
+   */
   public static void main(String[] args) throws InterruptedException {
-    Main main = new Main();
-    main.run(args);
-  }
+    int consumerNum = 5;
+    int producerNum = 1;
+    String courseFileName = "courses.csv";
+    BlockingQueue<Map<String,String>> buffer = new LinkedBlockingQueue<>();
 
-  public void run(String[] args) throws InterruptedException {
-    String studentFilePath = args[1];
-    String courseFilePath = args[0]+"/"+this.courseFileName;
+    BlockingQueue<Map<String, String>> activityDays = new LinkedBlockingQueue<>();
+    String ACTIVITY_THRESHOLD = "activity-threshold";
+
+    String courseFilePath = args[0]+"/"+ courseFileName;
+    String activityFilePath = args[1];
     int threshold = Integer.parseInt(args[2]);
     FilePublisher publisher = new FilePublisher();
 
@@ -37,16 +45,16 @@ public class Main {
     ExecutorService executor = Executors.newFixedThreadPool(consumerNum);
 
     //Start the producer
-    executor.execute(new Producer(this.buffer, studentFilePath,producerLatch, fileNameSet));
+    executor.execute(new Producer(buffer, activityFilePath,producerLatch, fileNameSet));
 
     //Start the consumer
     for (int i = 0; i < consumerNum; i++) {
-      executor.execute(new Consumer(this.buffer,consumerLatch,producerLatch, this.activityDays, threshold));
+      executor.execute(new Consumer(buffer,consumerLatch,producerLatch, activityDays, threshold));
     }
 
     //Wait for all consumer to complete
     consumerLatch.await();
-    publisher.saveFileToAddress(ACTIVITY_THRESHOLD, this.activityDays);
+    publisher.saveFileToAddress(ACTIVITY_THRESHOLD, activityDays);
     executor.shutdown();
   }
 

@@ -29,6 +29,7 @@ public class CsvProcessor {
    *
    * @param csvLine   the row of csv file
    * @param fieldList the top row of the csv file
+   * @return Map map
    */
   public Map<String, String> csvToHashMap(String csvLine, String[] fieldList) {
     String[] recordInfo = csvLine.split(csvSplit, -1);

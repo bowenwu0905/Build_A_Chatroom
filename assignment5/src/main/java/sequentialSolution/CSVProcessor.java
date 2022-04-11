@@ -17,19 +17,24 @@ import java.util.Objects;
  * @author bowen
  */
 public class CSVProcessor {
-  private final static String courseName = "courses.csv";
-  private final static String studentVle = "studentVle.csv";
+  String courseFilePath;
+  String studentFilePath;
   String[] inputArgs;
   private Map<String, Map<String, Integer>> res;
 
   /**
    *
-   * @param inputArgs, the path taken in as a string
+   * @param courseFilePath, the path of courseFile
+   * @param studentFilePath, the path of studentFile
+   * @param inputArgs, the path that takes in as argument
    */
-  public CSVProcessor(String[] inputArgs) {
+  public CSVProcessor(String courseFilePath, String studentFilePath, String[] inputArgs) {
+    this.courseFilePath = courseFilePath;
+    this.studentFilePath = studentFilePath;
     this.inputArgs = inputArgs;
-    this.res = new HashMap<String, Map<String, Integer>>();
+    this.res = new HashMap<>();
   }
+
 
   /**
    *
@@ -71,18 +76,18 @@ public class CSVProcessor {
    * @throws IOException when certain error happens
    */
   public Map<String, Map<String,Integer>> process() throws CsvValidationException, IOException {
-    readCourse();
-    countCourse();
+    readCourse(courseFilePath);
+    countCourse(studentFilePath);
     return res;
   }
 
   /**
    * read the course file and generate the key of csvMap
+   * @param courseFilePath, the path of courseFile as a String
    * @throws IOException when certain error happens
    * @throws CsvValidationException when the csv file is not valid
    */
-  public void readCourse() throws IOException, CsvValidationException {
-    String courseFilePath = inputArgs[0]+"/"+this.courseName;
+  public void readCourse(String courseFilePath) throws IOException, CsvValidationException {
     FileReader fileReader = new FileReader(absolutePathChange(courseFilePath));
     CSVReader csvReader = new CSVReaderBuilder(fileReader).withSkipLines(1).build();
     String[] nextLine;
@@ -94,11 +99,11 @@ public class CSVProcessor {
 
   /**
    * count the courseFile and generate the key of the csvMap
+   * @param studentFilePath, the path of courseFile as a String
    * @throws IOException when certain error happens
    * @throws CsvValidationException when the csv file is not valid
    */
-  public void countCourse() throws IOException, CsvValidationException {
-    String studentFilePath = inputArgs[0]+"/"+this.studentVle;
+  public void countCourse(String studentFilePath) throws IOException, CsvValidationException {
     FileReader fileReader = new FileReader(absolutePathChange(studentFilePath));
     CSVReader csvReader = new CSVReaderBuilder(fileReader).withSkipLines(1).build();
     String[] nextLine;
@@ -110,6 +115,7 @@ public class CSVProcessor {
     }
   }
 
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -119,13 +125,14 @@ public class CSVProcessor {
       return false;
     }
     CSVProcessor that = (CSVProcessor) o;
-    return Arrays.equals(inputArgs, that.inputArgs) && Objects.equals(res,
-        that.res);
+    return Objects.equals(courseFilePath, that.courseFilePath) && Objects.equals(
+        studentFilePath, that.studentFilePath) && Arrays.equals(inputArgs, that.inputArgs)
+        && Objects.equals(getRes(), that.getRes());
   }
 
   @Override
   public int hashCode() {
-    int result = Objects.hash(res);
+    int result = Objects.hash(courseFilePath, studentFilePath, getRes());
     result = 31 * result + Arrays.hashCode(inputArgs);
     return result;
   }
@@ -133,9 +140,10 @@ public class CSVProcessor {
   @Override
   public String toString() {
     return "CSVProcessor{" +
-        "inputArgs=" + Arrays.toString(inputArgs) +
+        "courseFilePath='" + courseFilePath + '\'' +
+        ", studentFilePath='" + studentFilePath + '\'' +
+        ", inputArgs=" + Arrays.toString(inputArgs) +
         ", res=" + res +
         '}';
   }
-
 }

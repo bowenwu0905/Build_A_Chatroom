@@ -4,7 +4,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * The class for processing the CSV
+ */
 public class CsvProcessor {
 
   public static final String csvSplit = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
@@ -50,7 +52,12 @@ public class CsvProcessor {
     return record;
   }
 
-
+  /**
+   * Generating the absolute file path
+   *
+   * @param path the relative file path
+   * @return the absolute file path
+   */
   public String absolutePathChange(String path) {
     File file = new File(path);
     if (file.isAbsolute()) {
@@ -59,12 +66,6 @@ public class CsvProcessor {
       String filePath = new File("").getAbsolutePath();
       return filePath.concat("/" + path);
     }
-  }
-
-
-  @Override
-  public String toString() {
-    return "CsvProcessor{}";
   }
 
 }
