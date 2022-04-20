@@ -1,10 +1,14 @@
 package protocol;
 
 /**
- * protocol class
+ * message state of protocol
  *
  * @author xiaochong
  */
-public class Protocol {
+public interface Protocol {
+
+  String encode(String message);
+
+  String decode(String message);
 
 }
