@@ -8,17 +8,7 @@ import java.util.Map;
  *
  * @author xiaochong
  */
-public enum ProtocolImp implements Protocol {
-  CONNECT_MESSAGE,
-  CONNECT_RESPONSE,
-  DISCONNECT_MESSAGE,
-  DISCONNECT_RESPONSE,
-  QUERY_USERS,
-  QUERY_RESPONSE,
-  BROADCAST_MESSAGE,
-  DIRECT_MESSAGE,
-  FAILED_MESSAGE,
-  SEND_INSULT;
+public class ProtocolImp implements Protocol {
 
   public final static Map<ProtocolImp,Integer> messageToIdr= new HashMap<>(){{
     put(ProtocolImp.CONNECT_MESSAGE,19);
@@ -36,43 +26,86 @@ public enum ProtocolImp implements Protocol {
 //  2. encoding can be break down to piece it will reaturn a list od string: connectMessange(type,Int,Sting)->list<string>
 // 3.Return type <[8,int],[]
   @Override
-  public String encode(String message) {
-    ProtocolImp messageType = getMessageType(message);
+  public String encode(MessageType messageType, String message) {
     switch (messageType) {
-      case CONNECT_MESSAGE:
-      case QUERY_USERS:
-      case SEND_INSULT:
-      case DIRECT_MESSAGE:
-      case FAILED_MESSAGE:
-      case QUERY_RESPONSE:
-      case CONNECT_RESPONSE:
-      case BROADCAST_MESSAGE:
-      case DISCONNECT_MESSAGE:
-      case DISCONNECT_RESPONSE:
+      case CONNECT_MESSAGE -> {
+
+      }
+
+      case QUERY_USERS -> {
+
+      }
+
+      case SEND_INSULT -> {
+
+      }
+      case DIRECT_MESSAGE -> {
+
+      }
+      case FAILED_MESSAGE -> {
+
+      }
+      case QUERY_RESPONSE -> {
+
+      }
+      case CONNECT_RESPONSE -> {
+
+      }
+      case BROADCAST_MESSAGE -> {
+
+      }
+      case DISCONNECT_MESSAGE -> {
+
+      }
+      case DISCONNECT_RESPONSE -> {
+
+      }
     }
     return null;
   }
 
   @Override
-  public String decode(String message) {
-    ProtocolImp messageType = getMessageType(message);
+  public String decode(MessageType messageType, String message) {
     switch (messageType) {
-      case CONNECT_MESSAGE:
-      case QUERY_USERS:
-      case SEND_INSULT:
-      case DIRECT_MESSAGE:
-      case FAILED_MESSAGE:
-      case QUERY_RESPONSE:
-      case CONNECT_RESPONSE:
-      case BROADCAST_MESSAGE:
-      case DISCONNECT_MESSAGE:
-      case DISCONNECT_RESPONSE:
+      case CONNECT_MESSAGE -> {
+
+      }
+
+      case QUERY_USERS -> {
+
+      }
+
+      case SEND_INSULT -> {
+
+      }
+      case DIRECT_MESSAGE -> {
+
+      }
+      case FAILED_MESSAGE -> {
+
+      }
+      case QUERY_RESPONSE -> {
+
+      }
+      case CONNECT_RESPONSE -> {
+
+      }
+      case BROADCAST_MESSAGE -> {
+
+      }
+      case DISCONNECT_MESSAGE -> {
+
+      }
+      case DISCONNECT_RESPONSE -> {
+
+      }
     }
     return null;
   }
 
-  private ProtocolImp getMessageType(String message) {
+  @Override
+  public MessageType getMessageType(String message) {
 
-    return ProtocolImp.BROADCAST_MESSAGE;
+    return MessageType.CONNECT_RESPONSE;
   }
 }
