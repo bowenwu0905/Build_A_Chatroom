@@ -80,19 +80,29 @@ public class ProtocolImp implements Protocol {
   }
   };
 
+  /**
+   * @param message, the message take in as String
+   * @return the length of String as byte array
+   */
+  public byte[] lengthToByteArray(String message) throws IOException {
+    int size = message.length();
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    DataOutputStream dos = new DataOutputStream(bos);
+    dos.writeInt(size);
+    dos.flush();
+    return bos.toByteArray();
+  };
+
   @Override
   public List<byte[]> encode(MessageType messageType, List<String> message) throws IOException {
     switch (messageType) {
       case CONNECT_MESSAGE -> {
         // only pass in userName
         List<byte[]> encoder = new ArrayList<>();
-        int usernameLength = message.get(0).length();
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        DataOutputStream dos = new DataOutputStream(bos);
-        dos.writeInt(usernameLength);
-        dos.flush();
-        encoder.add(bos.toByteArray());
-        encoder.add(message.get(0).getBytes());
+        String userName = message.get(0);
+        byte[] userNameSize = lengthToByteArray(userName);
+        encoder.add(userNameSize);
+        encoder.add(userName.getBytes());
         return encoder;
       }
 
@@ -113,6 +123,13 @@ public class ProtocolImp implements Protocol {
 
       }
       case CONNECT_RESPONSE -> {
+        // pass in success, message as String
+        // convert success: String -> Boolean -> byte[]
+        // convert message: messageSize -> byte[], String -> byte[]
+        List<byte[]> encoder = new ArrayList<>();
+        Boolean success = Boolean.parseBoolean(message.get(0));
+        byte[] vOut = new byte[]{(byte) (success?1:0)};
+        
 
       }
       case BROADCAST_MESSAGE -> {
