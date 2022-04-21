@@ -1,5 +1,6 @@
 package protocol;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
  */
 public interface Protocol {
 
-  List<byte[]> encode(MessageType messageType, List<String> message);
+  List<byte[]> encode(MessageType messageType, List<String> message) throws IOException;
 
   List<String> decode(List<byte[]> message);
 

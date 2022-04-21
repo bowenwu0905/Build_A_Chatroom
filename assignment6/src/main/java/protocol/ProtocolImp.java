@@ -1,5 +1,12 @@
 package protocol;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,10 +81,19 @@ public class ProtocolImp implements Protocol {
   };
 
   @Override
-  public List<byte[]> encode(MessageType messageType, List<String> message) {
+  public List<byte[]> encode(MessageType messageType, List<String> message) throws IOException {
     switch (messageType) {
       case CONNECT_MESSAGE -> {
-
+        // only pass in userName
+        List<byte[]> encoder = new ArrayList<>();
+        int usernameLength = message.get(0).length();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(bos);
+        dos.writeInt(usernameLength);
+        dos.flush();
+        encoder.add(bos.toByteArray());
+        encoder.add(message.get(0).getBytes());
+        return encoder;
       }
 
       case QUERY_USERS -> {
@@ -157,6 +173,9 @@ public class ProtocolImp implements Protocol {
     // byte - > number
     // number -> messageType
 
-    return MessageType.CONNECT_RESPONSE;
+    int number = ByteBuffer.wrap(message.get(0)).getInt();
+    MessageType messageType = idrToMessage.get(number);
+
+    return messageType;
   }
 }
