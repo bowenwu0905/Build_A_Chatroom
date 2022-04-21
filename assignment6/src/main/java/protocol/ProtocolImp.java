@@ -74,7 +74,7 @@ public class ProtocolImp implements Protocol {
   };
 
   @Override
-  public List<Byte[]> encode(MessageType messageType, List<String> message) {
+  public List<byte[]> encode(MessageType messageType, List<String> message) {
     switch (messageType) {
       case CONNECT_MESSAGE -> {
 
@@ -113,7 +113,7 @@ public class ProtocolImp implements Protocol {
   }
 
   @Override
-  public List<String> decode(List<Byte[]> message) {
+  public List<String> decode(List<byte[]> message) {
     MessageType messageType = getMessageType(message);
     switch (messageType) {
       case CONNECT_MESSAGE -> {
@@ -153,7 +153,7 @@ public class ProtocolImp implements Protocol {
   }
 
   @Override
-  public MessageType getMessageType(List<Byte[]> message) {
+  public MessageType getMessageType(List<byte[]> message) {
     // byte - > number
     // number -> messageType
 

@@ -1,5 +1,7 @@
 package protocol;
 
+import java.util.List;
+
 /**
  * message state of protocol
  *
@@ -7,10 +9,10 @@ package protocol;
  */
 public interface Protocol {
 
-  String encode(MessageType messageType, String message);
+  List<byte[]> encode(MessageType messageType, List<String> message);
 
-  String decode(MessageType messageType, String message);
+  List<String> decode(List<byte[]> message);
 
-  MessageType getMessageType(String message);
+  MessageType getMessageType(List<byte[]> message);
 
 }
