@@ -5,21 +5,10 @@ package protocol;
  *
  * @author xiaochong
  */
-public enum ProtocolImp implements Protocol {
-  CONNECT_MESSAGE,
-  CONNECT_RESPONSE,
-  DISCONNECT_MESSAGE,
-  DISCONNECT_RESPONSE,
-  QUERY_USERS,
-  QUERY_RESPONSE,
-  BROADCAST_MESSAGE,
-  DIRECT_MESSAGE,
-  FAILED_MESSAGE,
-  SEND_INSULT;
+public class ProtocolImp implements Protocol {
 
   @Override
-  public String encode(String message) {
-    ProtocolImp messageType = getMessageType(message);
+  public String encode(MessageType messageType, String message) {
     switch (messageType) {
       case CONNECT_MESSAGE:
       case QUERY_USERS:
@@ -36,8 +25,7 @@ public enum ProtocolImp implements Protocol {
   }
 
   @Override
-  public String decode(String message) {
-    ProtocolImp messageType = getMessageType(message);
+  public String decode(MessageType messageType, String message) {
     switch (messageType) {
       case CONNECT_MESSAGE:
       case QUERY_USERS:
@@ -53,8 +41,9 @@ public enum ProtocolImp implements Protocol {
     return null;
   }
 
-  private ProtocolImp getMessageType(String message) {
+  @Override
+  public MessageType getMessageType(String message) {
 
-    return ProtocolImp.BROADCAST_MESSAGE;
+    return MessageType.CONNECT_RESPONSE;
   }
 }

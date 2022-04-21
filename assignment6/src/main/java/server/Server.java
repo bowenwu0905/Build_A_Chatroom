@@ -21,7 +21,7 @@ public class Server {
   private ServerSocket serverSocket;
   private Semaphore semaphore;
   private Protocol protocol;
-  private ConcurrentHashMap<Integer, Socket> socketMap;
+  private ConcurrentHashMap<String, Socket> socketMap;
 
   public void start(int port) throws IOException {
     serverSocket = new ServerSocket(port);

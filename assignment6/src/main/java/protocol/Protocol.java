@@ -7,8 +7,10 @@ package protocol;
  */
 public interface Protocol {
 
-  String encode(String message);
+  String encode(MessageType messageType, String message);
 
-  String decode(String message);
+  String decode(MessageType messageType, String message);
+
+  MessageType getMessageType(String message);
 
 }
