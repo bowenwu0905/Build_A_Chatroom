@@ -34,7 +34,7 @@ public enum ProtocolImp implements Protocol {
 
 //TODO: 1. add messange to ID and ID to messange map
 //  2. encoding can be break down to piece it will reaturn a list od string: connectMessange(type,Int,Sting)->list<string>
-// 3.
+// 3.Return type <[8,int],[]
   @Override
   public String encode(String message) {
     ProtocolImp messageType = getMessageType(message);
