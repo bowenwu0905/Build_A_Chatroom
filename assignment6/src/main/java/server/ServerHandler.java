@@ -1,5 +1,6 @@
 package server;
 
+import com.sun.source.tree.Scope;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,35 +27,56 @@ public class ServerHandler implements Runnable {
   public ServerHandler(Semaphore semaphore, ServerSocket serverSocket) {
     this.semaphore = semaphore;
     this.serverSocket = serverSocket;
+    protocol = new ProtocolImp();
   }
 
   @Override
   public void run() {
-    try {
-      this.semaphore.acquire();
-      Socket socket  = this.serverSocket.accept();
-      socketMap.put(, socket);
-      BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-      String line;
-      // !line.equals(logoff)
-
-      while ((line = in.readLine()) != null) {
-        if (line.equals(""))
-          break;
-        protocol = new ProtocolImp();
+    while (true) {
+      try {
+        this.semaphore.acquire();
+        Socket socket = this.serverSocket.accept();
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        String line;
+        // !line.equals(logoff)
+        line = in.readLine();
         MessageType type = protocol.getMessageType(line);
-        protocol.decode(type, line);
+        switch (type) {
+          case BROADCAST_MESSAGE -> {
+          }
+          case SEND_INSULT -> {
+          }
+          case CONNECT_MESSAGE -> {
 
-      }
-      in.close();
-      socket.close();
-      socketMap.remove();
-      semaphore.release();
+            socketMap.put(protocol.decode(type, line), socket);
+            // success
+            String reponse = "" + socketMap.size();
+            // fail
+
+
+            out.write(protocol.encode(MessageType.CONNECT_RESPONSE, reponse));
+          }
+
+          case DISCONNECT_MESSAGE -> {
+            String username = protocol.decode(type, line);
+            Socket socket1 = socketMap.get(username);
+            socket1.close();
+            socketMap.remove(username);
+          }
+        }
+
+        if (socketMap.size() == 0)
+          break;
+
+        in.close();
+
+        semaphore.release();
       } catch (IOException e) {
         e.printStackTrace();
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
+    }
   }
 }
