@@ -11,7 +11,6 @@ public class ProtocolImp implements Protocol {
   public String encode(MessageType messageType, String message) {
     switch (messageType) {
       case CONNECT_MESSAGE -> {
-
       }
 
       case QUERY_USERS -> {

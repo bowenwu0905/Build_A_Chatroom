@@ -1,5 +1,7 @@
 package server;
 
+import assignment4.Grammar;
+import assignment4.JsonReader;
 import com.sun.source.tree.Scope;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,11 +25,15 @@ public class ServerHandler implements Runnable {
   private ServerSocket serverSocket;
   private Protocol protocol;
   private ConcurrentHashMap<String, Socket> socketMap;
+  private Grammar grammar;
+  private JsonReader jsonReader;
 
   public ServerHandler(Semaphore semaphore, ServerSocket serverSocket) {
     this.semaphore = semaphore;
     this.serverSocket = serverSocket;
     protocol = new ProtocolImp();
+    grammar = new Grammar();
+    jsonReader = new JsonReader();
   }
 
   @Override
@@ -44,10 +50,10 @@ public class ServerHandler implements Runnable {
         MessageType type = protocol.getMessageType(line);
         switch (type) {
           case BROADCAST_MESSAGE -> {
-          }
-          case SEND_INSULT -> {
-          }
-          case CONNECT_MESSAGE -> {
+          } case SEND_INSULT -> {
+            String insultMessage = grammar.textGenerator("start", jsonReader.jsonProcess());
+
+          } case CONNECT_MESSAGE -> {
 
             socketMap.put(protocol.decode(type, line), socket);
             // success
@@ -56,9 +62,13 @@ public class ServerHandler implements Runnable {
 
 
             out.write(protocol.encode(MessageType.CONNECT_RESPONSE, reponse));
-          }
+          } case QUERY_USERS -> {
+            String username = protocol.decode(type, line);
+            Socket socket1 = socketMap.get(username);
 
-          case DISCONNECT_MESSAGE -> {
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            out.write(protocol.encode(MessageType.QUERY_RESPONSE, username));
+          } case DISCONNECT_MESSAGE -> {
             String username = protocol.decode(type, line);
             Socket socket1 = socketMap.get(username);
             socket1.close();
