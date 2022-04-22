@@ -81,41 +81,58 @@ public class ProtocolImp implements Protocol {
   }
   };
 
+
   /**
-   * @param message, the message take in as String
-   * @return the length of String as byte array
+   *
+   * @param message, the message passed in as String
+   * @return List<byte[]> generated, the first element is the length of message converted to byteArray,
+   * the second element is the message itself converted to byteArray
+   * @throws IOException when certain error happens
    */
-  public byte[] lengthToByteArray(String message) throws IOException {
-    byte[] res = new byte[1];
-    Integer size = message.length();
-    res[0] = size.byteValue();
+  public List<byte[]> genByteArray(String message) throws IOException {
+    List<byte[]> res = new ArrayList<>();
+    Integer msgSize = message.length();
+    byte[] size = new byte[1];
+    size[0] = msgSize.byteValue();
+    res.add(size);
+    res.add(message.getBytes(StandardCharsets.UTF_8));
     return res;
-  };
+  }
 
   @Override
   public List<byte[]> encode(MessageType messageType, List<String> message) throws IOException {
     switch (messageType) {
-      case CONNECT_MESSAGE -> {
+      case CONNECT_MESSAGE, QUERY_USERS, FAILED_MESSAGE, DISCONNECT_MESSAGE -> {
         // only pass in userName (one element)
-        List<byte[]> encoder = new ArrayList<>();
         String userName = message.get(0);
-        byte[] userNameSize = lengthToByteArray(userName);
-        encoder.add(userNameSize);
-        encoder.add(userName.getBytes(StandardCharsets.UTF_8));
+        List<byte[]> encoder = genByteArray(userName);
         return encoder;
       }
 
-      case QUERY_USERS -> {
 
-      }
-
-      case SEND_INSULT -> {
+      case SEND_INSULT, BROADCAST_MESSAGE -> {
+        // pass in sender userName, recipient userName
+        String senderUserName = message.get(0);
+        String recipientUserName = message.get(1);
+        List<byte[]> sender = genByteArray(senderUserName);
+        List<byte[]> recipient = genByteArray(recipientUserName);
+        sender.addAll(recipient);
+        return sender;
 
       }
       case DIRECT_MESSAGE -> {
+        // pass in sender userName, recipient userName and message as String (three elements)
+        // return byte array with each element's length and itself converted to byte[] (six elements in total)
 
-      }
-      case FAILED_MESSAGE -> {
+        String senderUserName = message.get(0);
+        String recipientUserName = message.get(1);
+        String msg = message.get(1);
+        List<byte[]> sender = genByteArray(senderUserName);
+        List<byte[]> recipient = genByteArray(recipientUserName);
+        List<byte[]> msgByteArray = genByteArray(msg);
+        sender.addAll(recipient);
+        sender.addAll(msgByteArray);
+        return sender;
 
       }
       case QUERY_RESPONSE -> {
@@ -127,32 +144,15 @@ public class ProtocolImp implements Protocol {
         // convert message: messageSize -> byte[], String -> byte[]
         List<byte[]> encoder = new ArrayList<>();
         Boolean success = Boolean.parseBoolean(message.get(0));
-        String msg = message.get(1);
         byte[] vOut = new byte[]{(byte) (success?1:0)};
-        byte[] msgSize = lengthToByteArray(msg);
-        encoder.add(vOut);
-        encoder.add(msgSize);
-        encoder.add(msg.getBytes(StandardCharsets.UTF_8));
-        return encoder;
-
-      }
-      case BROADCAST_MESSAGE -> {
-        // pass in sender userName, message as String (two elements)
-        List<byte[]> encoder = new ArrayList<>();
-        String senderName = message.get(0);
         String msg = message.get(1);
-        byte[] senderNameSize = lengthToByteArray(senderName);
-        byte[] msgSize = lengthToByteArray(msg);
-        encoder.add(senderNameSize);
-        encoder.add(senderName.getBytes(StandardCharsets.UTF_8));
-        encoder.add(msgSize);
-        encoder.add(msg.getBytes(StandardCharsets.UTF_8));
+        List<byte[]> msgByteArray = genByteArray(msg);
+        encoder.add(vOut);
+        encoder.addAll(msgByteArray);
         return encoder;
-        
-      }
-      case DISCONNECT_MESSAGE -> {
 
       }
+
       case DISCONNECT_RESPONSE -> {
 
       }
