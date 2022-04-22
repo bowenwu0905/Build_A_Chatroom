@@ -136,6 +136,18 @@ public class ProtocolImp implements Protocol {
 
       }
       case QUERY_RESPONSE -> {
+        // take in all names of users (only name)
+        List<byte[]> encoder = new ArrayList<>();
+        Integer numberOfUsers = message.size();
+        byte[] number = new byte[1];
+        number[1] = numberOfUsers.byteValue();
+        encoder.add(number);
+        for(int i = 0; i < message.size(); i ++){
+          List<byte[]> nameToByteArray = genByteArray(message.get(i));
+          encoder.addAll(nameToByteArray);
+        }
+        return encoder;
+
 
       }
       case CONNECT_RESPONSE -> {
