@@ -56,6 +56,8 @@ public class ProtocolImp implements Protocol {
    */
   public final static int SEND_INSULT = 27;
 
+  public final static String emptyString = " ";
+
   public final static Map<MessageType,Integer> messageToIdr= new HashMap<>(){{
     put(MessageType.CONNECT_MESSAGE,CONNECT_MESSAGE);
     put(MessageType.CONNECT_RESPONSE,CONNECT_RESPONSE);
@@ -82,31 +84,24 @@ public class ProtocolImp implements Protocol {
   };
 
 
-  /**
-   *
-   * @param message, the message passed in as String
-   * @return List<byte[]> generated, the first element is the length of message converted to byteArray,
-   * the second element is the message itself converted to byteArray
-   * @throws IOException when certain error happens
-   */
-  public List<byte[]> genByteArray(String message) throws IOException {
-    List<byte[]> res = new ArrayList<>();
-    Integer msgSize = message.length();
-    byte[] size = new byte[1];
-    size[0] = msgSize.byteValue();
-    res.add(size);
-    res.add(message.getBytes(StandardCharsets.UTF_8));
-    return res;
+  public byte[] convertTobytes(String msg){
+    return msg.getBytes(StandardCharsets.UTF_8);
   }
 
   @Override
   public void encode(MessageType messageType, List<String> message, DataOutputStream dataOutputStream) throws IOException {
     switch (messageType) {
-      case CONNECT_MESSAGE, QUERY_USERS, FAILED_MESSAGE, DISCONNECT_MESSAGE -> {
+      case CONNECT_MESSAGE -> {
         // only pass in userName (one element)
+        int type = messageToIdr.get(MessageType.CONNECT_MESSAGE);
         String userName = message.get(0);
-        List<byte[]> encoder = genByteArray(userName);
-        return encoder;
+        int userNameLength = userName.length();
+        byte[] toBytes = convertTobytes(userName);
+        dataOutputStream.writeInt(type);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeInt(userNameLength);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.write(toBytes);
       }
 
 
