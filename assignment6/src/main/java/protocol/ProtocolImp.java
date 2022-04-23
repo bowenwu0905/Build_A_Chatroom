@@ -100,7 +100,7 @@ public class ProtocolImp implements Protocol {
   }
 
   @Override
-  public List<byte[]> encode(MessageType messageType, List<String> message) throws IOException {
+  public void encode(MessageType messageType, List<String> message, DataOutputStream dataOutputStream) throws IOException {
     switch (messageType) {
       case CONNECT_MESSAGE, QUERY_USERS, FAILED_MESSAGE, DISCONNECT_MESSAGE -> {
         // only pass in userName (one element)
@@ -150,7 +150,7 @@ public class ProtocolImp implements Protocol {
 
 
       }
-      case CONNECT_RESPONSE -> {
+      case CONNECT_RESPONSE, DISCONNECT_RESPONSE -> {
         // pass in success, message as String (two elements)
         // convert success: String -> Boolean -> byte[]
         // convert message: messageSize -> byte[], String -> byte[]
@@ -162,10 +162,6 @@ public class ProtocolImp implements Protocol {
         encoder.add(vOut);
         encoder.addAll(msgByteArray);
         return encoder;
-
-      }
-
-      case DISCONNECT_RESPONSE -> {
 
       }
     }
