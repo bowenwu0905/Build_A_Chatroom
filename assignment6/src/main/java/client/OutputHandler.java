@@ -20,31 +20,16 @@ public class OutputHandler {
       throws IOException {
     switch(messageType){
 
-      case CONNECT_RESPONSE -> {
-        fromServer.readChar();
-        Boolean successStatus = fromServer.readBoolean();
-        fromServer.readChar();
-        int messageSize = fromServer.readInt();
-        fromServer.readChar();
-        byte[] message = new byte[messageSize];
-        fromServer.read(message);
-        String backMessage = new String(message, StandardCharsets.UTF_8);
-        if (successStatus) {
-          PrintLogUtil.successMessage(userName,backMessage);
-          break;
-        } else {
-          PrintLogUtil.errorMessage(userName,backMessage);
-        }
-
-      }
-
-      case DISCONNECT_RESPONSE -> {
-
-
-
-      }
-
       case QUERY_RESPONSE -> {
+        fromServer.readChar();
+        int numberOfUsers = fromServer.readInt();
+        if(numberOfUsers>0){
+          fromServer.readChar();
+          for( int i =0 ; i<numberOfUsers;i++){
+
+          }
+
+        }
 
       }
       case DIRECT_MESSAGE -> {
@@ -63,5 +48,24 @@ public class OutputHandler {
 
 
   }
+
+  public boolean connectStatusResponseHandle() throws IOException {
+    fromServer.readChar();
+    Boolean successStatus = fromServer.readBoolean();
+    fromServer.readChar();
+    int messageSize = fromServer.readInt();
+    fromServer.readChar();
+    byte[] message = new byte[messageSize];
+    fromServer.read(message);
+    String backMessage = new String(message, StandardCharsets.UTF_8);
+    if (successStatus) {
+      PrintLogUtil.successMessage(userName,backMessage);
+      return successStatus;
+    } else {
+      PrintLogUtil.errorMessage(userName,backMessage);
+      return successStatus;
+    }
+  }
+
 
 }

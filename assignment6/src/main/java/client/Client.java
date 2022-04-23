@@ -18,7 +18,7 @@ import protocol.Protocol;
  */
 public class Client {
   private String userName;
-  private Protocol protocal;
+  private Protocol protocol;
 
   private InputHandler inputHandler;
   private OutputHandler outputHandler;
@@ -65,15 +65,13 @@ public class Client {
 
 
         String input = "";
-        System.out.println("Enter username to login as <username>");
+        System.out.println("Enter username to login as <username> \n");
         input = sc.nextLine();
 
         //user didn't input anything
         while (input.trim().equals("")){
-          System.out.println("Input is empty, please ENTER an username as <username>");
+          System.out.println("Input is empty, please ENTER an username as <username> \n");
           input = sc.nextLine();
-          //TODO: add protocal signature for CONNECT_MESSAGE
-
         }
         System.out.println("Hi," + input.trim());
         //This username is case seneitive
@@ -83,29 +81,37 @@ public class Client {
         DataInputStream fromServer = new DataInputStream(client.getInputStream());
         this.outputHandler = new OutputHandler(this.userName,fromServer);
 
-        while(true) {
+        boolean connectStatus = false;
+        while(!connectStatus) {
           this.inputHandler.connectServer();
           client.setSoTimeout(3000);
-          int messageType = fromServer.readInt();
-          outputHandler.outPuthandle(protocal.idrToMessage.get(messageType));
-
+          fromServer.readInt();
+          connectStatus = outputHandler.connectStatusResponseHandle();
         }
 
 
-        //Incloude success or not
-//        if (serverMessage.contains("SUCCESS")) LOGGER.info("Server " + serverMessage);
-//        else LOGGER.severe("Server " + serverMessage);
+
         while(true){
-
           String line = "";
-          System.out.println("Enter your command");
+          System.out.println("Enter your command \n");
           line = sc.nextLine();
-          inputPareser.checkInput(line);
-
+          while (input.trim().equals("")){
+            System.out.println("Input is empty, please ENTER your command");
+            input = sc.nextLine();
+          }
+          this.inputHandler.inputParse(line.trim());
+          client.setSoTimeout(3000);
+          int messageType = fromServer.readInt();
+          if(this.protocol.idrToMessage.get(messageType) == MessageType.DISCONNECT_MESSAGE){
+            Boolean isDisconnect = outputHandler.connectStatusResponseHandle();
+            if(isDisconnect){
+              this.setLogOff(isDisconnect);
+              break;
+            }
+          }else{
+            this.outputHandler.outPuthandle(this.protocol.idrToMessage.get(messageType));
+          }
         }
-
-
-
 
 
       }catch(SocketTimeoutException e){

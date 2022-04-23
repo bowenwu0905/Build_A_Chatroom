@@ -6,7 +6,11 @@ public class PrintLogUtil {
   }
 
   public static void successMessage(String userName, String backMessage){
-    System.out.println("Success: user: "+userName+ " message:"+backMessage);
+    System.out.println("Success: user: "+userName+ " message:"+backMessage+"\n");
+  }
+
+  public static void commandMessage(){
+    System.out.println("Enter your command \n");
   }
 
 }
