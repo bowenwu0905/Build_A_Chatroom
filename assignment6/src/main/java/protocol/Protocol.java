@@ -1,5 +1,10 @@
 package protocol;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
+
 /**
  * message state of protocol
  *
@@ -7,10 +12,10 @@ package protocol;
  */
 public interface Protocol {
 
-  String encode(MessageType messageType, String message);
+  void encode(MessageType messageType, List<String> message, DataOutputStream dataOutputStream) throws IOException;
 
-  String decode(MessageType messageType, String message);
+  List<String> decode(List<byte[]> message);
 
-  MessageType getMessageType(String message);
+  MessageType getMessageType(List<byte[]> message);
 
 }
