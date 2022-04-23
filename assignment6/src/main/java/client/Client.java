@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import protocol.MessageType;
@@ -17,11 +18,14 @@ import protocol.Protocol;
  */
 public class Client {
   private String userName;
+  private Protocol protocal;
 
-  private InputHandler inputPareser;
+  private InputHandler inputHandler;
+  private OutputHandler outputHandler;
   private boolean logOff = false;
-  Scanner sc = null;
-  Socket client = null;
+  private Scanner sc = null;
+  private Socket client = null;
+
 
   private void start(String[] args) throws IOException {
     if (args.length<2)  {
@@ -40,9 +44,6 @@ public class Client {
       System.err.println("Could not connect to "+hostname+":"+port+ ", has it started?");
       System.exit(1);
     }
-
-    String serverMessage;
-    int i = 0;
 
     while (!this.logOff) {
       try {
@@ -75,12 +76,22 @@ public class Client {
 
         }
         System.out.println("Hi," + input.trim());
+        //This username is case seneitive
+        this.setUserName(input.trim());
+        this.inputHandler = new InputHandler(this.userName,toServer);
 
-        //Send to server
-        toServer.writeUTF(input.trim());
-        client.setSoTimeout(3000);
         DataInputStream fromServer = new DataInputStream(client.getInputStream());
-        serverMessage = fromServer.readUTF();
+        this.outputHandler = new OutputHandler(this.userName,fromServer);
+
+        while(true) {
+          this.inputHandler.connectServer();
+          client.setSoTimeout(3000);
+          int messageType = fromServer.readInt();
+          outputHandler.outPuthandle(protocal.idrToMessage.get(messageType));
+
+        }
+
+
         //Incloude success or not
 //        if (serverMessage.contains("SUCCESS")) LOGGER.info("Server " + serverMessage);
 //        else LOGGER.severe("Server " + serverMessage);
@@ -94,32 +105,6 @@ public class Client {
         }
 
 
-
-        switch(state){
-//          case MessageType.CONNECT_RESPONSE -> {
-//
-//          }
-          case MessageType.DISCONNECT_RESPONSE -> {
-
-
-
-          }
-          case MessageType.QUERY_RESPONSE -> {
-
-          }
-          case MessageType.DIRECT_MESSAGE -> {
-
-          }
-          case MessageType.BROADCAST_MESSAGE -> {
-
-          }
-          case MessageType.FAILED_MESSAGE -> {
-
-          }
-          case MessageType.SEND_INSULT -> {
-
-          }
-        }
 
 
 
@@ -143,5 +128,13 @@ public class Client {
 
   public void setLogOff(boolean logOff) {
     this.logOff = logOff;
+  }
+
+  public String getUserName() {
+    return userName;
+  }
+
+  public void setUserName(String userName) {
+    this.userName = userName;
   }
 }

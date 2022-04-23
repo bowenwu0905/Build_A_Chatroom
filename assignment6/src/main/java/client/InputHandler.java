@@ -1,12 +1,18 @@
 package client;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import protocol.MessageType;
+import protocol.Protocol;
+import protocol.ProtocolImp;
 import util.Command;
 
 public class InputHandler {
   private String userName;
   private DataOutputStream toServer;
+  private Protocol protocal;
   private final static int FIRST_CHARACTER = 0;
   private final static int SECOND_CHARACTER = 1;
 
@@ -19,22 +25,23 @@ public class InputHandler {
   public InputHandler(String userName,DataOutputStream toServer){
     this.toServer = toServer;
     this.userName = userName;
+    this.protocal = new ProtocolImp();
   }
 
   //TODO: check the Input cannot be Empty.
-  public void inputParse(String Input){
+  public void inputParse(String Input) throws IOException {
     String lowerCaseInput = Input.toLowerCase();
     String firstWord = lowerCaseInput.split(SPACE,DIVID_INTO_PARTS)[FIRST_PART_INPUT_INDEX];
     //logOff
     if(lowerCaseInput.equals(Command.LOG_OFF)){
       //username
-
+      protocal.encode(MessageType.DISCONNECT_MESSAGE, Arrays.asList(userName), toServer);
 
     }
     //who
     else if (lowerCaseInput.equals(Command.WHO)) {
       //username
-
+    protocal.encode(MessageType.QUERY_USERS,Arrays.asList(userName),toServer);
     }
     else if(lowerCaseInput.equals(Command.HELP)){
       System.out.println(Command.HELP_MENU);
@@ -46,6 +53,7 @@ public class InputHandler {
       //Message
       String receiverName = firstWord.substring(SECOND_CHARACTER);
       String text = Input.split(SPACE,DIVID_INTO_PARTS)[SECOND_PART_INPUT_INDEX];
+      protocal.encode(MessageType.DIRECT_MESSAGE,Arrays.asList(userName,receiverName,text),toServer);
 
     }
     //@insult
@@ -55,14 +63,19 @@ public class InputHandler {
       //Message
       String receiverName = firstWord.substring(SECOND_CHARACTER);
       String text = Input.split(SPACE,DIVID_INTO_PARTS)[SECOND_PART_INPUT_INDEX];
+      protocal.encode(MessageType.SEND_INSULT,Arrays.asList(userName,receiverName),toServer);
     }
     //@all
     else{
       //userName
-      //receiverName
       //Message
-
+      String text = Input.split(SPACE,DIVID_INTO_PARTS)[SECOND_PART_INPUT_INDEX];
+      protocal.encode(MessageType.BROADCAST_MESSAGE,Arrays.asList(userName,text),toServer);
     }
+  }
+
+  public void connectServer() throws IOException {
+    protocal.encode(MessageType.CONNECT_MESSAGE,Arrays.asList(userName),toServer);
   }
 
 
