@@ -22,7 +22,7 @@ public class ProtocolImp implements Protocol {
   /**
    * The constant emptyString.
    */
-  public final static String emptyString = " ";
+  public final static char space = ' ';
 
   /**
    *
@@ -43,9 +43,9 @@ public class ProtocolImp implements Protocol {
         int userNameLength = userName.length();
         byte[] toBytes = convertStringTobytes(userName);
         dataOutputStream.writeInt(type);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.writeInt(userNameLength);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.write(toBytes);
       }
 
@@ -57,11 +57,11 @@ public class ProtocolImp implements Protocol {
         int msgLength = msg.length();
         byte[] toBytes = convertStringTobytes(msg);
         dataOutputStream.writeInt(type);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.writeBoolean(Boolean.parseBoolean(success));
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.writeInt(msgLength);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.write(toBytes);
       }
 
@@ -72,9 +72,9 @@ public class ProtocolImp implements Protocol {
         int userNameLength = userName.length();
         byte[] toBytes = convertStringTobytes(userName);
         dataOutputStream.writeInt(type);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.writeInt(userNameLength);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.write(toBytes);
       }
 
@@ -85,11 +85,11 @@ public class ProtocolImp implements Protocol {
         int msgLength = msg.length();
         byte[] toBytes = convertStringTobytes(msg);
         dataOutputStream.writeInt(type);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.writeBoolean(Boolean.parseBoolean(success));
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.writeInt(msgLength);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.write(toBytes);
       }
 
@@ -100,9 +100,9 @@ public class ProtocolImp implements Protocol {
         int userNameLength = userName.length();
         byte[] toBytes = convertStringTobytes(userName);
         dataOutputStream.writeInt(type);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.writeInt(userNameLength);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.write(toBytes);
       }
 
@@ -111,15 +111,15 @@ public class ProtocolImp implements Protocol {
         int type = messageToIdr.get(MessageType.QUERY_RESPONSE);
         int userNumber = message.size();
         dataOutputStream.writeInt(type);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.writeInt(userNumber);
         for(int i = 0; i < userNumber; i++){
-          dataOutputStream.writeChars(emptyString);
+          dataOutputStream.writeChar(space);
           String userName = message.get(i);
           byte[] toBytes = convertStringTobytes(userName);
           int userNameLength = userName.length();
           dataOutputStream.writeInt(userNameLength);
-          dataOutputStream.writeChars(emptyString);
+          dataOutputStream.writeChar(space);
           dataOutputStream.write(toBytes);
         }
       }
@@ -135,13 +135,13 @@ public class ProtocolImp implements Protocol {
         byte[] msgToBytes = convertStringTobytes(msg);
         int msgLength = msg.length();
         dataOutputStream.writeInt(type);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.writeInt(userNameLength);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.write(nameToBytes);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.writeInt(msgLength);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.write(msgToBytes);
 
       }
@@ -158,17 +158,17 @@ public class ProtocolImp implements Protocol {
         int msgLength = msg.length();
         byte[] msgToBytes = convertStringTobytes(msg);
         dataOutputStream.writeInt(type);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.writeInt(senderLength);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.write(senderToBytes);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.writeInt(recipientLength);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.write(recipientToBytes);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.writeInt(msgLength);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.write(msgToBytes);
 
       }
@@ -178,9 +178,9 @@ public class ProtocolImp implements Protocol {
         int msgLength = msg.length();
         byte[] toByte = convertStringTobytes(msg);
         dataOutputStream.writeInt(type);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.writeInt(msgLength);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.write(toByte);
 
       }
@@ -193,13 +193,13 @@ public class ProtocolImp implements Protocol {
         int recipientLength = recipientName.length();
         byte[] recipientToByte = convertStringTobytes(recipientName);
         dataOutputStream.writeInt(type);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.writeInt(senderLength);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.write(senderToByte);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.writeInt(recipientLength);
-        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeChar(space);
         dataOutputStream.write(recipientToByte);
       }
     }
