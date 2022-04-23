@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import protocol.MessageType;
 import protocol.Protocol;
 
 /**
@@ -16,8 +17,8 @@ import protocol.Protocol;
  */
 public class Client {
   private String userName;
-  private Protocol protocal;
-  private InputParser inputPareser;
+
+  private InputHandler inputPareser;
   private boolean logOff = false;
   Scanner sc = null;
   Socket client = null;
@@ -80,6 +81,7 @@ public class Client {
         client.setSoTimeout(3000);
         DataInputStream fromServer = new DataInputStream(client.getInputStream());
         serverMessage = fromServer.readUTF();
+        //Incloude success or not
 //        if (serverMessage.contains("SUCCESS")) LOGGER.info("Server " + serverMessage);
 //        else LOGGER.severe("Server " + serverMessage);
         while(true){
@@ -89,6 +91,34 @@ public class Client {
           line = sc.nextLine();
           inputPareser.checkInput(line);
 
+        }
+
+
+
+        switch(state){
+//          case MessageType.CONNECT_RESPONSE -> {
+//
+//          }
+          case MessageType.DISCONNECT_RESPONSE -> {
+
+
+
+          }
+          case MessageType.QUERY_RESPONSE -> {
+
+          }
+          case MessageType.DIRECT_MESSAGE -> {
+
+          }
+          case MessageType.BROADCAST_MESSAGE -> {
+
+          }
+          case MessageType.FAILED_MESSAGE -> {
+
+          }
+          case MessageType.SEND_INSULT -> {
+
+          }
         }
 
 
@@ -107,4 +137,11 @@ public class Client {
     client.start(args);
   }
 
+  public boolean isLogOff() {
+    return logOff;
+  }
+
+  public void setLogOff(boolean logOff) {
+    this.logOff = logOff;
+  }
 }
