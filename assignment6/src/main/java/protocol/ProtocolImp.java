@@ -55,9 +55,13 @@ public class ProtocolImp implements Protocol {
    * The constant SEND_INSULT.
    */
   public final static int SEND_INSULT = 27;
-
+  /**
+   * The constant emptyString.
+   */
   public final static String emptyString = " ";
-
+  /**
+   * The constant hashMap messageToIdr
+   */
   public final static Map<MessageType,Integer> messageToIdr= new HashMap<>(){{
     put(MessageType.CONNECT_MESSAGE,CONNECT_MESSAGE);
     put(MessageType.CONNECT_RESPONSE,CONNECT_RESPONSE);
@@ -69,7 +73,9 @@ public class ProtocolImp implements Protocol {
     put(MessageType.FAILED_MESSAGE,FAILED_MESSAGE);
     put(MessageType.SEND_INSULT,SEND_INSULT);
   }};
-
+  /**
+   * The constant hashMap idrToMessage
+   */
   public final static Map<Integer, MessageType> idrToMessage = new HashMap<>(){{
     put(CONNECT_MESSAGE, MessageType.CONNECT_MESSAGE);
     put(CONNECT_RESPONSE, MessageType.CONNECT_RESPONSE);
@@ -83,8 +89,12 @@ public class ProtocolImp implements Protocol {
   }
   };
 
-
-  public byte[] convertTobytes(String msg){
+  /**
+   *
+   * @param msg, the message passed in as String
+   * @return byte[] converted
+   */
+  public byte[] convertStringTobytes(String msg){
     return msg.getBytes(StandardCharsets.UTF_8);
   }
 
@@ -96,7 +106,7 @@ public class ProtocolImp implements Protocol {
         int type = messageToIdr.get(MessageType.CONNECT_MESSAGE);
         String userName = message.get(0);
         int userNameLength = userName.length();
-        byte[] toBytes = convertTobytes(userName);
+        byte[] toBytes = convertStringTobytes(userName);
         dataOutputStream.writeInt(type);
         dataOutputStream.writeChars(emptyString);
         dataOutputStream.writeInt(userNameLength);
@@ -104,63 +114,160 @@ public class ProtocolImp implements Protocol {
         dataOutputStream.write(toBytes);
       }
 
+      case CONNECT_RESPONSE ->{
+        // pass in boolean and message, both as String
+        int type = messageToIdr.get(MessageType.CONNECT_RESPONSE);
+        String success = message.get(0);
+        String msg = message.get(1);
+        int msgLength = msg.length();
+        byte[] toBytes = convertStringTobytes(msg);
+        dataOutputStream.writeInt(type);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeBoolean(Boolean.parseBoolean(success));
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeInt(msgLength);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.write(toBytes);
+      }
 
-      case SEND_INSULT, BROADCAST_MESSAGE -> {
-        // pass in sender userName, recipient userName
+      case DISCONNECT_MESSAGE -> {
+        // pass in userName
+        int type = messageToIdr.get(MessageType.DISCONNECT_MESSAGE);
+        String userName = message.get(0);
+        int userNameLength = userName.length();
+        byte[] toBytes = convertStringTobytes(userName);
+        dataOutputStream.writeInt(type);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeInt(userNameLength);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.write(toBytes);
+      }
+
+      case DISCONNECT_RESPONSE ->{
+        int type = messageToIdr.get(MessageType.DISCONNECT_RESPONSE);
+        String success = message.get(0);
+        String msg = message.get(1);
+        int msgLength = msg.length();
+        byte[] toBytes = convertStringTobytes(msg);
+        dataOutputStream.writeInt(type);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeBoolean(Boolean.parseBoolean(success));
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeInt(msgLength);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.write(toBytes);
+      }
+
+      case QUERY_USERS -> {
+        // pass in userName
+        int type = messageToIdr.get(MessageType.QUERY_USERS);
+        String userName = message.get(0);
+        int userNameLength = userName.length();
+        byte[] toBytes = convertStringTobytes(userName);
+        dataOutputStream.writeInt(type);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeInt(userNameLength);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.write(toBytes);
+      }
+
+      case QUERY_RESPONSE -> {
+        // only pass in all users' name
+        int type = messageToIdr.get(MessageType.QUERY_RESPONSE);
+        int userNumber = message.size();
+        dataOutputStream.writeInt(type);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeInt(userNumber);
+        for(int i = 0; i < userNumber; i++){
+          dataOutputStream.writeChars(emptyString);
+          String userName = message.get(i);
+          byte[] toBytes = convertStringTobytes(userName);
+          int userNameLength = userName.length();
+          dataOutputStream.writeInt(userNameLength);
+          dataOutputStream.writeChars(emptyString);
+          dataOutputStream.write(toBytes);
+        }
+      }
+
+
+      case BROADCAST_MESSAGE -> {
+        // pass in sender userName, message
+        int type = messageToIdr.get(MessageType.BROADCAST_MESSAGE);
         String senderUserName = message.get(0);
-        String recipientUserName = message.get(1);
-        List<byte[]> sender = genByteArray(senderUserName);
-        List<byte[]> recipient = genByteArray(recipientUserName);
-        sender.addAll(recipient);
-        return sender;
+        byte[] nameToBytes = convertStringTobytes(senderUserName);
+        int userNameLength = senderUserName.length();
+        String msg = message.get(1);
+        byte[] msgToBytes = convertStringTobytes(msg);
+        int msgLength = msg.length();
+        dataOutputStream.writeInt(type);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeInt(userNameLength);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.write(nameToBytes);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeInt(msgLength);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.write(msgToBytes);
 
       }
       case DIRECT_MESSAGE -> {
         // pass in sender userName, recipient userName and message as String (three elements)
-        // return byte array with each element's length and itself converted to byte[] (six elements in total)
-
+        int type = messageToIdr.get(MessageType.DIRECT_MESSAGE);
         String senderUserName = message.get(0);
+        byte[] senderToBytes = convertStringTobytes(senderUserName);
+        int senderLength = senderUserName.length();
         String recipientUserName = message.get(1);
-        String msg = message.get(1);
-        List<byte[]> sender = genByteArray(senderUserName);
-        List<byte[]> recipient = genByteArray(recipientUserName);
-        List<byte[]> msgByteArray = genByteArray(msg);
-        sender.addAll(recipient);
-        sender.addAll(msgByteArray);
-        return sender;
+        byte[] recipientToBytes = convertStringTobytes(recipientUserName);
+        int recipientLength = recipientUserName.length();
+        String msg = message.get(2);
+        int msgLength = msg.length();
+        byte[] msgToBytes = convertStringTobytes(msg);
+        dataOutputStream.writeInt(type);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeInt(senderLength);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.write(senderToBytes);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeInt(recipientLength);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.write(recipientToBytes);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeInt(msgLength);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.write(msgToBytes);
 
       }
-      case QUERY_RESPONSE -> {
-        // take in all names of users (only name)
-        List<byte[]> encoder = new ArrayList<>();
-        Integer numberOfUsers = message.size();
-        byte[] number = new byte[1];
-        number[1] = numberOfUsers.byteValue();
-        encoder.add(number);
-        for(int i = 0; i < message.size(); i ++){
-          List<byte[]> nameToByteArray = genByteArray(message.get(i));
-          encoder.addAll(nameToByteArray);
-        }
-        return encoder;
-
+      case FAILED_MESSAGE -> {
+        int type = messageToIdr.get(MessageType.FAILED_MESSAGE);
+        String msg = message.get(0);
+        int msgLength = msg.length();
+        byte[] toByte = convertStringTobytes(msg);
+        dataOutputStream.writeInt(type);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeInt(msgLength);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.write(toByte);
 
       }
-      case CONNECT_RESPONSE, DISCONNECT_RESPONSE -> {
-        // pass in success, message as String (two elements)
-        // convert success: String -> Boolean -> byte[]
-        // convert message: messageSize -> byte[], String -> byte[]
-        List<byte[]> encoder = new ArrayList<>();
-        Boolean success = Boolean.parseBoolean(message.get(0));
-        byte[] vOut = new byte[]{(byte) (success?1:0)};
-        String msg = message.get(1);
-        List<byte[]> msgByteArray = genByteArray(msg);
-        encoder.add(vOut);
-        encoder.addAll(msgByteArray);
-        return encoder;
-
+      case SEND_INSULT -> {
+        int type = messageToIdr.get(MessageType.SEND_INSULT);
+        String senderName = message.get(0);
+        int senderLength = senderName.length();
+        byte[] senderToByte = convertStringTobytes(senderName);
+        String recipientName = message.get(1);
+        int recipientLength = recipientName.length();
+        byte[] recipientToByte = convertStringTobytes(recipientName);
+        dataOutputStream.writeInt(type);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeInt(senderLength);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.write(senderToByte);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeInt(recipientLength);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.write(recipientToByte);
       }
     }
-    return null;
   }
 
   @Override
