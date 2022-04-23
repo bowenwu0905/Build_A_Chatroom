@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.lang.Integer;
 
 /**
  * implement of State
@@ -55,6 +56,8 @@ public class ProtocolImp implements Protocol {
    */
   public final static int SEND_INSULT = 27;
 
+  public final static String emptyString = " ";
+
   public final static Map<MessageType,Integer> messageToIdr= new HashMap<>(){{
     put(MessageType.CONNECT_MESSAGE,CONNECT_MESSAGE);
     put(MessageType.CONNECT_RESPONSE,CONNECT_RESPONSE);
@@ -80,65 +83,80 @@ public class ProtocolImp implements Protocol {
   }
   };
 
-  /**
-   * @param message, the message take in as String
-   * @return the length of String as byte array
-   */
-  public byte[] lengthToByteArray(String message) throws IOException {
-    int size = message.length();
-    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    DataOutputStream dos = new DataOutputStream(bos);
-    dos.writeInt(size);
-    dos.flush();
-    return bos.toByteArray();
-  };
+
+  public byte[] convertTobytes(String msg){
+    return msg.getBytes(StandardCharsets.UTF_8);
+  }
 
   @Override
-  public List<byte[]> encode(MessageType messageType, List<String> message) throws IOException {
+  public void encode(MessageType messageType, List<String> message, DataOutputStream dataOutputStream) throws IOException {
     switch (messageType) {
       case CONNECT_MESSAGE -> {
-        // only pass in userName
-        List<byte[]> encoder = new ArrayList<>();
+        // only pass in userName (one element)
+        int type = messageToIdr.get(MessageType.CONNECT_MESSAGE);
         String userName = message.get(0);
-        byte[] userNameSize = lengthToByteArray(userName);
-        encoder.add(userNameSize);
-        encoder.add(userName.getBytes());
-        return encoder;
+        int userNameLength = userName.length();
+        byte[] toBytes = convertTobytes(userName);
+        dataOutputStream.writeInt(type);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.writeInt(userNameLength);
+        dataOutputStream.writeChars(emptyString);
+        dataOutputStream.write(toBytes);
       }
 
-      case QUERY_USERS -> {
 
-      }
-
-      case SEND_INSULT -> {
+      case SEND_INSULT, BROADCAST_MESSAGE -> {
+        // pass in sender userName, recipient userName
+        String senderUserName = message.get(0);
+        String recipientUserName = message.get(1);
+        List<byte[]> sender = genByteArray(senderUserName);
+        List<byte[]> recipient = genByteArray(recipientUserName);
+        sender.addAll(recipient);
+        return sender;
 
       }
       case DIRECT_MESSAGE -> {
+        // pass in sender userName, recipient userName and message as String (three elements)
+        // return byte array with each element's length and itself converted to byte[] (six elements in total)
 
-      }
-      case FAILED_MESSAGE -> {
+        String senderUserName = message.get(0);
+        String recipientUserName = message.get(1);
+        String msg = message.get(1);
+        List<byte[]> sender = genByteArray(senderUserName);
+        List<byte[]> recipient = genByteArray(recipientUserName);
+        List<byte[]> msgByteArray = genByteArray(msg);
+        sender.addAll(recipient);
+        sender.addAll(msgByteArray);
+        return sender;
 
       }
       case QUERY_RESPONSE -> {
+        // take in all names of users (only name)
+        List<byte[]> encoder = new ArrayList<>();
+        Integer numberOfUsers = message.size();
+        byte[] number = new byte[1];
+        number[1] = numberOfUsers.byteValue();
+        encoder.add(number);
+        for(int i = 0; i < message.size(); i ++){
+          List<byte[]> nameToByteArray = genByteArray(message.get(i));
+          encoder.addAll(nameToByteArray);
+        }
+        return encoder;
+
 
       }
-      case CONNECT_RESPONSE -> {
-        // pass in success, message as String
+      case CONNECT_RESPONSE, DISCONNECT_RESPONSE -> {
+        // pass in success, message as String (two elements)
         // convert success: String -> Boolean -> byte[]
         // convert message: messageSize -> byte[], String -> byte[]
         List<byte[]> encoder = new ArrayList<>();
         Boolean success = Boolean.parseBoolean(message.get(0));
         byte[] vOut = new byte[]{(byte) (success?1:0)};
-        
-
-      }
-      case BROADCAST_MESSAGE -> {
-
-      }
-      case DISCONNECT_MESSAGE -> {
-
-      }
-      case DISCONNECT_RESPONSE -> {
+        String msg = message.get(1);
+        List<byte[]> msgByteArray = genByteArray(msg);
+        encoder.add(vOut);
+        encoder.addAll(msgByteArray);
+        return encoder;
 
       }
     }
