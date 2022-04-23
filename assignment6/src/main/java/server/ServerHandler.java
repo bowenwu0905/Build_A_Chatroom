@@ -45,11 +45,13 @@ public class ServerHandler implements Runnable {
   public void run() {
     while (true) {
       try {
+        // todo limit 10
         this.semaphore.acquire();
         Socket socket = this.serverSocket.accept();
         DataInputStream in = new DataInputStream(socket.getInputStream());
         DataOutputStream out = new DataOutputStream(socket.getOutputStream());
         int identifier = in.readInt();
+        in.readChar();
         switch (ProtocolImp.idrToMessage.get(identifier)) {
           case CONNECT_MESSAGE -> {
             int size = in.readInt();
@@ -67,15 +69,41 @@ public class ServerHandler implements Runnable {
               // fail
               response = "Already have established the connection";
             }
-            protocol.encode(MessageType.CONNECT_RESPONSE, List.of(String.valueOf(status), response));
             // todo
-            out.write(protocol.encode(MessageType.CONNECT_RESPONSE, response));
+            protocol.encode(MessageType.CONNECT_RESPONSE, List.of(String.valueOf(status), response), out);
+
           }
           case DISCONNECT_MESSAGE -> {
-            String username = protocol.decode(type, line);
-            Socket socket1 = socketMap.get(username);
-            socket1.close();
+            int size = in.readInt();
+            buffer = new byte[size];
+            in.read(buffer, 0, size);
+            String username = new String(buffer);
+            boolean status = false;
+            String response = null;
+            if (socketMap.containsKey(username)) {
+              status = true;
+              response = "You are no longer connected.";
+            } else {
+              response = "this client haven't set connection";
+            }
+            protocol.encode(MessageType.DISCONNECT_RESPONSE, List.of(String.valueOf(status), response), out);
+            socket.close();
             socketMap.remove(username);
+          }
+          case QUERY_USERS -> {
+            int size = in.readInt();
+            buffer = new byte[size];
+            in.read(buffer, 0, size);
+            String username = new String(buffer);
+
+            if (socketMap.containsKey(username)) {
+
+            }
+
+            Socket socket1 = socketMap.get(username);
+
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            out.write(protocol.encode(MessageType.QUERY_RESPONSE, username));
           }
           case BROADCAST_MESSAGE -> {
           }
@@ -83,13 +111,7 @@ public class ServerHandler implements Runnable {
             String insultMessage = grammar.textGenerator("start", jsonReader.jsonProcess());
 
           }
-          case QUERY_USERS -> {
-            String username = protocol.decode(type, line);
-            Socket socket1 = socketMap.get(username);
 
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.write(protocol.encode(MessageType.QUERY_RESPONSE, username));
-          }
 
         }
 
