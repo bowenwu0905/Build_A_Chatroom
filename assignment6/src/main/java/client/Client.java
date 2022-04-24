@@ -5,11 +5,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import protocol.MessageType;
 import protocol.Protocol;
+import protocol.ProtocolImp;
 import util.Command;
 
 /**
@@ -19,7 +19,7 @@ import util.Command;
  */
 public class Client {
   private String userName;
-  private Protocol protocol;
+  private Protocol protocol  = new ProtocolImp();
 
   private InputHandler inputHandler;
   private OutputHandler outputHandler;
@@ -27,6 +27,8 @@ public class Client {
   private Scanner sc = null;
   private Socket client = null;
 
+  public Client() {
+  }
 
   private void start(String[] args) throws IOException {
     if (args.length<2)  {
@@ -48,7 +50,7 @@ public class Client {
 
     while (!this.logOff) {
       try {
-        DataOutputStream toServer = null;
+        DataOutputStream toServer;
         //if server closed ahead
         try {
           toServer = new DataOutputStream(client.getOutputStream());
@@ -65,7 +67,7 @@ public class Client {
         }
 
 
-        String input = "";
+        String input;
         System.out.println("Enter username to login as <username> \n");
         input = sc.nextLine();
 
@@ -93,7 +95,7 @@ public class Client {
 
 
         while(true){
-          String line = "";
+          String line;
           System.out.println("Enter your command \n");
           line = sc.nextLine();
           while (input.trim().equals("")){
@@ -107,7 +109,7 @@ public class Client {
           client.setSoTimeout(3000);
           int messageType = fromServer.readInt();
           if(this.protocol.idrToMessage.get(messageType) == MessageType.DISCONNECT_MESSAGE){
-            Boolean isDisconnect = outputHandler.connectStatusResponseHandle();
+            boolean isDisconnect = outputHandler.connectStatusResponseHandle();
             if(isDisconnect){
               this.setLogOff(isDisconnect);
               break;
@@ -132,19 +134,19 @@ public class Client {
     client.start(args);
   }
 
-  public boolean isLogOff() {
+  private boolean isLogOff() {
     return logOff;
   }
 
-  public void setLogOff(boolean logOff) {
+  private void setLogOff(boolean logOff) {
     this.logOff = logOff;
   }
 
-  public String getUserName() {
+  private String getUserName() {
     return userName;
   }
 
-  public void setUserName(String userName) {
+  private void setUserName(String userName) {
     this.userName = userName;
   }
 }

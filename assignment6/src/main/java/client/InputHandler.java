@@ -2,7 +2,6 @@ package client;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import protocol.MessageType;
 import protocol.Protocol;
@@ -28,7 +27,6 @@ public class InputHandler {
     this.protocal = new ProtocolImp();
   }
 
-  //TODO: check the Input cannot be Empty.
   public void inputParse(String Input) throws IOException {
     String lowerCaseInput = Input.toLowerCase();
     String firstWord = lowerCaseInput.split(SPACE,DIVID_INTO_PARTS)[FIRST_PART_INPUT_INDEX];
@@ -62,7 +60,6 @@ public class InputHandler {
       //receiverName
       //Message
       String receiverName = firstWord.substring(SECOND_CHARACTER);
-      String text = Input.split(SPACE,DIVID_INTO_PARTS)[SECOND_PART_INPUT_INDEX];
       protocal.encode(MessageType.SEND_INSULT,Arrays.asList(userName,receiverName),toServer);
     }
     //@all

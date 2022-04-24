@@ -39,7 +39,7 @@ public class OutputHandler {
         PrintLogUtil.queryMessage(userName,allUser);
 
       }
-      case DIRECT_MESSAGE,SEND_INSULT -> {
+      case DIRECT_MESSAGE -> {
         fromServer.readChar();
         int senderNameSize = fromServer.readInt();
         fromServer.readChar();
@@ -93,7 +93,7 @@ public class OutputHandler {
 
   public boolean connectStatusResponseHandle() throws IOException {
     fromServer.readChar();
-    Boolean successStatus = fromServer.readBoolean();
+    boolean successStatus = fromServer.readBoolean();
     fromServer.readChar();
     int messageSize = fromServer.readInt();
     fromServer.readChar();

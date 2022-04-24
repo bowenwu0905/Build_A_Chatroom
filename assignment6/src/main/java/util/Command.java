@@ -13,16 +13,16 @@ public class Command {
       """
         usage: Usage
          ?                             open help menu. It should alone on a line
-         logoff                        logoff client connection from the server. It should alone 
+         logoff                        logoff client connection from the server. It should alone
                                        on a line
          who                           Query all the online users. It should alone on a line
          @user                         Send direct message to user. It should list at the start
                                        of the input
          !user                         Send insult message to user. It should list at the start
                                        of the input
-         @all                          Send group message to all online users. It should list at 
+         @all                          Send group message to all online users. It should list at
                                        the start of the input
-        Note: 1. if there are multiple commands (for @user,!user and @all), only the command at the 
+        Note: 1. if there are multiple commands (for @user,!user and @all), only the command at the
                  top of the input will be use
               2. if the user's input doesn't match any command, the program will treat it as "@all"
         """;
