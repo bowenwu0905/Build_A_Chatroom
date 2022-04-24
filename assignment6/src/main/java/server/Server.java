@@ -30,9 +30,12 @@ public class Server {
   }
 
   public void run() throws IOException, InterruptedException {
+    // basically, we want to limit 10 clients, we need to set a thread pool that
+    // only process 10 socket connection
     while (true) {
-      new Thread(new ServerHandler(semaphore, serverSocket)).start();
-
+      this.semaphore.acquire();
+      Socket socket = this.serverSocket.accept();
+      new Thread(new ServerHandler(semaphore, socket, socketMap)).start();
     }
   }
 
