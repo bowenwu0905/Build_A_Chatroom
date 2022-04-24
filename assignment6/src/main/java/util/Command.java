@@ -18,8 +18,7 @@ public class Command {
          who                           Query all the online users. It should alone on a line
          @user                         Send direct message to user. It should list at the start
                                        of the input
-         !user                         Send insult message to user. It should list at the start
-                                       of the input
+         !user                         Send insult message and broadcast. 
          @all                          Send group message to all online users. It should list at
                                        the start of the input
         Note: 1. if there are multiple commands (for @user,!user and @all), only the command at the
@@ -27,7 +26,13 @@ public class Command {
               2. if the user's input doesn't match any command, the program will treat it as "@all"
         """;
 
+  public Command() {
+  }
 
+  @Override
+  public String toString() {
+    return "Command{}";
+  }
 
 
 }

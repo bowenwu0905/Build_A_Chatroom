@@ -23,4 +23,11 @@ public class PrintLogUtil {
     System.out.println("From "+senderName+" to everyone:"+text+"\n");
   }
 
+  public PrintLogUtil() {
+  }
+
+  @Override
+  public String toString() {
+    return "PrintLogUtil{}";
+  }
 }

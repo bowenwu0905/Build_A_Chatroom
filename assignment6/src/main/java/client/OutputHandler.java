@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import protocol.MessageType;
 import util.PrintLogUtil;
 
@@ -87,8 +88,6 @@ public class OutputHandler {
 
       }
     }
-
-
   }
 
   public boolean connectStatusResponseHandle() throws IOException {
@@ -108,5 +107,45 @@ public class OutputHandler {
     return successStatus;
   }
 
+  public String getUserName() {
+    return userName;
+  }
 
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
+
+  public DataInputStream getFromServer() {
+    return fromServer;
+  }
+
+  public void setFromServer(DataInputStream fromServer) {
+    this.fromServer = fromServer;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    OutputHandler that = (OutputHandler) o;
+    return Objects.equals(userName, that.userName) && Objects.equals(fromServer,
+        that.fromServer);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(userName, fromServer);
+  }
+
+  @Override
+  public String toString() {
+    return "OutputHandler{" +
+        "userName='" + userName + '\'' +
+        ", fromServer=" + fromServer +
+        '}';
+  }
 }
