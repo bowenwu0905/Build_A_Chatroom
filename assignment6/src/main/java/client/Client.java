@@ -10,6 +10,7 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import protocol.MessageType;
 import protocol.Protocol;
+import util.Command;
 
 /**
  * client class
@@ -100,6 +101,9 @@ public class Client {
             input = sc.nextLine();
           }
           this.inputHandler.inputParse(line.trim());
+          if (line.trim().equals(Command.HELP)){
+            continue;
+          }
           client.setSoTimeout(3000);
           int messageType = fromServer.readInt();
           if(this.protocol.idrToMessage.get(messageType) == MessageType.DISCONNECT_MESSAGE){
