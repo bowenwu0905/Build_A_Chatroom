@@ -22,17 +22,18 @@ import protocol.ProtocolImp;
  * @author xiaochong
  */
 public class ServerHandler implements Runnable {
-  private static final int CLIENT_LIMIT = 10;
+
   private Semaphore semaphore;
   private Socket socket;
   private Protocol protocol = new ProtocolImp();
   private ConcurrentHashMap<String, Socket> socketMap;
-  private ConcurrentHashMap<String, DataOutputStream> outMap = new ConcurrentHashMap<>(CLIENT_LIMIT);
+  private ConcurrentHashMap<String, DataOutputStream> outMap;
   private Grammar grammar = new Grammar();
   private JsonReader jsonReader = new JsonReader();
 
 
-  public ServerHandler(Semaphore semaphore, Socket socket, ConcurrentHashMap<String, Socket> socketMap) {
+  public ServerHandler(Semaphore semaphore, Socket socket,
+      ConcurrentHashMap<String, Socket> socketMap) {
     this.semaphore = semaphore;
     this.socket = socket;
     this.socketMap = socketMap;
@@ -68,9 +69,11 @@ public class ServerHandler implements Runnable {
               // fail
               response = username + " already has established the connection";
             }
-            protocol.encode(MessageType.CONNECT_RESPONSE, List.of(String.valueOf(status), response), out);
+            protocol.encode(MessageType.CONNECT_RESPONSE, List.of(String.valueOf(status), response),
+                out);
 
-          } case DISCONNECT_MESSAGE -> {
+          }
+          case DISCONNECT_MESSAGE -> {
             int size = in.readInt();
             String username = getString(in, size);
             boolean status = false;
@@ -81,27 +84,30 @@ public class ServerHandler implements Runnable {
             } else {
               response = "this client haven't set the connection";
             }
-            protocol.encode(MessageType.DISCONNECT_RESPONSE, List.of(String.valueOf(status), response), out);
+            protocol.encode(MessageType.CONNECT_RESPONSE,
+                List.of(String.valueOf(status), response), out);
             socket.close();
             outMap.remove(username);
             socketMap.remove(username);
             semaphore.release();
             break;
-          } case QUERY_USERS -> {
+          }
+          case QUERY_USERS -> {
             int size = in.readInt();
             String username = getString(in, size);
-            String response;
             if (socketMap.containsKey(username)) {
               List<String> userList = new ArrayList<>();
               for (Entry<String, Socket> entry : socketMap.entrySet()) {
-                if (!entry.getKey().equals(username))
+                if (!entry.getKey().equals(username)) {
                   userList.add(entry.getKey());
+                }
               }
               protocol.encode(MessageType.QUERY_RESPONSE, userList, out);
             } else {
               sendFailedMessage(username, out);
             }
-          } case BROADCAST_MESSAGE -> {
+          }
+          case BROADCAST_MESSAGE -> {
             int size = in.readInt();
             String username = getString(in, size);
             in.readChar();
@@ -109,12 +115,14 @@ public class ServerHandler implements Runnable {
             String message = getString(in, messageSize);
             if (socketMap.containsKey(username)) {
               for (Entry<String, DataOutputStream> entry : outMap.entrySet()) {
-                protocol.encode(MessageType.DIRECT_MESSAGE, List.of(username, entry.getKey(), message), entry.getValue());
+                protocol.encode(MessageType.DIRECT_MESSAGE,
+                    List.of(username, entry.getKey(), message), entry.getValue());
               }
             } else {
               sendFailedMessage(username, out);
             }
-          } case DIRECT_MESSAGE -> {
+          }
+          case DIRECT_MESSAGE -> {
             int senderSize = in.readInt();
             String sender = getString(in, senderSize);
             in.readChar();
@@ -125,12 +133,14 @@ public class ServerHandler implements Runnable {
             String message = getString(in, messageSize);
             if (socketMap.containsKey(sender) && socketMap.containsKey(recipient)) {
               DataOutputStream dataOutputStream = outMap.get(recipient);
-              protocol.encode(MessageType.DIRECT_MESSAGE, List.of(sender, recipient, message), dataOutputStream);
+              protocol.encode(MessageType.DIRECT_MESSAGE, List.of(sender, recipient, message),
+                  dataOutputStream);
             } else {
               String tmp = !socketMap.containsKey(sender) ? sender : recipient;
               sendFailedMessage(tmp, out);
             }
-          } case SEND_INSULT -> {
+          }
+          case SEND_INSULT -> {
             int senderSize = in.readInt();
             String sender = getString(in, senderSize);
             in.readChar();
@@ -138,17 +148,19 @@ public class ServerHandler implements Runnable {
             String recipient = getString(in, recipientSize);
             String response;
             if (socketMap.containsKey(sender) && socketMap.containsKey(recipient)) {
-              response = grammar.textGenerator("start", jsonReader.jsonProcess("templates/insult_grammar.json"));
+              response = grammar.textGenerator("start",
+                  jsonReader.jsonProcess("templates/insult_grammar.json"));
               DataOutputStream dataOutputStream = outMap.get(recipient);
               for (Entry<String, DataOutputStream> entry : outMap.entrySet()) {
-                protocol.encode(MessageType.DIRECT_MESSAGE, List.of(sender, recipient, response), entry.getValue());
+                protocol.encode(MessageType.DIRECT_MESSAGE, List.of(sender, recipient, response),
+                    entry.getValue());
               }
             } else {
               String tmp = !socketMap.containsKey(sender) ? sender : recipient;
               sendFailedMessage(tmp, out);
             }
-          } default ->
-              protocol.encode(MessageType.FAILED_MESSAGE, List.of("wrong input"), out);
+          }
+          default -> protocol.encode(MessageType.FAILED_MESSAGE, List.of("wrong input"), out);
         }
       } catch (Exception e) {
         e.printStackTrace();
