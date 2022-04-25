@@ -82,6 +82,13 @@ public interface Protocol {
   }
   };
 
+  /**
+   *
+   * @param messageType, the type of Message in ENUM passed in
+   * @param message, the message passed in as a list of String
+   * @param dataOutputStream, dataOutputStream passed in to write
+   * @throws IOException
+   */
   void encode(MessageType messageType, List<String> message, DataOutputStream dataOutputStream) throws IOException;
 
 

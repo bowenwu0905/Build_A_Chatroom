@@ -1,11 +1,14 @@
 package server;
 
 import client.Client;
+import java.io.BufferedInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,16 +21,22 @@ import protocol.Protocol;
  * @author xiaochong
  */
 public class Server {
+
   private ServerSocket serverSocket;
   private Semaphore semaphore;
   private Protocol protocol;
   private ConcurrentHashMap<String, Socket> socketMap;
 
+  private ConcurrentHashMap<String, DataOutputStream> outMap;
+
+  private static final int CLIENT_LIMIT = 10;
+
   public void start(int port) throws IOException {
     serverSocket = new ServerSocket(port);
     System.out.println("Server start to listen port " + port);
-    semaphore = new Semaphore(10);
-    socketMap = new ConcurrentHashMap<>(10);
+    semaphore = new Semaphore(CLIENT_LIMIT);
+    socketMap = new ConcurrentHashMap<>(CLIENT_LIMIT);
+    outMap = new ConcurrentHashMap<>(CLIENT_LIMIT);
   }
 
   public void run() throws IOException, InterruptedException {
@@ -36,7 +45,15 @@ public class Server {
     while (true) {
       this.semaphore.acquire();
       Socket socket = this.serverSocket.accept();
-      new Thread(new ServerHandler(semaphore, socket, socketMap)).start();
+      new Thread(new ServerHandler(semaphore, socket, socketMap, outMap)).start();
+      if (this.semaphore.availablePermits() == CLIENT_LIMIT) {
+        System.out.println("enter q to close server or wait clients to connect");
+        Scanner in = new Scanner(System.in);
+        String input = in.nextLine();
+        if (input.equals("q")) {
+          break;
+        }
+      }
     }
   }
 
@@ -45,8 +62,8 @@ public class Server {
   }
 
   public static void main(String[] args) throws IOException, InterruptedException {
-    ConcurrentHashMap<Integer, Socket> socketMap = new ConcurrentHashMap<>(10);
     Server server = new Server();
+    // 需要从command输入么?
     server.start(10000);
     server.run();
     server.stopServer();
