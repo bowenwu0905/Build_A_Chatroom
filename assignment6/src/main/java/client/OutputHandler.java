@@ -61,22 +61,22 @@ public class OutputHandler {
         String backMessage = new String(message, StandardCharsets.UTF_8);
         PrintLogUtil.oneOnOneMessage(senderName,receiverName,backMessage);
       }
-      case BROADCAST_MESSAGE -> {
-        fromServer.readChar();
-        int senderNameSize = fromServer.readInt();
-        fromServer.readChar();
-        byte[] senderUser = new byte[senderNameSize];
-        fromServer.read(senderUser);
-        String senderName = new String(senderUser, StandardCharsets.UTF_8);
-        fromServer.readChar();
-        int messageSize = fromServer.readInt();
-        fromServer.readChar();
-        byte[] message = new byte[messageSize];
-        fromServer.read(message);
-        String backMessage = new String(message, StandardCharsets.UTF_8);
-        PrintLogUtil.groupMessage(senderName,backMessage);
-
-      }
+//      case BROADCAST_MESSAGE -> {
+//        fromServer.readChar();
+//        int senderNameSize = fromServer.readInt();
+//        fromServer.readChar();
+//        byte[] senderUser = new byte[senderNameSize];
+//        fromServer.read(senderUser);
+//        String senderName = new String(senderUser, StandardCharsets.UTF_8);
+//        fromServer.readChar();
+//        int messageSize = fromServer.readInt();
+//        fromServer.readChar();
+//        byte[] message = new byte[messageSize];
+//        fromServer.read(message);
+//        String backMessage = new String(message, StandardCharsets.UTF_8);
+//        PrintLogUtil.groupMessage(senderName,backMessage);
+//
+//      }
       case FAILED_MESSAGE -> {
         fromServer.readChar();
         int messageSize = fromServer.readInt();

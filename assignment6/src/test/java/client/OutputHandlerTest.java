@@ -68,13 +68,13 @@ class OutputHandlerTest {
     assertEquals(userName+" -> "+receiverName+ " :"+text+"\n\n",outContent.toString());
   }
 
-  @Test
-  void outPuthandle3() throws IOException {
-    p1.encode(MessageType.BROADCAST_MESSAGE, Arrays.asList(userName,text),toServer);
-    int x = fromServer.readInt();
-    o1.outPuthandle(Protocol.idrToMessage.get(x));
-    assertEquals("From "+userName+" to everyone:"+text+"\n\n",outContent.toString());
-  }
+//  @Test
+//  void outPuthandle3() throws IOException {
+//    p1.encode(MessageType.BROADCAST_MESSAGE, Arrays.asList(userName,text),toServer);
+//    int x = fromServer.readInt();
+//    o1.outPuthandle(Protocol.idrToMessage.get(x));
+//    assertEquals("From "+userName+" to everyone:"+text+"\n\n",outContent.toString());
+//  }
 
   @Test
   void outPuthandle4() throws IOException {

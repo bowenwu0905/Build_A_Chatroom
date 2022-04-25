@@ -142,7 +142,7 @@ public class Client {
     this.logOff = logOff;
   }
 
-  private String getUserName() {
+  public String getUserName() {
     return userName;
   }
 

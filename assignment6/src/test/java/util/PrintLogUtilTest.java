@@ -61,11 +61,11 @@ class PrintLogUtilTest {
     assertEquals(userName+" -> "+receiverName+ " :"+text+"\n\n",outContent.toString());
   }
 
-  @Test
-  void groupMessage() {
-    p1.groupMessage(userName,text);
-    assertEquals("From "+userName+" to everyone:"+text+"\n\n",outContent.toString());
-  }
+//  @Test
+//  void groupMessage() {
+//    p1.groupMessage(userName,text);
+//    assertEquals("From "+userName+" to everyone:"+text+"\n\n",outContent.toString());
+//  }
 
   @Test
   void testToString() {
