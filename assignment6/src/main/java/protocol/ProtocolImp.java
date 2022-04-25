@@ -15,7 +15,7 @@ import java.lang.Integer;
 /**
  * implement of State
  *
- * @author xiaochong
+ * @author Bowen
  */
 public class ProtocolImp implements Protocol {
 
