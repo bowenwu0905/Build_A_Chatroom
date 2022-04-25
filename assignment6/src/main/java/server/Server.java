@@ -27,6 +27,7 @@ public class Server {
     serverSocket = new ServerSocket(port);
     System.out.println("Server start to listen port " + port);
     semaphore = new Semaphore(10);
+    socketMap = new ConcurrentHashMap<>(10);
   }
 
   public void run() throws IOException, InterruptedException {

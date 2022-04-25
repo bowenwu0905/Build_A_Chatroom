@@ -67,7 +67,7 @@ public class ServerHandler implements Runnable {
               socketMap.put(username, socket);
               outMap.put(username, out);
               // success
-              response = "There are " + socketMap.size() + " other connected clients";
+              response = "There are " + socketMap.size() + " connected clients";
               status = true;
             } else {
               // fail
