@@ -35,7 +35,6 @@ public class InputHandler {
     if(lowerCaseInput.equals(Command.LOG_OFF)){
       //username
       protocal.encode(MessageType.DISCONNECT_MESSAGE, Arrays.asList(userName), toServer);
-
     }
     //who
     else if (lowerCaseInput.equals(Command.WHO)) {
@@ -52,7 +51,9 @@ public class InputHandler {
       //Message
       System.out.println("for One!!!!!");
       String receiverName = firstWord.substring(SECOND_CHARACTER);
+      System.out.println("receiver:"+receiverName);
       String text = Input.split(SPACE,DIVID_INTO_PARTS)[SECOND_PART_INPUT_INDEX];
+      System.out.println("text"+text);
       protocal.encode(MessageType.DIRECT_MESSAGE,Arrays.asList(userName,receiverName,text),toServer);
 
     }

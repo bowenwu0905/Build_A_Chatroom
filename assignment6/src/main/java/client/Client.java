@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import protocol.MessageType;
@@ -52,19 +53,19 @@ public class Client {
       try {
         DataOutputStream toServer;
         //if server closed ahead
-//        try {
+        try {
           toServer = new DataOutputStream(client.getOutputStream());
-//        }catch(Exception e){
-//          System.out.println("Server closed, retry connecting in 3 seconds.");
-//          TimeUnit.SECONDS.sleep(3);
-//          //Continue to check and connect server if server closed
-//          try {
-//            client = new Socket(hostname, port);
-//          }catch(Exception e2){
-//            System.err.println("Could not connect to "+hostname+":"+port+ ", has it started?");
-//          }
-//          continue;
-//        }
+        }catch(Exception e){
+          System.out.println("Server closed, retry connecting in 3 seconds.");
+          TimeUnit.SECONDS.sleep(3);
+          //Continue to check and connect server if server closed
+          try {
+            client = new Socket(hostname, port);
+          }catch(Exception e2){
+            System.err.println("Could not connect to "+hostname+":"+port+ ", has it started?");
+          }
+          continue;
+        }
 
         boolean connectStatus = false;
         String input = "";
@@ -96,6 +97,11 @@ public class Client {
 
         while(true){
           String line;
+          while(fromServer.available()>0){
+            int messageType = fromServer.readInt();
+            this.outputHandler.outPuthandle(this.protocol.idrToMessage.get(messageType));
+          }
+
           System.out.println("Enter your command \n");
           line = sc.nextLine();
           while (input.trim().equals("")){
@@ -106,17 +112,22 @@ public class Client {
           if (line.trim().equals(Command.HELP)){
             continue;
           }
+
           client.setSoTimeout(3000);
-          int messageType = fromServer.readInt();
-          if(this.protocol.idrToMessage.get(messageType) == MessageType.DISCONNECT_MESSAGE){
-            boolean isDisconnect = outputHandler.connectStatusResponseHandle();
-            if(isDisconnect){
-              this.setLogOff(isDisconnect);
-              break;
+
+            int messageType = fromServer.readInt();
+            if (this.protocol.idrToMessage.get(messageType) == MessageType.CONNECT_RESPONSE) {
+              System.out.println("here1");
+              boolean isDisconnect = outputHandler.connectStatusResponseHandle();
+              if (isDisconnect) {
+                System.out.println("open:"+isDisconnect);
+                this.setLogOff(isDisconnect);
+                break;
+              }
+            } else {
+              this.outputHandler.outPuthandle(this.protocol.idrToMessage.get(messageType));
             }
-          }else{
-            this.outputHandler.outPuthandle(this.protocol.idrToMessage.get(messageType));
-          }
+
         }
 
 
@@ -148,5 +159,38 @@ public class Client {
 
   private void setUserName(String userName) {
     this.userName = userName;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Client client = (Client) o;
+    return logOff == client.logOff && Objects.equals(userName, client.userName)
+        && Objects.equals(protocol, client.protocol) && Objects.equals(
+        inputHandler, client.inputHandler) && Objects.equals(outputHandler,
+        client.outputHandler);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(userName, protocol, inputHandler, outputHandler, logOff);
+  }
+
+  @Override
+  public String toString() {
+    return "Client{" +
+        "userName='" + userName + '\'' +
+        ", protocol=" + protocol +
+        ", inputHandler=" + inputHandler +
+        ", outputHandler=" + outputHandler +
+        ", logOff=" + logOff +
+        ", sc=" + sc +
+        ", client=" + client +
+        '}';
   }
 }
