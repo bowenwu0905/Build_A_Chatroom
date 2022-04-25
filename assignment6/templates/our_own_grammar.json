@@ -1,0 +1,25 @@
+{
+  "grammarTitle": "Our Own Grammar Generator",
+  "grammarDesc": "Self written grammar generated file",
+  "start":[
+    "<people>, <people> and <people> work together on assignment <number>."
+  ],
+  "people": [
+    "zitao",
+    "xiaochong",
+    "bowen"
+  ],
+  "verb": [
+    "sigh <adverb>",
+    "portend like <object>",
+    "die <adverb>"
+  ],
+  "number": [
+    "1",
+    "2, and <more>",
+    "<undefined>"
+  ],
+  "more": [
+    "3"
+  ]
+}

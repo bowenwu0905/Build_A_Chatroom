@@ -27,12 +27,16 @@ public class Server {
     serverSocket = new ServerSocket(port);
     System.out.println("Server start to listen port " + port);
     semaphore = new Semaphore(10);
+    socketMap = new ConcurrentHashMap<>(10);
   }
 
   public void run() throws IOException, InterruptedException {
+    // basically, we want to limit 10 clients, we need to set a thread pool that
+    // only process 10 socket connection
     while (true) {
-      new Thread(new ServerHandler(semaphore, serverSocket)).start();
-
+      this.semaphore.acquire();
+      Socket socket = this.serverSocket.accept();
+      new Thread(new ServerHandler(semaphore, socket, socketMap)).start();
     }
   }
 

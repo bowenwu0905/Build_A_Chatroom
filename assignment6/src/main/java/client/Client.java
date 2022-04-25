@@ -7,7 +7,10 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import protocol.MessageType;
 import protocol.Protocol;
+import protocol.ProtocolImp;
+import util.Command;
 
 /**
  * client class
@@ -16,11 +19,16 @@ import protocol.Protocol;
  */
 public class Client {
   private String userName;
-  private Protocol protocal;
-  private InputParser inputPareser;
+  private Protocol protocol  = new ProtocolImp();
+
+  private InputHandler inputHandler;
+  private OutputHandler outputHandler;
   private boolean logOff = false;
-  Scanner sc = null;
-  Socket client = null;
+  private Scanner sc = null;
+  private Socket client = null;
+
+  public Client() {
+  }
 
   private void start(String[] args) throws IOException {
     if (args.length<2)  {
@@ -40,57 +48,76 @@ public class Client {
       System.exit(1);
     }
 
-    String serverMessage;
-    int i = 0;
-
     while (!this.logOff) {
       try {
-        DataOutputStream toServer = null;
+        DataOutputStream toServer;
         //if server closed ahead
-        try {
+//        try {
           toServer = new DataOutputStream(client.getOutputStream());
-        }catch(Exception e){
-          System.out.println("Server closed, retry connecting in 3 seconds.");
-          TimeUnit.SECONDS.sleep(3);
-          //Continue to check and connect server if server closed
-          try {
-            client = new Socket(hostname, port);
-          }catch(Exception e2){
-            System.err.println("Could not connect to "+hostname+":"+port+ ", has it started?");
-          }
-          continue;
-        }
+//        }catch(Exception e){
+//          System.out.println("Server closed, retry connecting in 3 seconds.");
+//          TimeUnit.SECONDS.sleep(3);
+//          //Continue to check and connect server if server closed
+//          try {
+//            client = new Socket(hostname, port);
+//          }catch(Exception e2){
+//            System.err.println("Could not connect to "+hostname+":"+port+ ", has it started?");
+//          }
+//          continue;
+//        }
 
-
+        boolean connectStatus = false;
         String input = "";
-        System.out.println("Enter username to login as <username>");
-        input = sc.nextLine();
+        DataInputStream fromServer = new DataInputStream(client.getInputStream());;
+       while(!connectStatus){
 
-        //user didn't input anything
-        while (input.trim().equals("")){
-          System.out.println("Input is empty, please ENTER an username as <username>");
+          System.out.println("Enter username to login as <username> \n");
           input = sc.nextLine();
-          //TODO: add protocal signature for CONNECT_MESSAGE
 
+          //user didn't input anything
+          while (input.trim().equals("")){
+            System.out.println("Input is empty, please ENTER an username as <username> \n");
+            input = sc.nextLine();
+          }
+          System.out.println("Hi," + input.trim());
+          //This username is case seneitive
+          this.setUserName(input.trim());
+          this.inputHandler = new InputHandler(this.userName,toServer);
+
+
+          this.outputHandler = new OutputHandler(this.userName,fromServer);
+
+          this.inputHandler.connectServer();
+          client.setSoTimeout(3000);
+          fromServer.readInt();
+          connectStatus = outputHandler.connectStatusResponseHandle();
         }
-        System.out.println("Hi," + input.trim());
 
-        //Send to server
-        toServer.writeUTF(input.trim());
-        client.setSoTimeout(3000);
-        DataInputStream fromServer = new DataInputStream(client.getInputStream());
-        serverMessage = fromServer.readUTF();
-//        if (serverMessage.contains("SUCCESS")) LOGGER.info("Server " + serverMessage);
-//        else LOGGER.severe("Server " + serverMessage);
+
         while(true){
-
-          String line = "";
-          System.out.println("Enter your command");
+          String line;
+          System.out.println("Enter your command \n");
           line = sc.nextLine();
-          inputPareser.checkInput(line);
-
+          while (input.trim().equals("")){
+            System.out.println("Input is empty, please ENTER your command");
+            input = sc.nextLine();
+          }
+          this.inputHandler.inputParse(line.trim());
+          if (line.trim().equals(Command.HELP)){
+            continue;
+          }
+          client.setSoTimeout(3000);
+          int messageType = fromServer.readInt();
+          if(this.protocol.idrToMessage.get(messageType) == MessageType.DISCONNECT_MESSAGE){
+            boolean isDisconnect = outputHandler.connectStatusResponseHandle();
+            if(isDisconnect){
+              this.setLogOff(isDisconnect);
+              break;
+            }
+          }else{
+            this.outputHandler.outPuthandle(this.protocol.idrToMessage.get(messageType));
+          }
         }
-
 
 
       }catch(SocketTimeoutException e){
@@ -107,4 +134,19 @@ public class Client {
     client.start(args);
   }
 
+  private boolean isLogOff() {
+    return logOff;
+  }
+
+  private void setLogOff(boolean logOff) {
+    this.logOff = logOff;
+  }
+
+  public String getUserName() {
+    return userName;
+  }
+
+  private void setUserName(String userName) {
+    this.userName = userName;
+  }
 }

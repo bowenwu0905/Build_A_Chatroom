@@ -14,6 +14,7 @@ import java.util.Map;
  */
 public interface Protocol {
 
+
   /**
    * The constant CONNECT_MESSAGE.
    */
