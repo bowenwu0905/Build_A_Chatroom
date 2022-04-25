@@ -2,6 +2,7 @@ package server;
 
 import client.Client;
 import java.io.BufferedInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -20,10 +21,13 @@ import protocol.Protocol;
  * @author xiaochong
  */
 public class Server {
+
   private ServerSocket serverSocket;
   private Semaphore semaphore;
   private Protocol protocol;
   private ConcurrentHashMap<String, Socket> socketMap;
+
+  private ConcurrentHashMap<String, DataOutputStream> outMap;
 
   private static final int CLIENT_LIMIT = 10;
 
