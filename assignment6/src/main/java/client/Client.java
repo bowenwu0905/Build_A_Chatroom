@@ -52,45 +52,49 @@ public class Client {
       try {
         DataOutputStream toServer;
         //if server closed ahead
-        try {
+//        try {
           toServer = new DataOutputStream(client.getOutputStream());
-        }catch(Exception e){
-          System.out.println("Server closed, retry connecting in 3 seconds.");
-          TimeUnit.SECONDS.sleep(3);
-          //Continue to check and connect server if server closed
-          try {
-            client = new Socket(hostname, port);
-          }catch(Exception e2){
-            System.err.println("Could not connect to "+hostname+":"+port+ ", has it started?");
-          }
-          continue;
-        }
-
-
-        String input;
-        System.out.println("Enter username to login as <username> \n");
-        input = sc.nextLine();
-
-        //user didn't input anything
-        while (input.trim().equals("")){
-          System.out.println("Input is empty, please ENTER an username as <username> \n");
-          input = sc.nextLine();
-        }
-        System.out.println("Hi," + input.trim());
-        //This username is case seneitive
-        this.setUserName(input.trim());
-        this.inputHandler = new InputHandler(this.userName,toServer);
-
-        DataInputStream fromServer = new DataInputStream(client.getInputStream());
-        this.outputHandler = new OutputHandler(this.userName,fromServer);
+//        }catch(Exception e){
+//          System.out.println("Server closed, retry connecting in 3 seconds.");
+//          TimeUnit.SECONDS.sleep(3);
+//          //Continue to check and connect server if server closed
+//          try {
+//            client = new Socket(hostname, port);
+//          }catch(Exception e2){
+//            System.err.println("Could not connect to "+hostname+":"+port+ ", has it started?");
+//          }
+//          continue;
+//        }
 
         boolean connectStatus = false;
-        while(!connectStatus) {
+        String input = "";
+        DataInputStream fromServer = new DataInputStream(client.getInputStream());;
+       while(!connectStatus){
+
+          System.out.println("Enter username to login as <username> \n");
+          input = sc.nextLine();
+
+          //user didn't input anything
+          while (input.trim().equals("")){
+            System.out.println("Input is empty, please ENTER an username as <username> \n");
+            input = sc.nextLine();
+          }
+          System.out.println("Hi," + input.trim());
+          //This username is case seneitive
+          this.setUserName(input.trim());
+          this.inputHandler = new InputHandler(this.userName,toServer);
+
+
+          this.outputHandler = new OutputHandler(this.userName,fromServer);
+
           this.inputHandler.connectServer();
           client.setSoTimeout(3000);
           fromServer.readInt();
           connectStatus = outputHandler.connectStatusResponseHandle();
         }
+
+
+
 
 
 
