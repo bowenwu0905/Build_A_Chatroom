@@ -20,7 +20,7 @@ import java.util.concurrent.locks.Lock;
  * The consumer class. It is for updtaing the hashmap. It will keep running until the producer
  * terminates and the buffer is empty
  */
-public class Consumer implements Runnable {
+public class  Consumer implements Runnable {
 
   private BlockingQueue<Map<String, String>> buffer;
   private ConcurrentMap<String, ConcurrentMap<String, Integer>> data;

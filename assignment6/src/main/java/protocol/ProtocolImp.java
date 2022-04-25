@@ -1,5 +1,6 @@
 package protocol;
 
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -12,12 +13,14 @@ import java.util.List;
 import java.util.Map;
 import java.lang.Integer;
 
+
 /**
  * implement of State
  *
  * @author Bowen
  */
 public class ProtocolImp implements Protocol {
+
 
   /**
    * The constant emptyString.
