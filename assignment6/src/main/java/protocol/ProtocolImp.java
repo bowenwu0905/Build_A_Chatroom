@@ -202,57 +202,9 @@ public class ProtocolImp implements Protocol {
         dataOutputStream.writeChar(space);
         dataOutputStream.write(recipientToByte);
       }
+
     }
   }
 
-  @Override
-  public List<String> decode(List<byte[]> message) {
-    MessageType messageType = getMessageType(message);
-    switch (messageType) {
-      case CONNECT_MESSAGE -> {
 
-      }
-
-      case QUERY_USERS -> {
-
-      }
-
-      case SEND_INSULT -> {
-
-      }
-      case DIRECT_MESSAGE -> {
-
-      }
-      case FAILED_MESSAGE -> {
-
-      }
-      case QUERY_RESPONSE -> {
-
-      }
-      case CONNECT_RESPONSE -> {
-
-      }
-      case BROADCAST_MESSAGE -> {
-
-      }
-      case DISCONNECT_MESSAGE -> {
-
-      }
-      case DISCONNECT_RESPONSE -> {
-
-      }
-    }
-    return null;
-  }
-
-  @Override
-  public MessageType getMessageType(List<byte[]> message) {
-    // byte - > number
-    // number -> messageType
-
-    int number = ByteBuffer.wrap(message.get(0)).getInt();
-    MessageType messageType = idrToMessage.get(number);
-
-    return messageType;
-  }
 }

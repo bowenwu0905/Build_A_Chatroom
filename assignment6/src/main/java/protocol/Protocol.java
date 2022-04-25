@@ -83,8 +83,5 @@ public interface Protocol {
 
   void encode(MessageType messageType, List<String> message, DataOutputStream dataOutputStream) throws IOException;
 
-  List<String> decode(List<byte[]> message);
-
-  MessageType getMessageType(List<byte[]> message);
 
 }
