@@ -50,6 +50,7 @@ public class InputHandler {
       //userName
       //receiverName
       //Message
+      System.out.println("for One!!!!!");
       String receiverName = firstWord.substring(SECOND_CHARACTER);
       String text = Input.split(SPACE,DIVID_INTO_PARTS)[SECOND_PART_INPUT_INDEX];
       protocal.encode(MessageType.DIRECT_MESSAGE,Arrays.asList(userName,receiverName,text),toServer);
@@ -67,7 +68,8 @@ public class InputHandler {
     else{
       //userName
       //Message
-      String text = Input.split(SPACE,DIVID_INTO_PARTS)[SECOND_PART_INPUT_INDEX];
+      String text = Input.replaceAll("(?i)"+Command.AT_ALL, "");
+      System.out.println("for all!!!!!");
       protocal.encode(MessageType.BROADCAST_MESSAGE,Arrays.asList(userName,text),toServer);
     }
   }
