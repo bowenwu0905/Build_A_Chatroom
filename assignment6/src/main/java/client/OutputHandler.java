@@ -115,13 +115,6 @@ public class OutputHandler {
     this.userName = userName;
   }
 
-  public DataInputStream getFromServer() {
-    return fromServer;
-  }
-
-  public void setFromServer(DataInputStream fromServer) {
-    this.fromServer = fromServer;
-  }
 
   @Override
   public boolean equals(Object o) {
@@ -132,8 +125,7 @@ public class OutputHandler {
       return false;
     }
     OutputHandler that = (OutputHandler) o;
-    return Objects.equals(userName, that.userName) && Objects.equals(fromServer,
-        that.fromServer);
+    return Objects.equals(userName, that.userName);
   }
 
   @Override
