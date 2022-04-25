@@ -36,6 +36,7 @@ public class Server {
     System.out.println("Server start to listen port " + port);
     semaphore = new Semaphore(CLIENT_LIMIT);
     socketMap = new ConcurrentHashMap<>(CLIENT_LIMIT);
+    outMap = new ConcurrentHashMap<>(CLIENT_LIMIT);
   }
 
   public void run() throws IOException, InterruptedException {
@@ -44,7 +45,7 @@ public class Server {
     while (true) {
       this.semaphore.acquire();
       Socket socket = this.serverSocket.accept();
-      new Thread(new ServerHandler(semaphore, socket, socketMap)).start();
+      new Thread(new ServerHandler(semaphore, socket, socketMap, outMap)).start();
       if (this.semaphore.availablePermits() == CLIENT_LIMIT) {
         System.out.println("enter q to close server or wait clients to connect");
         Scanner in = new Scanner(System.in);
@@ -54,7 +55,6 @@ public class Server {
         }
       }
     }
-
   }
 
   public void stopServer() throws IOException {
@@ -62,7 +62,6 @@ public class Server {
   }
 
   public static void main(String[] args) throws IOException, InterruptedException {
-    ConcurrentHashMap<Integer, Socket> socketMap = new ConcurrentHashMap<>(CLIENT_LIMIT);
     Server server = new Server();
     // 需要从command输入么?
     server.start(10000);

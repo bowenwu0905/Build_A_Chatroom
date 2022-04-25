@@ -33,10 +33,12 @@ public class ServerHandler implements Runnable {
 
 
   public ServerHandler(Semaphore semaphore, Socket socket,
-      ConcurrentHashMap<String, Socket> socketMap) {
+      ConcurrentHashMap<String, Socket> socketMap,
+      ConcurrentHashMap<String, DataOutputStream> outMap) {
     this.semaphore = semaphore;
     this.socket = socket;
     this.socketMap = socketMap;
+    this.outMap = outMap;
   }
 
   @Override
