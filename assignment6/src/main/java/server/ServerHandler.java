@@ -22,11 +22,12 @@ import protocol.ProtocolImp;
  * @author xiaochong
  */
 public class ServerHandler implements Runnable {
+  private static final int CLIENT_LIMIT = 10;
   private Semaphore semaphore;
   private Socket socket;
   private Protocol protocol = new ProtocolImp();
   private ConcurrentHashMap<String, Socket> socketMap;
-  private ConcurrentHashMap<String, DataOutputStream> outMap = new ConcurrentHashMap<>(10);
+  private ConcurrentHashMap<String, DataOutputStream> outMap = new ConcurrentHashMap<>(CLIENT_LIMIT);
   private Grammar grammar = new Grammar();
   private JsonReader jsonReader = new JsonReader();
 
@@ -65,7 +66,7 @@ public class ServerHandler implements Runnable {
               status = true;
             } else {
               // fail
-              response = "Already have established the connection";
+              response = username + " already has established the connection";
             }
             protocol.encode(MessageType.CONNECT_RESPONSE, List.of(String.valueOf(status), response), out);
 
@@ -89,7 +90,7 @@ public class ServerHandler implements Runnable {
           } case QUERY_USERS -> {
             int size = in.readInt();
             String username = getString(in, size);
-            String response = null;
+            String response;
             if (socketMap.containsKey(username)) {
               List<String> userList = new ArrayList<>();
               for (Entry<String, Socket> entry : socketMap.entrySet()) {
@@ -98,8 +99,7 @@ public class ServerHandler implements Runnable {
               }
               protocol.encode(MessageType.QUERY_RESPONSE, userList, out);
             } else {
-              response = "this client haven't set the connection";
-              protocol.encode(MessageType.FAILED_MESSAGE, List.of(response), out);
+              sendFailedMessage(username, out);
             }
           } case BROADCAST_MESSAGE -> {
             int size = in.readInt();
@@ -107,15 +107,12 @@ public class ServerHandler implements Runnable {
             in.readChar();
             int messageSize = in.readInt();
             String message = getString(in, messageSize);
-            String response = null;
             if (socketMap.containsKey(username)) {
-              response = message + "\n Message from sender: " + username;
               for (Entry<String, DataOutputStream> entry : outMap.entrySet()) {
-                protocol.encode(MessageType.DIRECT_MESSAGE, List.of(username, entry.getKey(), response), entry.getValue());
+                protocol.encode(MessageType.DIRECT_MESSAGE, List.of(username, entry.getKey(), message), entry.getValue());
               }
             } else {
-              response = "this client haven't set the connection";
-              protocol.encode(MessageType.FAILED_MESSAGE, List.of(response), out);
+              sendFailedMessage(username, out);
             }
           } case DIRECT_MESSAGE -> {
             int senderSize = in.readInt();
@@ -126,14 +123,12 @@ public class ServerHandler implements Runnable {
             in.readChar();
             int messageSize = in.readInt();
             String message = getString(in, messageSize);
-            String response = null;
             if (socketMap.containsKey(sender) && socketMap.containsKey(recipient)) {
               DataOutputStream dataOutputStream = outMap.get(recipient);
               protocol.encode(MessageType.DIRECT_MESSAGE, List.of(sender, recipient, message), dataOutputStream);
             } else {
               String tmp = !socketMap.containsKey(sender) ? sender : recipient;
-              response = tmp + " haven't set the connection";
-              protocol.encode(MessageType.FAILED_MESSAGE, List.of(response), out);
+              sendFailedMessage(tmp, out);
             }
           } case SEND_INSULT -> {
             int senderSize = in.readInt();
@@ -141,7 +136,7 @@ public class ServerHandler implements Runnable {
             in.readChar();
             int recipientSize = in.readInt();
             String recipient = getString(in, recipientSize);
-            String response = null;
+            String response;
             if (socketMap.containsKey(sender) && socketMap.containsKey(recipient)) {
               response = grammar.textGenerator("start", jsonReader.jsonProcess("templates/insult_grammar.json"));
               DataOutputStream dataOutputStream = outMap.get(recipient);
@@ -150,19 +145,11 @@ public class ServerHandler implements Runnable {
               }
             } else {
               String tmp = !socketMap.containsKey(sender) ? sender : recipient;
-              response = tmp + " haven't set the connection";
-              protocol.encode(MessageType.FAILED_MESSAGE, List.of(response), out);
+              sendFailedMessage(tmp, out);
             }
-          } default -> {
-            // todo
-
-          }
-
+          } default ->
+              protocol.encode(MessageType.FAILED_MESSAGE, List.of("wrong input"), out);
         }
-      } catch (IOException e) {
-        e.printStackTrace();
-      } catch (InterruptedException e) {
-        e.printStackTrace();
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -174,5 +161,10 @@ public class ServerHandler implements Runnable {
     byte[] buffer = new byte[size];
     in.read(buffer, 0, size);
     return new String(buffer, StandardCharsets.UTF_8);
+  }
+
+  private void sendFailedMessage(String client, DataOutputStream out) throws IOException {
+    String response = client + " hasn't set the connection";
+    protocol.encode(MessageType.FAILED_MESSAGE, List.of(response), out);
   }
 }
