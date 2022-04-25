@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import protocol.MessageType;
 import protocol.Protocol;
 import protocol.ProtocolImp;
+import util.Command;
 
 class InputHandlerTest {
   String userName;
@@ -155,6 +156,16 @@ class InputHandlerTest {
   }
 
 
+  @Test
+  void inputParse6() throws IOException {
+    i1.inputParse("?");
+    String expected = Command.HELP_MENU;
+    assertEquals(expected+"\n",outContent.toString());
+
+
+  }
+
+
 
   @Test
   void connectServer() throws IOException {
@@ -172,18 +183,25 @@ class InputHandlerTest {
 
   @Test
   void getUserName() {
+    assertEquals(userName,i1.getUserName());
   }
 
   @Test
-  void setUserName() {
+  public void setUserName(String userName) {
+    this.userName = userName;
   }
 
   @Test
   void getProtocal() {
+    Protocol p1 = new ProtocolImp();
+    assertEquals(p1,i1.getProtocal());
   }
 
   @Test
   void setProtocal() {
+    Protocol p1 = new ProtocolImp();
+    i1.setProtocal(p1);
+    assertEquals(p1,i1.getProtocal());
   }
 
   @Test

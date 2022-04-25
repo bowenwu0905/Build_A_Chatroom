@@ -94,10 +94,6 @@ public class Client {
         }
 
 
-
-
-
-
         while(true){
           String line;
           System.out.println("Enter your command \n");
