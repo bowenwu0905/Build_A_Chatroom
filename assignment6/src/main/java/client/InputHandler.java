@@ -3,6 +3,7 @@ package client;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 import protocol.MessageType;
 import protocol.Protocol;
 import protocol.ProtocolImp;
@@ -75,6 +76,45 @@ public class InputHandler {
     protocal.encode(MessageType.CONNECT_MESSAGE,Arrays.asList(userName),toServer);
   }
 
+  public String getUserName() {
+    return userName;
+  }
 
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
 
+  public Protocol getProtocal() {
+    return protocal;
+  }
+
+  public void setProtocal(Protocol protocal) {
+    this.protocal = protocal;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    InputHandler that = (InputHandler) o;
+    return Objects.equals(userName, that.userName) && Objects.equals(protocal, that.protocal);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(userName,  protocal);
+  }
+
+  @Override
+  public String toString() {
+    return "InputHandler{" +
+        "userName='" + userName + '\'' +
+        ", toServer=" + toServer +
+        ", protocal=" + protocal +
+        '}';
+  }
 }

@@ -19,9 +19,9 @@ public class PrintLogUtil {
     System.out.println(senderName+" -> "+receiverName+ " :"+text+"\n");
   }
 
-  public static void groupMessage(String senderName,String text){
-    System.out.println("From "+senderName+" to everyone:"+text+"\n");
-  }
+//  public static void groupMessage(String senderName,String text){
+//    System.out.println("From "+senderName+" to everyone:"+text+"\n");
+//  }
 
   public PrintLogUtil() {
   }

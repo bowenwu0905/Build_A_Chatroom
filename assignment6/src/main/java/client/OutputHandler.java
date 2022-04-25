@@ -61,22 +61,22 @@ public class OutputHandler {
         String backMessage = new String(message, StandardCharsets.UTF_8);
         PrintLogUtil.oneOnOneMessage(senderName,receiverName,backMessage);
       }
-      case BROADCAST_MESSAGE -> {
-        fromServer.readChar();
-        int senderNameSize = fromServer.readInt();
-        fromServer.readChar();
-        byte[] senderUser = new byte[senderNameSize];
-        fromServer.read(senderUser);
-        String senderName = new String(senderUser, StandardCharsets.UTF_8);
-        fromServer.readChar();
-        int messageSize = fromServer.readInt();
-        fromServer.readChar();
-        byte[] message = new byte[messageSize];
-        fromServer.read(message);
-        String backMessage = new String(message, StandardCharsets.UTF_8);
-        PrintLogUtil.groupMessage(senderName,backMessage);
-
-      }
+//      case BROADCAST_MESSAGE -> {
+//        fromServer.readChar();
+//        int senderNameSize = fromServer.readInt();
+//        fromServer.readChar();
+//        byte[] senderUser = new byte[senderNameSize];
+//        fromServer.read(senderUser);
+//        String senderName = new String(senderUser, StandardCharsets.UTF_8);
+//        fromServer.readChar();
+//        int messageSize = fromServer.readInt();
+//        fromServer.readChar();
+//        byte[] message = new byte[messageSize];
+//        fromServer.read(message);
+//        String backMessage = new String(message, StandardCharsets.UTF_8);
+//        PrintLogUtil.groupMessage(senderName,backMessage);
+//
+//      }
       case FAILED_MESSAGE -> {
         fromServer.readChar();
         int messageSize = fromServer.readInt();
@@ -115,13 +115,6 @@ public class OutputHandler {
     this.userName = userName;
   }
 
-  public DataInputStream getFromServer() {
-    return fromServer;
-  }
-
-  public void setFromServer(DataInputStream fromServer) {
-    this.fromServer = fromServer;
-  }
 
   @Override
   public boolean equals(Object o) {
@@ -132,8 +125,7 @@ public class OutputHandler {
       return false;
     }
     OutputHandler that = (OutputHandler) o;
-    return Objects.equals(userName, that.userName) && Objects.equals(fromServer,
-        that.fromServer);
+    return Objects.equals(userName, that.userName);
   }
 
   @Override
