@@ -104,29 +104,32 @@ public class Client {
 
           System.out.println("Enter your command \n");
           line = sc.nextLine();
-          while (input.trim().equals("")){
+          while (line.trim().equals("")){
             System.out.println("Input is empty, please ENTER your command");
-            input = sc.nextLine();
+            line = sc.nextLine();
           }
-          this.inputHandler.inputParse(line.trim());
+
           if (line.trim().equals(Command.HELP)){
             continue;
           }
+          this.inputHandler.inputParse(line.trim());
 
-          client.setSoTimeout(3000);
 
+//          while(fromServer.available()>0) {
+            client.setSoTimeout(3000);
             int messageType = fromServer.readInt();
             if (this.protocol.idrToMessage.get(messageType) == MessageType.CONNECT_RESPONSE) {
               System.out.println("here1");
               boolean isDisconnect = outputHandler.connectStatusResponseHandle();
               if (isDisconnect) {
-                System.out.println("open:"+isDisconnect);
+                System.out.println("open:" + isDisconnect);
                 this.setLogOff(isDisconnect);
                 break;
               }
             } else {
               this.outputHandler.outPuthandle(this.protocol.idrToMessage.get(messageType));
             }
+//          }
 
         }
 
