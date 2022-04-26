@@ -88,12 +88,12 @@ public class InputHandler {
       return false;
     }
     InputHandler that = (InputHandler) o;
-    return Objects.equals(userName, that.userName) && Objects.equals(protocal, that.protocal);
+    return Objects.equals(userName, that.userName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(userName,  protocal);
+    return Objects.hash(userName);
   }
 
   @Override
@@ -101,7 +101,6 @@ public class InputHandler {
     return "InputHandler{" +
         "userName='" + userName + '\'' +
         ", toServer=" + toServer +
-        ", protocal=" + protocal +
         '}';
   }
 }

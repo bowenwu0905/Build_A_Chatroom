@@ -16,14 +16,13 @@ public class WriterThread extends Thread{
   private Socket socket;
   private Scanner sc;
   private CountDownLatch readerLatch;
-  private DataOutputStream toServer;
 
   public WriterThread(Client client,  CountDownLatch readerLatch, Socket socket)
       throws IOException {
     this.client = client;
     this.readerLatch = readerLatch;
     this.socket = socket;
-    this.toServer = new DataOutputStream(this.socket.getOutputStream());
+    DataOutputStream toServer = new DataOutputStream(this.socket.getOutputStream());
     this.inputHandler = new InputHandler(client.getUserName(), toServer);
     sc = new Scanner(System.in);
   }
@@ -45,6 +44,11 @@ public class WriterThread extends Thread{
         System.err.println("Error writing to server: " + e.getMessage());
       }
     }
+    try {
+      socket.close();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
@@ -56,26 +60,16 @@ public class WriterThread extends Thread{
       return false;
     }
     WriterThread that = (WriterThread) o;
-    return Objects.equals(inputHandler, that.inputHandler) && Objects.equals(
-        client, that.client) && Objects.equals(socket, that.socket)
-        && Objects.equals(sc, that.sc) && Objects.equals(readerLatch,
-        that.readerLatch) && Objects.equals(toServer, that.toServer);
+    return Objects.equals(client, that.client);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(inputHandler, client, socket, sc, readerLatch, toServer);
+    return Objects.hash(client);
   }
 
   @Override
   public String toString() {
-    return "WriterThread{" +
-        "inputHandler=" + inputHandler +
-        ", client=" + client +
-        ", socket=" + socket +
-        ", sc=" + sc +
-        ", readerLatch=" + readerLatch +
-        ", toServer=" + toServer +
-        '}';
+    return "WriterThread{}";
   }
 }

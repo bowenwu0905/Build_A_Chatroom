@@ -114,7 +114,7 @@ public class OutputHandler {
 
   @Override
   public int hashCode() {
-    return Objects.hash(userName, fromServer);
+    return Objects.hash(userName);
   }
 
   @Override

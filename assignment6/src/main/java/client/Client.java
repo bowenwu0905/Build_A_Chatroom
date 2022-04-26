@@ -22,11 +22,8 @@ public class Client {
   private String userName;
   private Protocol protocol  = new ProtocolImp();
 
-  private InputHandler inputHandler;
-  private OutputHandler outputHandler;
   private boolean logOff = false;
   private boolean connectStatus = false;
-  private Scanner sc = null;
   private Socket client = null;
 
   private final static int READER_NUM = 1;
@@ -41,7 +38,7 @@ public class Client {
     }
 
     //Try to connect to server
-    sc = new Scanner(System.in);
+    Scanner sc = new Scanner(System.in);
     String hostname = args[0];
     int port =  Integer.parseInt(args[1]);
 
@@ -69,7 +66,6 @@ public class Client {
           }
           continue;
         }
-
         String input = "";
         DataInputStream fromServer = new DataInputStream(client.getInputStream());
         while(!connectStatus){
@@ -85,25 +81,24 @@ public class Client {
           System.out.println(">>> Hi," + input.trim());
 //          This username is case seneitive
           this.setUserName(input.trim());
-          this.inputHandler = new InputHandler(this.userName,toServer);
-          this.outputHandler = new OutputHandler(this.userName,fromServer);
-          this.inputHandler.connectServer();
+          InputHandler inputHandler = new InputHandler(this.userName, toServer);
+          OutputHandler outputHandler = new OutputHandler(this.userName, fromServer);
+          inputHandler.connectServer();
           client.setSoTimeout(3000);
           fromServer.readInt();
           connectStatus = outputHandler.connectStatusResponseHandle();
         }
-
         CountDownLatch readLatch = new CountDownLatch(this.READER_NUM);
         new ReaderThread(this, readLatch,client).start();
         new WriterThread(this, readLatch,client).start();
         readLatch.await();
-
       }catch(SocketTimeoutException e){
         System.err.println("Timeout error. Server not responding.");
       }catch(Exception e){
         if (client != null) client.close();
       }
     }
+
     System.exit(0);
   }
 
@@ -138,27 +133,16 @@ public class Client {
       return false;
     }
     Client client = (Client) o;
-    return logOff == client.logOff && Objects.equals(userName, client.userName)
-        && Objects.equals(protocol, client.protocol) && Objects.equals(
-        inputHandler, client.inputHandler) && Objects.equals(outputHandler,
-        client.outputHandler);
+    return Objects.equals(userName, client.userName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(userName, protocol, inputHandler, outputHandler, logOff);
+    return Objects.hash(userName);
   }
 
   @Override
   public String toString() {
-    return "Client{" +
-        "userName='" + userName + '\'' +
-        ", protocol=" + protocol +
-        ", inputHandler=" + inputHandler +
-        ", outputHandler=" + outputHandler +
-        ", logOff=" + logOff +
-        ", sc=" + sc +
-        ", client=" + client +
-        '}';
+    return "Client{}";
   }
 }
