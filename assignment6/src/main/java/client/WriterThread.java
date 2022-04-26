@@ -1,19 +1,19 @@
 package client;
 
-import java.io.DataInputStream;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
-import util.Command;
+
 
 public class WriterThread extends Thread{
 
   private InputHandler inputHandler;
   private Client client;
   private Socket socket;
-  private Scanner sc =null;
+  private Scanner sc;
   private CountDownLatch readerLatch;
   private DataOutputStream toServer;
 
@@ -22,7 +22,9 @@ public class WriterThread extends Thread{
     this.client = client;
     this.readerLatch = readerLatch;
     this.socket = socket;
+
     this.toServer = new DataOutputStream(this.socket.getOutputStream());
+
     this.inputHandler = new InputHandler(client.getUserName(), toServer);
     sc = new Scanner(System.in);
   }
@@ -33,7 +35,7 @@ public class WriterThread extends Thread{
     while (!socket.isClosed() || this.readerLatch.getCount() > 0) {
 
       try {
-        String line = "";
+        String line;
         System.out.println(">>> Enter your command \n");
         line = sc.nextLine();
         while (line.trim().equals("")) {

@@ -3,11 +3,10 @@ package client;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 import protocol.MessageType;
 import protocol.Protocol;
-import util.Command;
+
 
 public class ReaderThread extends Thread{
   private Client client;
@@ -31,7 +30,6 @@ public class ReaderThread extends Thread{
     while (true) {
       try {
         if (fromServer.available() > 0 ) {
-
               int messageType = fromServer.readInt();
               this.outputHandler = new OutputHandler(client.getUserName(), fromServer);
               if (Protocol.idrToMessage.get(messageType) == MessageType.CONNECT_RESPONSE) {
@@ -49,11 +47,8 @@ public class ReaderThread extends Thread{
       ex.printStackTrace();
       break;
       }
-
     }
     this.readerLatch.countDown();
-    System.out.println("end of write");
-
 
   }
 

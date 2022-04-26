@@ -9,15 +9,14 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import protocol.MessageType;
 import protocol.Protocol;
 import protocol.ProtocolImp;
-import util.Command;
+
 
 /**
  * client class
  *
- * @author xiaochong,Zitao Shen
+ * @author Zitao Shen
  */
 public class Client {
   private String userName;
