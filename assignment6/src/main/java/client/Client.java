@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import protocol.MessageType;
 import protocol.Protocol;
@@ -27,6 +28,8 @@ public class Client {
   private boolean logOff = false;
   private Scanner sc = null;
   private Socket client = null;
+
+  private final static int READER_NUM = 1;
 
   public Client() {
   }
@@ -69,18 +72,18 @@ public class Client {
 
         boolean connectStatus = false;
         String input = "";
-        DataInputStream fromServer = new DataInputStream(client.getInputStream());;
-       while(!connectStatus){
+        DataInputStream fromServer = new DataInputStream(client.getInputStream());
+        while(!connectStatus){
 
-          System.out.println("Enter username to login as <username> \n");
+          System.out.println(">>> Enter username to login as <username> \n");
           input = sc.nextLine();
 
           //user didn't input anything
           while (input.trim().equals("")){
-            System.out.println("Input is empty, please ENTER an username as <username> \n");
+            System.out.println(">>> Input is empty, please ENTER an username as <username> \n");
             input = sc.nextLine();
           }
-          System.out.println("Hi," + input.trim());
+          System.out.println(">>> Hi," + input.trim());
           //This username is case seneitive
           this.setUserName(input.trim());
           this.inputHandler = new InputHandler(this.userName,toServer);
@@ -94,44 +97,43 @@ public class Client {
           connectStatus = outputHandler.connectStatusResponseHandle();
         }
 
-
-        while(true){
-          String line;
-          while(fromServer.available()>0){
-            int messageType = fromServer.readInt();
-            this.outputHandler.outPuthandle(this.protocol.idrToMessage.get(messageType));
-          }
-
-          System.out.println("Enter your command \n");
-          line = sc.nextLine();
-          while (line.trim().equals("")){
-            System.out.println("Input is empty, please ENTER your command");
-            line = sc.nextLine();
-          }
-
-          if (line.trim().equals(Command.HELP)){
-            continue;
-          }
-          this.inputHandler.inputParse(line.trim());
+        CountDownLatch readLatch = new CountDownLatch(this.READER_NUM);
+        new ReaderThread(this, readLatch,client).start();
+        new WriterThread(inputHandler, readLatch).start();
 
 
-//          while(fromServer.available()>0) {
-            client.setSoTimeout(3000);
-            int messageType = fromServer.readInt();
-            if (this.protocol.idrToMessage.get(messageType) == MessageType.CONNECT_RESPONSE) {
-              System.out.println("here1");
-              boolean isDisconnect = outputHandler.connectStatusResponseHandle();
-              if (isDisconnect) {
-                System.out.println("open:" + isDisconnect);
-                this.setLogOff(isDisconnect);
-                break;
-              }
-            } else {
-              this.outputHandler.outPuthandle(this.protocol.idrToMessage.get(messageType));
-            }
+//        while(true){
+//          String line;
+//
+//
+//          System.out.println("Enter your command \n");
+//          line = sc.nextLine();
+//          while (line.trim().equals("")){
+//            System.out.println("Input is empty, please ENTER your command");
+//            line = sc.nextLine();
 //          }
-
-        }
+//
+//          if (line.trim().equals(Command.HELP)){
+//            continue;
+//          }
+//          this.inputHandler.inputParse(line.trim());
+//
+//
+//            client.setSoTimeout(3000);
+//            int messageType = fromServer.readInt();
+//            if (this.protocol.idrToMessage.get(messageType) == MessageType.CONNECT_RESPONSE) {
+//              System.out.println("here1");
+//              boolean isDisconnect = outputHandler.connectStatusResponseHandle();
+//              if (isDisconnect) {
+//                System.out.println("open:" + isDisconnect);
+//                this.setLogOff(isDisconnect);
+//                break;
+//              }
+//            } else {
+//              this.outputHandler.outPuthandle(this.protocol.idrToMessage.get(messageType));
+//            }
+//
+//        }
 
 
       }catch(SocketTimeoutException e){
@@ -140,6 +142,7 @@ public class Client {
         if (client != null) client.close();
       }
     }
+    client.close();
 
   }
 
@@ -152,7 +155,7 @@ public class Client {
     return logOff;
   }
 
-  private void setLogOff(boolean logOff) {
+  public void setLogOff(boolean logOff) {
     this.logOff = logOff;
   }
 
