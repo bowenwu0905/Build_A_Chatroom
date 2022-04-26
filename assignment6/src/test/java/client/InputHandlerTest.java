@@ -17,6 +17,7 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import protocol.MessageType;
 import protocol.Protocol;
 import protocol.ProtocolImp;
@@ -138,7 +139,7 @@ class InputHandlerTest {
 
   @Test
   void inputParse5() throws IOException {
-    i1.inputParse("@all "+text);
+    i1.inputParse(text);
     assertEquals(Protocol.messageToIdr.get(MessageType.BROADCAST_MESSAGE),fromServer.readInt());
     assertEquals(' ',fromServer.readChar());
     assertEquals(userName.length(),fromServer.readInt());
@@ -147,15 +148,14 @@ class InputHandlerTest {
     fromServer.read(senderUser);
     String senderName = new String(senderUser, StandardCharsets.UTF_8);
     assertEquals(userName,senderName);
-
     assertEquals(' ',fromServer.readChar());
-    assertEquals(text.length(),fromServer.readInt());
+    int x = fromServer.readInt();
+    assertEquals(text.length(),x);
     assertEquals(' ',fromServer.readChar());
-    byte[] textByte = new byte[text.length()];
+    byte[] textByte = new byte[x];
     fromServer.read(textByte);
     String m = new String(textByte, StandardCharsets.UTF_8);
     assertEquals(text,m);
-
   }
 
 
@@ -189,23 +189,8 @@ class InputHandlerTest {
     assertEquals(userName,i1.getUserName());
   }
 
-  @Test
-  public void setUserName(String userName) {
-    this.userName = userName;
-  }
 
-  @Test
-  void getProtocal() {
-    Protocol p1 = new ProtocolImp();
-    assertEquals(p1,i1.getProtocal());
-  }
 
-  @Test
-  void setProtocal() {
-    Protocol p1 = new ProtocolImp();
-    i1.setProtocal(p1);
-    assertEquals(p1,i1.getProtocal());
-  }
 
   @Test
   void testEquals() {

@@ -7,16 +7,16 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import protocol.MessageType;
 import protocol.Protocol;
 import protocol.ProtocolImp;
-import util.Command;
+
 
 /**
  * client class
  *
- * @author xiaochong,Zitao Shen
+ * @author Zitao Shen
  */
 public class Client {
   private String userName;
@@ -25,8 +25,11 @@ public class Client {
   private InputHandler inputHandler;
   private OutputHandler outputHandler;
   private boolean logOff = false;
+  private boolean connectStatus = false;
   private Scanner sc = null;
   private Socket client = null;
+
+  private final static int READER_NUM = 1;
 
   public Client() {
   }
@@ -67,72 +70,33 @@ public class Client {
           continue;
         }
 
-        boolean connectStatus = false;
         String input = "";
-        DataInputStream fromServer = new DataInputStream(client.getInputStream());;
-       while(!connectStatus){
+        DataInputStream fromServer = new DataInputStream(client.getInputStream());
+        while(!connectStatus){
 
-          System.out.println("Enter username to login as <username> \n");
+          System.out.println(">>> Enter username to login as <username> \n");
           input = sc.nextLine();
 
           //user didn't input anything
           while (input.trim().equals("")){
-            System.out.println("Input is empty, please ENTER an username as <username> \n");
+            System.out.println(">>> Input is empty, please ENTER an username as <username> \n");
             input = sc.nextLine();
           }
-          System.out.println("Hi," + input.trim());
-          //This username is case seneitive
+          System.out.println(">>> Hi," + input.trim());
+//          This username is case seneitive
           this.setUserName(input.trim());
           this.inputHandler = new InputHandler(this.userName,toServer);
-
-
           this.outputHandler = new OutputHandler(this.userName,fromServer);
-
           this.inputHandler.connectServer();
           client.setSoTimeout(3000);
           fromServer.readInt();
           connectStatus = outputHandler.connectStatusResponseHandle();
         }
 
-
-        while(true){
-          String line;
-          while(fromServer.available()>0){
-            int messageType = fromServer.readInt();
-            this.outputHandler.outPuthandle(this.protocol.idrToMessage.get(messageType));
-          }
-
-          System.out.println("Enter your command \n");
-          line = sc.nextLine();
-          while (line.trim().equals("")){
-            System.out.println("Input is empty, please ENTER your command");
-            line = sc.nextLine();
-          }
-
-          if (line.trim().equals(Command.HELP)){
-            continue;
-          }
-          this.inputHandler.inputParse(line.trim());
-
-
-//          while(fromServer.available()>0) {
-            client.setSoTimeout(3000);
-            int messageType = fromServer.readInt();
-            if (this.protocol.idrToMessage.get(messageType) == MessageType.CONNECT_RESPONSE) {
-              System.out.println("here1");
-              boolean isDisconnect = outputHandler.connectStatusResponseHandle();
-              if (isDisconnect) {
-                System.out.println("open:" + isDisconnect);
-                this.setLogOff(isDisconnect);
-                break;
-              }
-            } else {
-              this.outputHandler.outPuthandle(this.protocol.idrToMessage.get(messageType));
-            }
-//          }
-
-        }
-
+        CountDownLatch readLatch = new CountDownLatch(this.READER_NUM);
+        new ReaderThread(this, readLatch,client).start();
+        new WriterThread(this, readLatch,client).start();
+        readLatch.await();
 
       }catch(SocketTimeoutException e){
         System.err.println("Timeout error. Server not responding.");
@@ -140,7 +104,7 @@ public class Client {
         if (client != null) client.close();
       }
     }
-
+    System.exit(0);
   }
 
   public static void main(String[] args) throws IOException{
@@ -148,19 +112,20 @@ public class Client {
     client.start(args);
   }
 
-  private boolean isLogOff() {
+  public boolean isLogOff() {
     return logOff;
   }
 
-  private void setLogOff(boolean logOff) {
+  public void setLogOff(boolean logOff) {
     this.logOff = logOff;
   }
+
 
   public String getUserName() {
     return userName;
   }
 
-  private void setUserName(String userName) {
+  public void setUserName(String userName) {
     this.userName = userName;
   }
 
