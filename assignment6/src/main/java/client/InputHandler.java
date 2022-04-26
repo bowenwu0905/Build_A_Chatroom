@@ -79,18 +79,6 @@ public class InputHandler {
     return userName;
   }
 
-  public void setUserName(String userName) {
-    this.userName = userName;
-  }
-
-  public Protocol getProtocal() {
-    return protocal;
-  }
-
-  public void setProtocal(Protocol protocal) {
-    this.protocal = protocal;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
