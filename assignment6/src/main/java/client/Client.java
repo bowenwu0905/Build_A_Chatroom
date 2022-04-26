@@ -26,6 +26,7 @@ public class Client {
   private InputHandler inputHandler;
   private OutputHandler outputHandler;
   private boolean logOff = false;
+  private boolean connectStatus = false;
   private Scanner sc = null;
   private Socket client = null;
 
@@ -52,25 +53,25 @@ public class Client {
       System.exit(1);
     }
 
-    while (!this.logOff) {
+//    while (!this.logOff) {
       try {
         DataOutputStream toServer;
         //if server closed ahead
-        try {
+//        try {
           toServer = new DataOutputStream(client.getOutputStream());
-        }catch(Exception e){
-          System.out.println("Server closed, retry connecting in 3 seconds.");
-          TimeUnit.SECONDS.sleep(3);
-          //Continue to check and connect server if server closed
-          try {
-            client = new Socket(hostname, port);
-          }catch(Exception e2){
-            System.err.println("Could not connect to "+hostname+":"+port+ ", has it started?");
-          }
-          continue;
-        }
+//        }catch(Exception e){
+//          System.out.println("Server closed, retry connecting in 3 seconds.");
+//          TimeUnit.SECONDS.sleep(3);
+//          //Continue to check and connect server if server closed
+//          try {
+//            client = new Socket(hostname, port);
+//          }catch(Exception e2){
+//            System.err.println("Could not connect to "+hostname+":"+port+ ", has it started?");
+//          }
+//          continue;
+//        }
 
-        boolean connectStatus = false;
+
         String input = "";
         DataInputStream fromServer = new DataInputStream(client.getInputStream());
         while(!connectStatus){
@@ -84,13 +85,10 @@ public class Client {
             input = sc.nextLine();
           }
           System.out.println(">>> Hi," + input.trim());
-          //This username is case seneitive
+//          This username is case seneitive
           this.setUserName(input.trim());
           this.inputHandler = new InputHandler(this.userName,toServer);
-
-
           this.outputHandler = new OutputHandler(this.userName,fromServer);
-
           this.inputHandler.connectServer();
           client.setSoTimeout(3000);
           fromServer.readInt();
@@ -99,7 +97,10 @@ public class Client {
 
         CountDownLatch readLatch = new CountDownLatch(this.READER_NUM);
         new ReaderThread(this, readLatch,client).start();
-        new WriterThread(inputHandler, readLatch).start();
+        new WriterThread(this, readLatch,client).start();
+        System.out.println("latch"+readLatch);
+//        readLatch.await();
+//        client.close();
 
 
 //        while(true){
@@ -141,8 +142,8 @@ public class Client {
       }catch(Exception e){
         if (client != null) client.close();
       }
-    }
-    client.close();
+//    }
+
 
   }
 
@@ -151,7 +152,7 @@ public class Client {
     client.start(args);
   }
 
-  private boolean isLogOff() {
+  public boolean isLogOff() {
     return logOff;
   }
 
@@ -159,11 +160,19 @@ public class Client {
     this.logOff = logOff;
   }
 
+  public boolean isConnectStatus() {
+    return connectStatus;
+  }
+
+  public void setConnectStatus(boolean connectStatus) {
+    this.connectStatus = connectStatus;
+  }
+
   public String getUserName() {
     return userName;
   }
 
-  private void setUserName(String userName) {
+  public void setUserName(String userName) {
     this.userName = userName;
   }
 

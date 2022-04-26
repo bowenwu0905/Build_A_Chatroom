@@ -24,29 +24,53 @@ public class ReaderThread extends Thread{
     this.readerLatch = readerLatch;
     this.socket = socket;
     this.fromServer = new DataInputStream(this.socket.getInputStream());
-    this.outputHandler = new OutputHandler(client.getUserName(), fromServer);
+
 
   }
   public void run() {
     while (true) {
       try {
-        int messageType = fromServer.readInt();
-        if (Protocol.idrToMessage.get(messageType) == MessageType.CONNECT_RESPONSE) {
-          this.isDisconnect = outputHandler.connectStatusResponseHandle();
-          if (this.isDisconnect) {
-            this.client.setLogOff(this.isDisconnect);
-            break;
-          }
-        } else {
-          this.outputHandler.outPuthandle(Protocol.idrToMessage.get(messageType));
+        if (fromServer.available() > 0 ) {
+//          if(!this.client.isConnectStatus()){
+//            fromServer.readInt();
+//            this.outputHandler = new OutputHandler(client.getUserName(), fromServer);
+//            this.client.setConnectStatus( outputHandler.connectStatusResponseHandle());
+//          }
+//          else {
+
+              int messageType = fromServer.readInt();
+              this.outputHandler = new OutputHandler(client.getUserName(), fromServer);
+              if (Protocol.idrToMessage.get(messageType) == MessageType.CONNECT_RESPONSE) {
+                this.isDisconnect = outputHandler.connectStatusResponseHandle();
+                if (this.isDisconnect) {
+
+//                  this.client.setLogOff(this.isDisconnect);
+
+                  this.readerLatch.countDown();
+                  break;
+                }
+              } else {
+                this.outputHandler.outPuthandle(Protocol.idrToMessage.get(messageType));
+              }
+
+
+//          }
         }
       } catch (IOException ex) {
-        System.err.println("Error reading from server: " + ex.getMessage());
-        ex.printStackTrace();
-        break;
+      System.err.println("Error reading from server: " + ex.getMessage());
+      ex.printStackTrace();
+      break;
       }
+
     }
-    this.readerLatch.countDown();
+ System.out.println("end of write");
+
+//    try {
+//      socket.close();
+//    } catch (IOException e) {
+//      throw new RuntimeException(e);
+//    }
+
   }
 
 }
