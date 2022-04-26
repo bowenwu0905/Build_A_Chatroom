@@ -242,11 +242,10 @@ public class ServerHandler implements Runnable {
       return false;
     }
     ServerHandler that = (ServerHandler) o;
-    return Objects.equals(getSemaphore(), that.getSemaphore()) && Objects.equals(
-        getSocket(), that.getSocket()) && Objects.equals(getProtocol(), that.getProtocol())
-        && Objects.equals(getSocketMap(), that.getSocketMap()) && Objects.equals(
-        getOutMap(), that.getOutMap()) && Objects.equals(getGrammar(), that.getGrammar())
-        && Objects.equals(getJsonReader(), that.getJsonReader());
+    return Objects.equals(getSemaphore(), that.getSemaphore())
+        && Objects.equals(getSocket(), that.getSocket())
+        && Objects.equals(getSocketMap(), that.getSocketMap())
+        && Objects.equals(getOutMap(), that.getOutMap());
   }
 
   @Override
