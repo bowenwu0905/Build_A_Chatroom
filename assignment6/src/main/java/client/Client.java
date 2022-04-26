@@ -53,24 +53,23 @@ public class Client {
       System.exit(1);
     }
 
-//    while (!this.logOff) {
+    while (!this.logOff) {
       try {
         DataOutputStream toServer;
         //if server closed ahead
-//        try {
+        try {
           toServer = new DataOutputStream(client.getOutputStream());
-//        }catch(Exception e){
-//          System.out.println("Server closed, retry connecting in 3 seconds.");
-//          TimeUnit.SECONDS.sleep(3);
-//          //Continue to check and connect server if server closed
-//          try {
-//            client = new Socket(hostname, port);
-//          }catch(Exception e2){
-//            System.err.println("Could not connect to "+hostname+":"+port+ ", has it started?");
-//          }
-//          continue;
-//        }
-
+        }catch(Exception e){
+          System.out.println("Server closed, retry connecting in 3 seconds.");
+          TimeUnit.SECONDS.sleep(3);
+          //Continue to check and connect server if server closed
+          try {
+            client = new Socket(hostname, port);
+          }catch(Exception e2){
+            System.err.println("Could not connect to "+hostname+":"+port+ ", has it started?");
+          }
+          continue;
+        }
 
         String input = "";
         DataInputStream fromServer = new DataInputStream(client.getInputStream());
@@ -98,53 +97,15 @@ public class Client {
         CountDownLatch readLatch = new CountDownLatch(this.READER_NUM);
         new ReaderThread(this, readLatch,client).start();
         new WriterThread(this, readLatch,client).start();
-        System.out.println("latch"+readLatch);
-//        readLatch.await();
-//        client.close();
-
-
-//        while(true){
-//          String line;
-//
-//
-//          System.out.println("Enter your command \n");
-//          line = sc.nextLine();
-//          while (line.trim().equals("")){
-//            System.out.println("Input is empty, please ENTER your command");
-//            line = sc.nextLine();
-//          }
-//
-//          if (line.trim().equals(Command.HELP)){
-//            continue;
-//          }
-//          this.inputHandler.inputParse(line.trim());
-//
-//
-//            client.setSoTimeout(3000);
-//            int messageType = fromServer.readInt();
-//            if (this.protocol.idrToMessage.get(messageType) == MessageType.CONNECT_RESPONSE) {
-//              System.out.println("here1");
-//              boolean isDisconnect = outputHandler.connectStatusResponseHandle();
-//              if (isDisconnect) {
-//                System.out.println("open:" + isDisconnect);
-//                this.setLogOff(isDisconnect);
-//                break;
-//              }
-//            } else {
-//              this.outputHandler.outPuthandle(this.protocol.idrToMessage.get(messageType));
-//            }
-//
-//        }
-
+        readLatch.await();
 
       }catch(SocketTimeoutException e){
         System.err.println("Timeout error. Server not responding.");
       }catch(Exception e){
         if (client != null) client.close();
       }
-//    }
-
-
+    }
+    System.exit(0);
   }
 
   public static void main(String[] args) throws IOException{
@@ -160,13 +121,6 @@ public class Client {
     this.logOff = logOff;
   }
 
-  public boolean isConnectStatus() {
-    return connectStatus;
-  }
-
-  public void setConnectStatus(boolean connectStatus) {
-    this.connectStatus = connectStatus;
-  }
 
   public String getUserName() {
     return userName;
