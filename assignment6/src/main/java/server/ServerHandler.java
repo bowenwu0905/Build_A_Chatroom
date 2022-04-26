@@ -99,7 +99,7 @@ public class ServerHandler implements Runnable {
     }
   }
 
-  private void connectMessage(DataInputStream in, DataOutputStream out) throws IOException {
+  public void connectMessage(DataInputStream in, DataOutputStream out) throws IOException {
     int size = in.readInt();
     String username = getString(in, size);
     boolean status = false;
@@ -118,7 +118,7 @@ public class ServerHandler implements Runnable {
         out);
   }
 
-  private void disconnectMessage(DataInputStream in, DataOutputStream out) throws IOException {
+  public void disconnectMessage(DataInputStream in, DataOutputStream out) throws IOException {
     int size = in.readInt();
     String username = getString(in, size);
     boolean status = false;
@@ -137,7 +137,7 @@ public class ServerHandler implements Runnable {
     semaphore.release();
   }
 
-  private void queryUser(DataInputStream in, DataOutputStream out) throws IOException {
+  public void queryUser(DataInputStream in, DataOutputStream out) throws IOException {
     int size = in.readInt();
     String username = getString(in, size);
     if (socketMap.containsKey(username)) {
@@ -153,7 +153,7 @@ public class ServerHandler implements Runnable {
     }
   }
 
-  private void broadcastMessage(DataInputStream in, DataOutputStream out) throws IOException {
+  public void broadcastMessage(DataInputStream in, DataOutputStream out) throws IOException {
     int size = in.readInt();
     String username = getString(in, size);
     in.readChar();
@@ -169,7 +169,7 @@ public class ServerHandler implements Runnable {
     }
   }
 
-  private void directMessage(DataInputStream in, DataOutputStream out) throws IOException {
+  public void directMessage(DataInputStream in, DataOutputStream out) throws IOException {
     int senderSize = in.readInt();
     String sender = getString(in, senderSize);
     in.readChar();
@@ -188,7 +188,7 @@ public class ServerHandler implements Runnable {
     }
   }
 
-  private void sendInsult(DataInputStream in, DataOutputStream out) throws Exception {
+  public void sendInsult(DataInputStream in, DataOutputStream out) throws Exception {
     int senderSize = in.readInt();
     String sender = getString(in, senderSize);
     in.readChar();
@@ -208,14 +208,14 @@ public class ServerHandler implements Runnable {
     }
   }
 
-  private String getString(DataInputStream in, int size) throws IOException {
+  public String getString(DataInputStream in, int size) throws IOException {
     in.readChar();
     byte[] buffer = new byte[size];
     in.read(buffer, 0, size);
     return new String(buffer, StandardCharsets.UTF_8);
   }
 
-  private void sendFailedMessage(String client, DataOutputStream out) throws IOException {
+  public void sendFailedMessage(String client, DataOutputStream out) throws IOException {
     String response = client + " hasn't set the connection";
     protocol.encode(MessageType.FAILED_MESSAGE, List.of(response), out);
   }
