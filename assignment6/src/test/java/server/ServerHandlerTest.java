@@ -25,7 +25,8 @@ class ServerHandlerTest {
   private ServerSocket serverSocket;
   private Socket socket;
 
-
+  private DataInputStream in;
+  private DataOutputStream out;
   @BeforeEach
   void setUp() throws IOException {
     Semaphore semaphore = new Semaphore(10);
@@ -34,6 +35,10 @@ class ServerHandlerTest {
     ConcurrentHashMap<String, Socket> socketMap = new ConcurrentHashMap<>(10);
     ConcurrentHashMap<String, DataOutputStream> outMap = new ConcurrentHashMap<>(10);
     serverHandler = new ServerHandler(semaphore, socket, socketMap, outMap);
+    DataInputStream in = new DataInputStream(
+        new FileInputStream("/src/test/java/server/file.txt"));
+    DataOutputStream out = new DataOutputStream(
+        new FileOutputStream("/src/test/java/server/file.txt"));
   }
 
   @Test
@@ -73,21 +78,14 @@ class ServerHandlerTest {
 
   @Test
   void connectMessage() throws FileNotFoundException {
-    DataInputStream in = new DataInputStream(
-        new FileInputStream("/src/test/java/server/file.txt"));
-    DataOutputStream out = new DataOutputStream(
-        new FileOutputStream("/src/test/java/server/file.txt"));
+
   }
 
   @Test
   void disconnectMessage() throws FileNotFoundException {
     DataOutputStream out = new DataOutputStream(
         new FileOutputStream("/src/test/java/server/connectMessage.txt"));
-    out.writeInt();
-    out.writeChar();
-    out.writeInt();
-    out.writeChar();
-    out.writeBytes();
+
   }
 
   @AfterEach
