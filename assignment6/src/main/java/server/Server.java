@@ -150,10 +150,9 @@ public class Server {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof Server)) {
+    if (!(o instanceof Server server)) {
       return false;
     }
-    Server server = (Server) o;
     return Objects.equals(getServerSocket(), server.getServerSocket())
         && Objects.equals(getSemaphore(), server.getSemaphore())
         && Objects.equals(getSocketMap(), server.getSocketMap())

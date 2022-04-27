@@ -332,10 +332,9 @@ public class ServerHandler implements Runnable {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof ServerHandler)) {
+    if (!(o instanceof ServerHandler that)) {
       return false;
     }
-    ServerHandler that = (ServerHandler) o;
     return Objects.equals(getSemaphore(), that.getSemaphore())
         && Objects.equals(getSocket(), that.getSocket())
         && Objects.equals(getSocketMap(), that.getSocketMap())
