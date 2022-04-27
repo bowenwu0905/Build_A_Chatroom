@@ -95,22 +95,7 @@ class InputHandlerTest {
     fromServer.read(senderUser);
     String senderName = new String(senderUser, StandardCharsets.UTF_8);
     assertEquals(userName, senderName);
-
     assertEquals(' ', fromServer.readChar());
-    assertEquals(receiverName.length(), fromServer.readInt());
-    assertEquals(' ', fromServer.readChar());
-    byte[] receiverUser = new byte[receiverName.length()];
-    fromServer.read(receiverUser);
-    String rName = new String(receiverUser, StandardCharsets.UTF_8);
-    assertEquals(receiverName, rName);
-
-    assertEquals(' ', fromServer.readChar());
-    assertEquals(text.length(), fromServer.readInt());
-    assertEquals(' ', fromServer.readChar());
-    byte[] textByte = new byte[text.length()];
-    fromServer.read(textByte);
-    String m = new String(textByte, StandardCharsets.UTF_8);
-    assertEquals(text, m);
   }
 
   @Test

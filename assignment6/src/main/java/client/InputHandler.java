@@ -70,7 +70,7 @@ public class InputHandler {
       //receiverName
       //Message
       String receiverName = firstWord.substring(SECOND_CHARACTER);
-      String text = Input.split(SPACE, DIVIDE_INTO_PARTS)[SECOND_PART_INPUT_INDEX];
+      String text = Input.replaceAll(Command.AT_USER+receiverName, EMPTY);
       protocol.encode(MessageType.DIRECT_MESSAGE, Arrays.asList(userName, receiverName, text),
           toServer);
     }
