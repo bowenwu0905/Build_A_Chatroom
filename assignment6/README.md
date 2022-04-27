@@ -73,7 +73,7 @@ identifier.
 
 2.Go to the client class. In the client's main function, server's IP address (or localhost) and port `10000` are required to be passed in IntelliJ interface.
 
-## example of the client side output
+## Example of the client side output
 <img width="592" alt="image" src="https://media.github.ccs.neu.edu/user/10167/files/f929d007-a40c-4e75-b229-549a4d234565">
 
 
