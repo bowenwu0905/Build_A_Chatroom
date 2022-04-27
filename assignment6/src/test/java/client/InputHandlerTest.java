@@ -137,6 +137,9 @@ class InputHandlerTest {
 
   }
 
+
+
+
   @Test
   void inputParse5() throws IOException {
     i1.inputParse(text);
@@ -169,6 +172,66 @@ class InputHandlerTest {
   }
 
 
+  @Test
+  void inputParse7() throws IOException {
+    text = "!";
+    i1.inputParse(text);
+    assertEquals(Protocol.messageToIdr.get(MessageType.BROADCAST_MESSAGE),fromServer.readInt());
+    assertEquals(' ',fromServer.readChar());
+    assertEquals(userName.length(),fromServer.readInt());
+    assertEquals(' ',fromServer.readChar());
+    byte[] senderUser = new byte[userName.length()];
+    fromServer.read(senderUser);
+    String senderName = new String(senderUser, StandardCharsets.UTF_8);
+    assertEquals(userName,senderName);
+    assertEquals(' ',fromServer.readChar());
+    int x = fromServer.readInt();
+    assertEquals(text.length(),x);
+    assertEquals(' ',fromServer.readChar());
+    byte[] textByte = new byte[x];
+    fromServer.read(textByte);
+    String m = new String(textByte, StandardCharsets.UTF_8);
+    assertEquals(text,m);
+  }
+
+  @Test
+  void inputParse8() throws IOException {
+    text = "@";
+    i1.inputParse(text);
+    assertEquals(Protocol.messageToIdr.get(MessageType.BROADCAST_MESSAGE),fromServer.readInt());
+    assertEquals(' ',fromServer.readChar());
+    assertEquals(userName.length(),fromServer.readInt());
+    assertEquals(' ',fromServer.readChar());
+    byte[] senderUser = new byte[userName.length()];
+    fromServer.read(senderUser);
+    String senderName = new String(senderUser, StandardCharsets.UTF_8);
+    assertEquals(userName,senderName);
+    assertEquals(' ',fromServer.readChar());
+    int x = fromServer.readInt();
+    assertEquals(text.length(),x);
+    assertEquals(' ',fromServer.readChar());
+    byte[] textByte = new byte[x];
+    fromServer.read(textByte);
+    String m = new String(textByte, StandardCharsets.UTF_8);
+    assertEquals(text,m);
+  }
+
+  @Test
+  void inputParse9() throws IOException {
+    String text1 = "@all hello";
+    i1.inputParse(text1);
+    assertEquals(Protocol.messageToIdr.get(MessageType.BROADCAST_MESSAGE),fromServer.readInt());
+    assertEquals(' ',fromServer.readChar());
+    assertEquals(userName.length(),fromServer.readInt());
+    assertEquals(' ',fromServer.readChar());
+    byte[] senderUser = new byte[userName.length()];
+    fromServer.read(senderUser);
+    String senderName = new String(senderUser, StandardCharsets.UTF_8);
+    assertEquals(userName,senderName);
+    assertEquals(' ',fromServer.readChar());
+  }
+
+
 
   @Test
   void connectServer() throws IOException {
@@ -194,13 +257,43 @@ class InputHandlerTest {
 
   @Test
   void testEquals() {
+    assertTrue(i1.equals(i1));
+  }
+
+  @Test
+  void testEquals1() {
+    assertFalse(i1.equals(8));
+  }
+
+  @Test
+  void testEquals2() {
+  assertFalse(i1.equals(null));
+  }
+  @Test
+  void testEqual3() {
+    InputHandler i2 = new InputHandler("xx",toServer);
+    assertFalse(i1.equals(i2));
   }
 
   @Test
   void testHashCode() {
+    assertEquals(i1.hashCode(),i1.hashCode());
+
+  }
+
+  @Test
+  void testHashCode1() {
+    InputHandler i2 = new InputHandler("xx",toServer);
+    assertFalse(i2.hashCode()==i1.hashCode());
+
   }
 
   @Test
   void testToString() {
+    String r = "InputHandler{" +
+        "userName='" + userName + '\'' +
+        ", toServer=" + toServer +
+        '}';
+    assertEquals(r,i1.toString());
   }
 }

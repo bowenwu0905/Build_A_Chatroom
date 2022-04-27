@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -63,6 +64,8 @@ class OutputHandlerTest {
     assertEquals("Success: user: "+userName+ " All online user list:"+String.join(", ", allUsers)+"\n\n",outContent.toString());
   }
 
+
+
   @Test
   void outPuthandle2() throws IOException {
     p1.encode(MessageType.DIRECT_MESSAGE, Arrays.asList(userName,receiverName,text),toServer);
@@ -71,20 +74,20 @@ class OutputHandlerTest {
     assertEquals(userName+" -> "+receiverName+ " :"+text+"\n\n",outContent.toString());
   }
 
-//  @Test
-//  void outPuthandle3() throws IOException {
-//    p1.encode(MessageType.BROADCAST_MESSAGE, Arrays.asList(userName,text),toServer);
-//    int x = fromServer.readInt();
-//    o1.outPuthandle(Protocol.idrToMessage.get(x));
-//    assertEquals("From "+userName+" to everyone:"+text+"\n\n",outContent.toString());
-//  }
-
   @Test
   void outPuthandle4() throws IOException {
     p1.encode(MessageType.FAILED_MESSAGE, Arrays.asList(text),toServer);
     int x = fromServer.readInt();
     o1.outPuthandle(Protocol.idrToMessage.get(x));
     assertEquals("ERROR: user: u1 Issue:"+text+"\n\n",errContent.toString());
+  }
+
+  @Test
+  void outPuthandle5() throws IOException {
+    p1.encode(MessageType.QUERY_RESPONSE, new ArrayList<>(),toServer);
+    int x = fromServer.readInt();
+    o1.outPuthandle(Protocol.idrToMessage.get(x));
+    assertEquals("Success: user: "+userName+ " All online user list:\n\n",outContent.toString());
   }
 
 
@@ -122,13 +125,44 @@ class OutputHandlerTest {
 
   @Test
   void testEquals() {
+    assertTrue(o1.equals(o1));
+  }
+
+  @Test
+  void testEquals1() {
+    assertFalse(o1.equals(8));
+  }
+
+  @Test
+  void testEquals2() {
+    assertFalse(o1.equals(null));
+  }
+  @Test
+  void testEqual3() {
+    OutputHandler i2 = new OutputHandler("xx",fromServer);
+    assertFalse(o1.equals(i2));
   }
 
   @Test
   void testHashCode() {
+    assertEquals(o1.hashCode(),o1.hashCode());
+
+  }
+
+  @Test
+  void testHashCode1() {
+    OutputHandler i2 = new OutputHandler("xx",fromServer);
+    assertFalse(i2.hashCode()==o1.hashCode());
+
   }
 
   @Test
   void testToString() {
+    String expected = "OutputHandler{" +
+        "userName='" + userName + '\'' +
+        ", fromServer=" + fromServer +
+        '}';
+    assertEquals(expected,o1.toString());
+
   }
 }

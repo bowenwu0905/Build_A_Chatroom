@@ -11,19 +11,15 @@ import protocol.Protocol;
 
 public class ReaderThread extends Thread{
   private Client client;
-  private Socket socket;
   private CountDownLatch readerLatch;
-  private OutputHandler outputHandler;
 
   private  DataInputStream fromServer;
-  private boolean isDisconnect = false;
 
   public ReaderThread(Client client,CountDownLatch readerLatch,Socket socket)
       throws IOException {
     this.client = client;
     this.readerLatch = readerLatch;
-    this.socket = socket;
-    this.fromServer = new DataInputStream(this.socket.getInputStream());
+    this.fromServer = new DataInputStream(socket.getInputStream());
   }
 
   public void run() {
@@ -31,15 +27,15 @@ public class ReaderThread extends Thread{
       try {
         if (fromServer.available() > 0 ) {
               int messageType = fromServer.readInt();
-              this.outputHandler = new OutputHandler(client.getUserName(), fromServer);
+          OutputHandler outputHandler = new OutputHandler(client.getUserName(), fromServer);
               if (Protocol.idrToMessage.get(messageType) == MessageType.CONNECT_RESPONSE) {
-                this.isDisconnect = outputHandler.connectStatusResponseHandle();
-                if (this.isDisconnect) {
-                  this.client.setLogOff(this.isDisconnect);
+                boolean isDisconnect = outputHandler.connectStatusResponseHandle();
+                if (isDisconnect) {
+                  this.client.setLogOff(isDisconnect);
                   break;
                 }
               } else {
-                this.outputHandler.outPuthandle(Protocol.idrToMessage.get(messageType));
+                outputHandler.outPuthandle(Protocol.idrToMessage.get(messageType));
               }
         }
       } catch (IOException ex) {
@@ -60,26 +56,16 @@ public class ReaderThread extends Thread{
       return false;
     }
     ReaderThread that = (ReaderThread) o;
-    return isDisconnect == that.isDisconnect && Objects.equals(client, that.client)
-        && Objects.equals(socket, that.socket) && Objects.equals(readerLatch,
-        that.readerLatch) && Objects.equals(outputHandler, that.outputHandler)
-        && Objects.equals(fromServer, that.fromServer);
+    return Objects.equals(client, that.client);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(client, socket, readerLatch, outputHandler, fromServer, isDisconnect);
+    return Objects.hash(client);
   }
 
   @Override
   public String toString() {
-    return "ReaderThread{" +
-        "client=" + client +
-        ", socket=" + socket +
-        ", readerLatch=" + readerLatch +
-        ", outputHandler=" + outputHandler +
-        ", fromServer=" + fromServer +
-        ", isDisconnect=" + isDisconnect +
-        '}';
+    return "ReaderThread{}";
   }
 }
