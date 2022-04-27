@@ -241,10 +241,24 @@ class ServerHandlerTest {
   }
 
   @Test
-  void testEquals2() {
+  void testEquals2() throws FileNotFoundException {
     ServerHandler serverHandler1 = new ServerHandler(semaphore, socket, socketMap, outMap);
     serverHandler1.getOutMap().put("a2", out);
     assertTrue(serverHandler1.equals(serverHandler));
+    ServerHandler serverHandler2 = new ServerHandler(new Semaphore(5), socket, socketMap, outMap);
+    assertFalse(serverHandler2.equals(serverHandler));
+    ServerHandler serverHandler3 = new ServerHandler(semaphore, new Socket(), socketMap, outMap);
+    assertFalse(serverHandler3.equals(serverHandler));
+    ConcurrentHashMap<String, Socket> map = new ConcurrentHashMap<>(1);
+    map.put("a", new Socket());
+    ServerHandler serverHandler4 = new ServerHandler(semaphore, socket, map, outMap);
+    assertFalse(serverHandler4.equals(serverHandler));
+    String filePath = new File("").getAbsolutePath();
+    String fileDestination = filePath.concat("/src/test/java/server/file.txt");
+    ConcurrentHashMap<String, DataOutputStream> outputStreamConcurrentHashMap = new ConcurrentHashMap<>();
+    outputStreamConcurrentHashMap.put("a", new DataOutputStream(new FileOutputStream(fileDestination)));
+    ServerHandler serverHandler5 = new ServerHandler(semaphore, socket, socketMap, outputStreamConcurrentHashMap);
+    assertFalse(serverHandler5.equals(serverHandler));
   }
 
   @Test

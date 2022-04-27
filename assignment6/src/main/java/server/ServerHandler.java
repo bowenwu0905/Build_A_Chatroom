@@ -32,7 +32,13 @@ public class ServerHandler implements Runnable {
   private final Grammar grammar = new Grammar();
   private final JsonReader jsonReader = new JsonReader();
 
-
+  /**
+   * create a server handler
+   * @param semaphore Semaphore
+   * @param socket Socket
+   * @param socketMap ConcurrentHashMap String, Socket
+   * @param outMap ConcurrentHashMap String, DataOutputStream
+   */
   public ServerHandler(Semaphore semaphore, Socket socket,
       ConcurrentHashMap<String, Socket> socketMap,
       ConcurrentHashMap<String, DataOutputStream> outMap) {
@@ -42,34 +48,65 @@ public class ServerHandler implements Runnable {
     this.outMap = outMap;
   }
 
+  /**
+   * get semaphore
+   * @return Semaphore
+   */
   public Semaphore getSemaphore() {
     return semaphore;
   }
 
+  /**
+   * get socket
+   * @return Socket
+   */
   public Socket getSocket() {
     return socket;
   }
 
+  /**
+   * get protocol
+   * @return Protocol class
+   */
   public Protocol getProtocol() {
     return protocol;
   }
 
+  /**
+   * get socket map
+   * @return ConcurrentHashMap String, Socket
+   */
   public ConcurrentHashMap<String, Socket> getSocketMap() {
     return socketMap;
   }
 
+  /**
+   * get out map
+   * @return ConcurrentHashMap String, DataOutputStream
+   */
   public ConcurrentHashMap<String, DataOutputStream> getOutMap() {
     return outMap;
   }
 
+  /**
+   * get grammar
+   * @return Grammar
+   */
   public Grammar getGrammar() {
     return grammar;
   }
 
+  /**
+   * get json reader
+   * @return JsonReader
+   */
   public JsonReader getJsonReader() {
     return jsonReader;
   }
 
+  /**
+   * override runnable method
+   */
   @Override
   public void run() {
     DataInputStream in;
@@ -99,6 +136,12 @@ public class ServerHandler implements Runnable {
     }
   }
 
+  /**
+   * connect message type
+   * @param in DataInputStream
+   * @param out DataOutputStream
+   * @throws IOException IOException
+   */
   public void connectMessage(DataInputStream in, DataOutputStream out) throws IOException {
     int size = in.readInt();
     String username = getString(in, size);
@@ -117,7 +160,12 @@ public class ServerHandler implements Runnable {
     protocol.encode(MessageType.CONNECT_RESPONSE, List.of(String.valueOf(status), response),
         out);
   }
-
+  /**
+   * disconnect message type
+   * @param in DataInputStream
+   * @param out DataOutputStream
+   * @throws IOException IOException
+   */
   public void disconnectMessage(DataInputStream in, DataOutputStream out) throws IOException {
     int size = in.readInt();
     String username = getString(in, size);
@@ -137,6 +185,12 @@ public class ServerHandler implements Runnable {
     semaphore.release();
   }
 
+  /**
+   * query user type
+   * @param in DataInputStream
+   * @param out DataOutputStream
+   * @throws IOException IOException
+   */
   public void queryUser(DataInputStream in, DataOutputStream out) throws IOException {
     int size = in.readInt();
     String username = getString(in, size);
@@ -153,6 +207,12 @@ public class ServerHandler implements Runnable {
     }
   }
 
+  /**
+   * broadcast message type
+   * @param in DataInputStream
+   * @param out DataOutputStream
+   * @throws IOException IOException
+   */
   public void broadcastMessage(DataInputStream in, DataOutputStream out) throws IOException {
     int size = in.readInt();
     String username = getString(in, size);
@@ -169,6 +229,12 @@ public class ServerHandler implements Runnable {
     }
   }
 
+  /**
+   * direct message type
+   * @param in DataInputStream
+   * @param out DataOutputStream
+   * @throws IOException IOException
+   */
   public void directMessage(DataInputStream in, DataOutputStream out) throws IOException {
     int senderSize = in.readInt();
     String sender = getString(in, senderSize);
@@ -188,6 +254,12 @@ public class ServerHandler implements Runnable {
     }
   }
 
+  /**
+   * send insult type
+   * @param in DataInputStream
+   * @param out DataOutputStream
+   * @throws IOException IOException
+   */
   public void sendInsult(DataInputStream in, DataOutputStream out) throws Exception {
     int senderSize = in.readInt();
     String sender = getString(in, senderSize);
@@ -208,6 +280,13 @@ public class ServerHandler implements Runnable {
     }
   }
 
+  /**
+   * get string from input
+   * @param in DataInputStream
+   * @param size int
+   * @return String
+   * @throws IOException IOException
+   */
   public String getString(DataInputStream in, int size) throws IOException {
     in.readChar();
     byte[] buffer = new byte[size];
@@ -215,11 +294,21 @@ public class ServerHandler implements Runnable {
     return new String(buffer, StandardCharsets.UTF_8);
   }
 
+  /**
+   * send failed message
+   * @param client client name
+   * @param out DataOutputStream
+   * @throws IOException IOException
+   */
   public void sendFailedMessage(String client, DataOutputStream out) throws IOException {
     String response = client + " hasn't set the connection";
     protocol.encode(MessageType.FAILED_MESSAGE, List.of(response), out);
   }
 
+  /**
+   * to string method
+   * @return String
+   */
   @Override
   public String toString() {
     return "ServerHandler{" +
@@ -233,21 +322,29 @@ public class ServerHandler implements Runnable {
         '}';
   }
 
+  /**
+   * equals method
+   * @param o Object
+   * @return boolean
+   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof ServerHandler)) {
+    if (!(o instanceof ServerHandler that)) {
       return false;
     }
-    ServerHandler that = (ServerHandler) o;
     return Objects.equals(getSemaphore(), that.getSemaphore())
         && Objects.equals(getSocket(), that.getSocket())
         && Objects.equals(getSocketMap(), that.getSocketMap())
         && Objects.equals(getOutMap(), that.getOutMap());
   }
 
+  /**
+   * get hash code
+   * @return int
+   */
   @Override
   public int hashCode() {
     return Objects.hash(getSemaphore(), getSocket(), getProtocol(), getSocketMap(), getOutMap(),

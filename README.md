@@ -10,6 +10,7 @@ as sending messages to the client.
 The client will maintain the socket to listen for incoming messages from the server (public or private messages),
 as well as listen to the UI (terminal) for messages from the user to send to the server. 
 The client would list all commands when the user types a ?
+
 • logoff: sends a DISCONNECT_MESSAGE to the server
 
 • who: sends a QUERY_CONNECTED_USERS to the server
