@@ -94,7 +94,7 @@ class OutputHandlerTest {
   @Test
   void connectStatusResponseHandle1() throws IOException {
     p1.encode(MessageType.CONNECT_RESPONSE, Arrays.asList("true","success Message"),toServer);
-    int x = fromServer.readInt();
+     fromServer.readInt();
     boolean result = o1.connectStatusResponseHandle();
     assertTrue(result);
     assertEquals("Success: user: u1 message:success Message\n\n",outContent.toString());
@@ -103,7 +103,7 @@ class OutputHandlerTest {
   @Test
   void connectStatusResponseHandle2() throws IOException {
     p1.encode(MessageType.CONNECT_RESPONSE, Arrays.asList("false","failure Message"),toServer);
-    int x = fromServer.readInt();
+    fromServer.readInt();
     boolean result = o1.connectStatusResponseHandle();
     assertFalse(result);
     assertEquals("ERROR: user: u1 Issue:failure Message\n\n",errContent.toString());

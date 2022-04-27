@@ -2,12 +2,10 @@ package client;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.ByteArrayInputStream;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -17,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class WriterThreadTest {
+
   ServerSocket serverSocket;
   WriterThread w1;
   Socket socket;
@@ -24,8 +23,7 @@ class WriterThreadTest {
   Client client;
   CountDownLatch readerLatch;
   DataInputStream serverIn;
-  char space = ' ';
-  String message = "hi";
+
   private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
   private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
   private final PrintStream originalOut = System.out;
@@ -38,7 +36,7 @@ class WriterThreadTest {
     server = serverSocket.accept();
     client = new Client();
     readerLatch = new CountDownLatch(1);
-    w1 = new WriterThread(client,readerLatch,socket);
+    w1 = new WriterThread(client, readerLatch, socket);
     serverIn = new DataInputStream(server.getInputStream());
 
     System.setOut(new PrintStream(outContent));
@@ -74,29 +72,29 @@ class WriterThreadTest {
   void testEquals2() {
     assertFalse(w1.equals(null));
   }
+
   @Test
   void testEqual3() throws IOException {
-    WriterThread i2 = new WriterThread(new Client(),readerLatch,socket);
+    WriterThread i2 = new WriterThread(new Client(), readerLatch, socket);
     assertTrue(w1.equals(i2));
   }
 
   @Test
   void testHashCode() {
-    assertEquals(w1.hashCode(),w1.hashCode());
+    assertEquals(w1.hashCode(), w1.hashCode());
 
   }
 
   @Test
   void testHashCode1() throws IOException {
-    WriterThread i2 = new WriterThread(new Client(),readerLatch,socket);
-    assertTrue(i2.hashCode()==w1.hashCode());
+    WriterThread i2 = new WriterThread(new Client(), readerLatch, socket);
+    assertTrue(i2.hashCode() == w1.hashCode());
 
   }
 
 
-
   @Test
   void testToString() {
-    assertEquals("WriterThread{}",w1.toString());
+    assertEquals("WriterThread{}", w1.toString());
   }
 }

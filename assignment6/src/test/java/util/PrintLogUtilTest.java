@@ -17,7 +17,7 @@ class PrintLogUtilTest {
   String backMessage = "b1";
   String receiverName = "r1";
   String text = "hello";
-  List<String> allUsers = Arrays.asList("u1","u2","u3");
+  List<String> allUsers = Arrays.asList("u1", "u2", "u3");
   private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
   private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
   private final PrintStream originalOut = System.out;
@@ -39,37 +39,36 @@ class PrintLogUtilTest {
 
   @Test
   void errorMessage() {
-  p1.errorMessage(userName,backMessage);
-  assertEquals("ERROR: user: "+ userName +" Issue:"+ backMessage +"\n\n",errContent.toString());
+    p1.errorMessage(userName, backMessage);
+    assertEquals("ERROR: user: " + userName + " Issue:" + backMessage + "\n\n",
+        errContent.toString());
   }
 
   @Test
   void successMessage() {
-    p1.successMessage(userName,backMessage);
-    assertEquals("Success: user: "+userName+ " message:"+backMessage+"\n\n",outContent.toString());
+    p1.successMessage(userName, backMessage);
+    assertEquals("Success: user: " + userName + " message:" + backMessage + "\n\n",
+        outContent.toString());
   }
 
   @Test
   void queryMessage() {
-    p1.queryMessage(userName,allUsers);
-    assertEquals("Success: user: "+userName+ " All online user list:"+String.join(", ", allUsers)+"\n\n",outContent.toString());
+    p1.queryMessage(userName, allUsers);
+    assertEquals(
+        "Success: user: " + userName + " All online user list:" + String.join(", ", allUsers)
+            + "\n\n", outContent.toString());
   }
 
   @Test
   void oneOnOneMessage() {
-    p1.oneOnOneMessage(userName,receiverName,text);
-    assertEquals(userName+" -> "+receiverName+ " :"+text+"\n\n",outContent.toString());
+    p1.oneOnOneMessage(userName, receiverName, text);
+    assertEquals(userName + " -> " + receiverName + " :" + text + "\n\n", outContent.toString());
   }
 
-//  @Test
-//  void groupMessage() {
-//    p1.groupMessage(userName,text);
-//    assertEquals("From "+userName+" to everyone:"+text+"\n\n",outContent.toString());
-//  }
 
   @Test
   void testToString() {
     String expected = "PrintLogUtil{}";
-    assertEquals(expected,p1.toString());
+    assertEquals(expected, p1.toString());
   }
 }

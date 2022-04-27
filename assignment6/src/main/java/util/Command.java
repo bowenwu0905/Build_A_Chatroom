@@ -1,5 +1,8 @@
 package util;
 
+/**
+ * The command class
+ */
 public class Command {
   public static final String LOG_OFF = "logoff";
   public static final String WHO = "who";
@@ -26,9 +29,16 @@ public class Command {
               2. if the user's input doesn't match any command, the program will treat it as "@all"
         """;
 
+  /**
+   * The constructor
+   */
   public Command() {
   }
 
+  /**
+   * to string
+   * @return the string format
+   */
   @Override
   public String toString() {
     return "Command{}";
