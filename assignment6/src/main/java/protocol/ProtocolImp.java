@@ -30,6 +30,21 @@ public class ProtocolImp implements Protocol {
   public final static char space = ' ';
 
   /**
+   * The constant first index.
+   */
+  public final static Integer first_index = 0;
+
+  /**
+   * The constant second index.
+   */
+  public final static Integer second_index = 1;
+
+  /**
+   * The constant third index.
+   */
+  public final static  Integer third_index = 2;
+
+  /**
    *
    * @param msg, the message passed in as String
    * @return byte[] converted
@@ -44,7 +59,7 @@ public class ProtocolImp implements Protocol {
       case CONNECT_MESSAGE -> {
         // only pass in userName (one element)
         int type = messageToIdr.get(MessageType.CONNECT_MESSAGE);
-        String userName = message.get(0);
+        String userName = message.get(first_index);
         int userNameLength = userName.length();
         byte[] toBytes = convertStringTobytes(userName);
         dataOutputStream.writeInt(type);
@@ -57,8 +72,8 @@ public class ProtocolImp implements Protocol {
       case CONNECT_RESPONSE ->{
         // pass in boolean and message, both as String
         int type = messageToIdr.get(MessageType.CONNECT_RESPONSE);
-        String success = message.get(0);
-        String msg = message.get(1);
+        String success = message.get(first_index);
+        String msg = message.get(second_index);
         int msgLength = msg.length();
         byte[] toBytes = convertStringTobytes(msg);
         dataOutputStream.writeInt(type);
@@ -73,7 +88,7 @@ public class ProtocolImp implements Protocol {
       case DISCONNECT_MESSAGE -> {
         // pass in userName
         int type = messageToIdr.get(MessageType.DISCONNECT_MESSAGE);
-        String userName = message.get(0);
+        String userName = message.get(first_index);
         int userNameLength = userName.length();
         byte[] toBytes = convertStringTobytes(userName);
         dataOutputStream.writeInt(type);
@@ -85,8 +100,8 @@ public class ProtocolImp implements Protocol {
 
       case DISCONNECT_RESPONSE ->{
         int type = messageToIdr.get(MessageType.DISCONNECT_RESPONSE);
-        String success = message.get(0);
-        String msg = message.get(1);
+        String success = message.get(first_index);
+        String msg = message.get(second_index);
         int msgLength = msg.length();
         byte[] toBytes = convertStringTobytes(msg);
         dataOutputStream.writeInt(type);
@@ -101,7 +116,7 @@ public class ProtocolImp implements Protocol {
       case QUERY_USERS -> {
         // pass in userName
         int type = messageToIdr.get(MessageType.QUERY_USERS);
-        String userName = message.get(0);
+        String userName = message.get(first_index);
         int userNameLength = userName.length();
         byte[] toBytes = convertStringTobytes(userName);
         dataOutputStream.writeInt(type);
@@ -133,10 +148,10 @@ public class ProtocolImp implements Protocol {
       case BROADCAST_MESSAGE -> {
         // pass in sender userName, message
         int type = messageToIdr.get(MessageType.BROADCAST_MESSAGE);
-        String senderUserName = message.get(0);
+        String senderUserName = message.get(first_index);
         byte[] nameToBytes = convertStringTobytes(senderUserName);
         int userNameLength = senderUserName.length();
-        String msg = message.get(1);
+        String msg = message.get(second_index);
         byte[] msgToBytes = convertStringTobytes(msg);
         int msgLength = msg.length();
         dataOutputStream.writeInt(type);
@@ -153,13 +168,13 @@ public class ProtocolImp implements Protocol {
       case DIRECT_MESSAGE -> {
         // pass in sender userName, recipient userName and message as String (three elements)
         int type = messageToIdr.get(MessageType.DIRECT_MESSAGE);
-        String senderUserName = message.get(0);
+        String senderUserName = message.get(first_index);
         byte[] senderToBytes = convertStringTobytes(senderUserName);
         int senderLength = senderUserName.length();
-        String recipientUserName = message.get(1);
+        String recipientUserName = message.get(second_index);
         byte[] recipientToBytes = convertStringTobytes(recipientUserName);
         int recipientLength = recipientUserName.length();
-        String msg = message.get(2);
+        String msg = message.get(third_index);
         int msgLength = msg.length();
         byte[] msgToBytes = convertStringTobytes(msg);
         dataOutputStream.writeInt(type);
@@ -179,7 +194,7 @@ public class ProtocolImp implements Protocol {
       }
       case FAILED_MESSAGE -> {
         int type = messageToIdr.get(MessageType.FAILED_MESSAGE);
-        String msg = message.get(0);
+        String msg = message.get(first_index);
         int msgLength = msg.length();
         byte[] toByte = convertStringTobytes(msg);
         dataOutputStream.writeInt(type);
@@ -191,10 +206,10 @@ public class ProtocolImp implements Protocol {
       }
       case SEND_INSULT -> {
         int type = messageToIdr.get(MessageType.SEND_INSULT);
-        String senderName = message.get(0);
+        String senderName = message.get(first_index);
         int senderLength = senderName.length();
         byte[] senderToByte = convertStringTobytes(senderName);
-        String recipientName = message.get(1);
+        String recipientName = message.get(second_index);
         int recipientLength = recipientName.length();
         byte[] recipientToByte = convertStringTobytes(recipientName);
         dataOutputStream.writeInt(type);
