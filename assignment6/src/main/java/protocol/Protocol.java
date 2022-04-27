@@ -2,7 +2,6 @@ package protocol;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,41 +54,42 @@ public interface Protocol {
   /**
    * The constant hashMap messageToIdr
    */
-  Map<MessageType,Integer> messageToIdr= new HashMap<>(){{
-    put(MessageType.CONNECT_MESSAGE,CONNECT_MESSAGE);
-    put(MessageType.CONNECT_RESPONSE,CONNECT_RESPONSE);
-    put(MessageType.DISCONNECT_MESSAGE,DISCONNECT_MESSAGE);
-    put(MessageType.QUERY_USERS,QUERY_CONNECTED_USERS);
-    put(MessageType.QUERY_RESPONSE,QUERY_USER_RESPONSE);
-    put(MessageType.BROADCAST_MESSAGE,BROADCAST_MESSAGE);
-    put(MessageType.DIRECT_MESSAGE,DIRECT_MESSAGE);
-    put(MessageType.FAILED_MESSAGE,FAILED_MESSAGE);
-    put(MessageType.SEND_INSULT,SEND_INSULT);
+  Map<MessageType, Integer> messageToIdr = new HashMap<>() {{
+    put(MessageType.CONNECT_MESSAGE, CONNECT_MESSAGE);
+    put(MessageType.CONNECT_RESPONSE, CONNECT_RESPONSE);
+    put(MessageType.DISCONNECT_MESSAGE, DISCONNECT_MESSAGE);
+    put(MessageType.QUERY_USERS, QUERY_CONNECTED_USERS);
+    put(MessageType.QUERY_RESPONSE, QUERY_USER_RESPONSE);
+    put(MessageType.BROADCAST_MESSAGE, BROADCAST_MESSAGE);
+    put(MessageType.DIRECT_MESSAGE, DIRECT_MESSAGE);
+    put(MessageType.FAILED_MESSAGE, FAILED_MESSAGE);
+    put(MessageType.SEND_INSULT, SEND_INSULT);
   }};
   /**
    * The constant hashMap idrToMessage
    */
-  Map<Integer, MessageType> idrToMessage = new HashMap<>(){{
-    put(CONNECT_MESSAGE, MessageType.CONNECT_MESSAGE);
-    put(CONNECT_RESPONSE, MessageType.CONNECT_RESPONSE);
-    put(DISCONNECT_MESSAGE, MessageType.DISCONNECT_MESSAGE);
-    put(QUERY_CONNECTED_USERS, MessageType.QUERY_USERS);
-    put(QUERY_USER_RESPONSE, MessageType.QUERY_RESPONSE);
-    put(BROADCAST_MESSAGE, MessageType.BROADCAST_MESSAGE);
-    put(DIRECT_MESSAGE, MessageType.DIRECT_MESSAGE);
-    put(FAILED_MESSAGE, MessageType.FAILED_MESSAGE);
-    put(SEND_INSULT, MessageType.SEND_INSULT);
-  }
+  Map<Integer, MessageType> idrToMessage = new HashMap<>() {
+    {
+      put(CONNECT_MESSAGE, MessageType.CONNECT_MESSAGE);
+      put(CONNECT_RESPONSE, MessageType.CONNECT_RESPONSE);
+      put(DISCONNECT_MESSAGE, MessageType.DISCONNECT_MESSAGE);
+      put(QUERY_CONNECTED_USERS, MessageType.QUERY_USERS);
+      put(QUERY_USER_RESPONSE, MessageType.QUERY_RESPONSE);
+      put(BROADCAST_MESSAGE, MessageType.BROADCAST_MESSAGE);
+      put(DIRECT_MESSAGE, MessageType.DIRECT_MESSAGE);
+      put(FAILED_MESSAGE, MessageType.FAILED_MESSAGE);
+      put(SEND_INSULT, MessageType.SEND_INSULT);
+    }
   };
 
   /**
-   *
-   * @param messageType, the type of Message in ENUM passed in
-   * @param message, the message passed in as a list of String
+   * @param messageType,      the type of Message in ENUM passed in
+   * @param message,          the message passed in as a list of String
    * @param dataOutputStream, dataOutputStream passed in to write
    * @throws IOException when certain error happens
    */
-  void encode(MessageType messageType, List<String> message, DataOutputStream dataOutputStream) throws IOException;
+  void encode(MessageType messageType, List<String> message, DataOutputStream dataOutputStream)
+      throws IOException;
 
 
 }

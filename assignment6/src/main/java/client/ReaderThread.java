@@ -14,10 +14,10 @@ import protocol.Protocol;
  */
 public class ReaderThread extends Thread {
 
-  private Client client;
-  private CountDownLatch readerLatch;
+  private final Client client;
+  private final CountDownLatch readerLatch;
 
-  private DataInputStream fromServer;
+  private final DataInputStream fromServer;
 
   /**
    * the constructor for the class

@@ -34,10 +34,11 @@ public class ServerHandler implements Runnable {
 
   /**
    * create a server handler
+   *
    * @param semaphore Semaphore
-   * @param socket Socket
+   * @param socket    Socket
    * @param socketMap ConcurrentHashMap String, Socket
-   * @param outMap ConcurrentHashMap String, DataOutputStream
+   * @param outMap    ConcurrentHashMap String, DataOutputStream
    */
   public ServerHandler(Semaphore semaphore, Socket socket,
       ConcurrentHashMap<String, Socket> socketMap,
@@ -50,6 +51,7 @@ public class ServerHandler implements Runnable {
 
   /**
    * get semaphore
+   *
    * @return Semaphore
    */
   public Semaphore getSemaphore() {
@@ -58,6 +60,7 @@ public class ServerHandler implements Runnable {
 
   /**
    * get socket
+   *
    * @return Socket
    */
   public Socket getSocket() {
@@ -66,6 +69,7 @@ public class ServerHandler implements Runnable {
 
   /**
    * get protocol
+   *
    * @return Protocol class
    */
   public Protocol getProtocol() {
@@ -74,6 +78,7 @@ public class ServerHandler implements Runnable {
 
   /**
    * get socket map
+   *
    * @return ConcurrentHashMap String, Socket
    */
   public ConcurrentHashMap<String, Socket> getSocketMap() {
@@ -82,6 +87,7 @@ public class ServerHandler implements Runnable {
 
   /**
    * get out map
+   *
    * @return ConcurrentHashMap String, DataOutputStream
    */
   public ConcurrentHashMap<String, DataOutputStream> getOutMap() {
@@ -90,6 +96,7 @@ public class ServerHandler implements Runnable {
 
   /**
    * get grammar
+   *
    * @return Grammar
    */
   public Grammar getGrammar() {
@@ -98,6 +105,7 @@ public class ServerHandler implements Runnable {
 
   /**
    * get json reader
+   *
    * @return JsonReader
    */
   public JsonReader getJsonReader() {
@@ -138,7 +146,8 @@ public class ServerHandler implements Runnable {
 
   /**
    * connect message type
-   * @param in DataInputStream
+   *
+   * @param in  DataInputStream
    * @param out DataOutputStream
    * @throws IOException IOException
    */
@@ -160,9 +169,11 @@ public class ServerHandler implements Runnable {
     protocol.encode(MessageType.CONNECT_RESPONSE, List.of(String.valueOf(status), response),
         out);
   }
+
   /**
    * disconnect message type
-   * @param in DataInputStream
+   *
+   * @param in  DataInputStream
    * @param out DataOutputStream
    * @throws IOException IOException
    */
@@ -187,7 +198,8 @@ public class ServerHandler implements Runnable {
 
   /**
    * query user type
-   * @param in DataInputStream
+   *
+   * @param in  DataInputStream
    * @param out DataOutputStream
    * @throws IOException IOException
    */
@@ -209,7 +221,8 @@ public class ServerHandler implements Runnable {
 
   /**
    * broadcast message type
-   * @param in DataInputStream
+   *
+   * @param in  DataInputStream
    * @param out DataOutputStream
    * @throws IOException IOException
    */
@@ -231,7 +244,8 @@ public class ServerHandler implements Runnable {
 
   /**
    * direct message type
-   * @param in DataInputStream
+   *
+   * @param in  DataInputStream
    * @param out DataOutputStream
    * @throws IOException IOException
    */
@@ -256,7 +270,8 @@ public class ServerHandler implements Runnable {
 
   /**
    * send insult type
-   * @param in DataInputStream
+   *
+   * @param in  DataInputStream
    * @param out DataOutputStream
    * @throws IOException IOException
    */
@@ -282,7 +297,8 @@ public class ServerHandler implements Runnable {
 
   /**
    * get string from input
-   * @param in DataInputStream
+   *
+   * @param in   DataInputStream
    * @param size int
    * @return String
    * @throws IOException IOException
@@ -296,8 +312,9 @@ public class ServerHandler implements Runnable {
 
   /**
    * send failed message
+   *
    * @param client client name
-   * @param out DataOutputStream
+   * @param out    DataOutputStream
    * @throws IOException IOException
    */
   public void sendFailedMessage(String client, DataOutputStream out) throws IOException {
@@ -307,6 +324,7 @@ public class ServerHandler implements Runnable {
 
   /**
    * to string method
+   *
    * @return String
    */
   @Override
@@ -324,6 +342,7 @@ public class ServerHandler implements Runnable {
 
   /**
    * equals method
+   *
    * @param o Object
    * @return boolean
    */
@@ -343,6 +362,7 @@ public class ServerHandler implements Runnable {
 
   /**
    * get hash code
+   *
    * @return int
    */
   @Override

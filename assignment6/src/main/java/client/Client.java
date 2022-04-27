@@ -11,36 +11,43 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 
-
 /**
  * Client class. You need to run the main for starting the class. Two threads, for reading the
  * command and sending the command, will start.
- *
- * Note: Client will try to reconnect server when server closed during the phase of login. After login,
- * if the server closed, only error message will be thrown and reconnection will not happen
+ * <p>
+ * Note: Client will try to reconnect server when server closed during the phase of login. After
+ * login, if the server closed, only error message will be thrown and reconnection will not happen
  *
  * @author Zitao Shen
  */
 public class Client {
-
-  private String userName;
-
-  private boolean logOff = false;
-  private boolean connectStatus = false;
-  private Socket client = null;
 
   private static final int ARG_LENGTH = 2;
   private final static int READER_NUM = 1;
   private final static int HOSTNAME_ARG_INDEX = 0;
   private final static int PORT_ARG_INDEX = 1;
   private final static int SLEEP_TIME = 3;
-
   private final static int STREAM_TIME_OUT = 3000;
+  private String userName;
+  private boolean logOff = false;
+  private boolean connectStatus = false;
+  private Socket client = null;
 
   /**
    * The constructor
    */
   public Client() {
+  }
+
+  /**
+   * The main function, you need to run this function to start the client
+   *
+   * @param args hostname and port
+   * @throws IOException throw when stream broke
+   */
+  public static void main(String[] args) throws IOException {
+    Client client = new Client();
+    client.start(args);
   }
 
   /**
@@ -111,7 +118,7 @@ public class Client {
         }
 
         //Start thread to receive and send message
-        CountDownLatch readLatch = new CountDownLatch(this.READER_NUM);
+        CountDownLatch readLatch = new CountDownLatch(READER_NUM);
         new ReaderThread(this, readLatch, client).start();
         new WriterThread(this, readLatch, client).start();
         readLatch.await();
@@ -125,17 +132,6 @@ public class Client {
     }
     //LogOut
     System.exit(0);
-  }
-
-  /**
-   * The main function, you need to run this function to start the client
-   *
-   * @param args hostname and port
-   * @throws IOException throw when stream broke
-   */
-  public static void main(String[] args) throws IOException {
-    Client client = new Client();
-    client.start(args);
   }
 
   /**

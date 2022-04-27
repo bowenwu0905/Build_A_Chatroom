@@ -45,5 +45,5 @@ public enum MessageType {
   /**
    * The message type of SEND_INSULT
    */
-  SEND_INSULT;
+  SEND_INSULT
 }

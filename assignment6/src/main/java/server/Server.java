@@ -15,13 +15,12 @@ import java.util.concurrent.Semaphore;
  */
 public class Server {
 
+  private static final int CLIENT_LIMIT = 10;
+  private static final int port = 10000;
   private ServerSocket serverSocket;
   private Semaphore semaphore;
   private ConcurrentHashMap<String, Socket> socketMap;
-
   private ConcurrentHashMap<String, DataOutputStream> outMap;
-
-  private static final int CLIENT_LIMIT = 10;
 
   /**
    * create a new server
@@ -30,7 +29,20 @@ public class Server {
   }
 
   /**
+   * main class
+   *
+   * @param args input arguments
+   * @throws IOException IOException
+   */
+  public static void main(String[] args) throws IOException {
+    Server server = new Server();
+    server.start(port);
+    server.run();
+  }
+
+  /**
    * start server
+   *
    * @param port int
    * @throws IOException when server socket failed
    */
@@ -44,6 +56,7 @@ public class Server {
 
   /**
    * server start listening
+   *
    * @throws IOException server throw exception
    */
   public void run() throws IOException {
@@ -63,19 +76,8 @@ public class Server {
   }
 
   /**
-   * main class
-   * @param args input arguments
-   * @throws IOException IOException
-   */
-  public static void main(String[] args) throws IOException {
-    Server server = new Server();
-    // 需要从command输入么?
-    server.start(10000);
-    server.run();
-  }
-
-  /**
    * get server socket
+   *
    * @return ServerSocket
    */
   public ServerSocket getServerSocket() {
@@ -84,6 +86,7 @@ public class Server {
 
   /**
    * set server socket
+   *
    * @param serverSocket ServerSocket
    */
   public void setServerSocket(ServerSocket serverSocket) {
@@ -92,6 +95,7 @@ public class Server {
 
   /**
    * get semaphore
+   *
    * @return Semaphore
    */
   public Semaphore getSemaphore() {
@@ -100,6 +104,7 @@ public class Server {
 
   /**
    * set semaphore
+   *
    * @param semaphore Semaphore
    */
   public void setSemaphore(Semaphore semaphore) {
@@ -108,6 +113,7 @@ public class Server {
 
   /**
    * get socket map
+   *
    * @return ConcurrentHashMap
    */
   public ConcurrentHashMap<String, Socket> getSocketMap() {
@@ -116,6 +122,7 @@ public class Server {
 
   /**
    * set socket map
+   *
    * @param socketMap ConcurrentHashMap String, Socket
    */
   public void setSocketMap(
@@ -125,6 +132,7 @@ public class Server {
 
   /**
    * get out map
+   *
    * @return ConcurrentHashMap String, DataOutputStream
    */
   public ConcurrentHashMap<String, DataOutputStream> getOutMap() {
@@ -133,6 +141,7 @@ public class Server {
 
   /**
    * set out map
+   *
    * @param outMap ConcurrentHashMap String, DataOutputStream
    */
   public void setOutMap(
@@ -142,6 +151,7 @@ public class Server {
 
   /**
    * equals method
+   *
    * @param o Object
    * @return boolean
    */
@@ -161,6 +171,7 @@ public class Server {
 
   /**
    * get hash code
+   *
    * @return int
    */
   @Override
@@ -170,6 +181,7 @@ public class Server {
 
   /**
    * to string method
+   *
    * @return String
    */
   @Override

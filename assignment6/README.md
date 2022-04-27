@@ -73,7 +73,6 @@ identifier.
 
 2.Go to the client class. In the client's main function, server's IP address (or localhost) and port `10000` are required to be passed in IntelliJ interface.
 
-
 ## Assumptions
 In the client:
 1. if there are multiple commands (for @user,!user and @all), only the command at the

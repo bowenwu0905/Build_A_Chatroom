@@ -16,7 +16,8 @@ public class PrintLogUtil {
 
   /**
    * Generate the error message
-   * @param userName the name of client
+   *
+   * @param userName    the name of client
    * @param backMessage the message received
    */
   public static void errorMessage(String userName, String backMessage) {
@@ -25,7 +26,8 @@ public class PrintLogUtil {
 
   /**
    * Generate the success message
-   * @param userName the name of client
+   *
+   * @param userName    the name of client
    * @param backMessage the received message
    */
   public static void successMessage(String userName, String backMessage) {
@@ -34,8 +36,9 @@ public class PrintLogUtil {
 
   /**
    * Generate the query message
+   *
    * @param userName the name of client
-   * @param allUser the list of online users
+   * @param allUser  the list of online users
    */
   public static void queryMessage(String userName, List<String> allUser) {
     System.out.println(
@@ -45,9 +48,10 @@ public class PrintLogUtil {
 
   /**
    * Generate the one to one message
-   * @param senderName the name of client
+   *
+   * @param senderName   the name of client
    * @param receiverName the name of receiver
-   * @param text the message
+   * @param text         the message
    */
   public static void oneOnOneMessage(String senderName, String receiverName, String text) {
     System.out.println(senderName + " -> " + receiverName + " :" + text + "\n");
@@ -56,6 +60,7 @@ public class PrintLogUtil {
 
   /**
    * to string
+   *
    * @return the string format
    */
   @Override

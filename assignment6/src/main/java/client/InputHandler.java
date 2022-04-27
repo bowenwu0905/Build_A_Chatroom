@@ -14,20 +14,18 @@ import util.Command;
  */
 public class InputHandler {
 
-  private String userName;
-  private DataOutputStream toServer;
-  private Protocol protocol;
   private final static int FIRST_CHARACTER = 0;
   private final static int SECOND_CHARACTER = 1;
-
   private final static int START_WORD_LENGTH_LOWER_BOUND = 1;
   private final static int FIRST_PART_INPUT_INDEX = 0;
   private final static int SECOND_PART_INPUT_INDEX = 1;
   private final static int DIVIDE_INTO_PARTS = 2;
   private final static String SPACE = " ";
   private final static String CASE_IGNORE = "(?i)";
-
   private final static String EMPTY = "";
+  private final String userName;
+  private final DataOutputStream toServer;
+  private final Protocol protocol;
 
   /**
    * The constructor for the class
@@ -70,7 +68,7 @@ public class InputHandler {
       //receiverName
       //Message
       String receiverName = firstWord.substring(SECOND_CHARACTER);
-      String text = Input.replaceAll(Command.AT_USER+receiverName, EMPTY);
+      String text = Input.replaceAll(Command.AT_USER + receiverName, EMPTY);
       protocol.encode(MessageType.DIRECT_MESSAGE, Arrays.asList(userName, receiverName, text),
           toServer);
     }

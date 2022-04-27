@@ -13,11 +13,11 @@ import java.util.concurrent.CountDownLatch;
  */
 public class WriterThread extends Thread {
 
-  private InputHandler inputHandler;
-  private Client client;
-  private Socket socket;
-  private Scanner sc;
-  private CountDownLatch readerLatch;
+  private final InputHandler inputHandler;
+  private final Client client;
+  private final Socket socket;
+  private final Scanner sc;
+  private final CountDownLatch readerLatch;
 
   /**
    * The constructor

@@ -14,10 +14,9 @@ import util.PrintLogUtil;
  */
 public class OutputHandler {
 
-  private String userName;
-  private DataInputStream fromServer;
-
   private final static int NO_USER = 0;
+  private String userName;
+  private final DataInputStream fromServer;
 
 
   /**

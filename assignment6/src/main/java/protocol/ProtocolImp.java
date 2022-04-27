@@ -1,19 +1,10 @@
 package protocol;
 
 
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.lang.Integer;
-
 
 
 /**
@@ -42,19 +33,19 @@ public class ProtocolImp implements Protocol {
   /**
    * The constant third index.
    */
-  public final static  Integer third_index = 2;
+  public final static Integer third_index = 2;
 
   /**
-   *
    * @param msg, the message passed in as String
    * @return byte[] converted
    */
-  public byte[] convertStringTobytes(String msg){
+  public byte[] convertStringTobytes(String msg) {
     return msg.getBytes(StandardCharsets.UTF_8);
   }
 
   @Override
-  public void encode(MessageType messageType, List<String> message, DataOutputStream dataOutputStream) throws IOException {
+  public void encode(MessageType messageType, List<String> message,
+      DataOutputStream dataOutputStream) throws IOException {
     switch (messageType) {
       case CONNECT_MESSAGE -> {
         // only pass in userName (one element)
@@ -69,7 +60,7 @@ public class ProtocolImp implements Protocol {
         dataOutputStream.write(toBytes);
       }
 
-      case CONNECT_RESPONSE ->{
+      case CONNECT_RESPONSE -> {
         // pass in boolean and message, both as String
         int type = messageToIdr.get(MessageType.CONNECT_RESPONSE);
         String success = message.get(first_index);
@@ -98,7 +89,7 @@ public class ProtocolImp implements Protocol {
         dataOutputStream.write(toBytes);
       }
 
-      case DISCONNECT_RESPONSE ->{
+      case DISCONNECT_RESPONSE -> {
         int type = messageToIdr.get(MessageType.DISCONNECT_RESPONSE);
         String success = message.get(first_index);
         String msg = message.get(second_index);
@@ -133,17 +124,15 @@ public class ProtocolImp implements Protocol {
         dataOutputStream.writeInt(type);
         dataOutputStream.writeChar(space);
         dataOutputStream.writeInt(userNumber);
-        for(int i = 0; i < userNumber; i++){
+        for (String s : message) {
           dataOutputStream.writeChar(space);
-          String userName = message.get(i);
-          byte[] toBytes = convertStringTobytes(userName);
-          int userNameLength = userName.length();
+          byte[] toBytes = convertStringTobytes(s);
+          int userNameLength = s.length();
           dataOutputStream.writeInt(userNameLength);
           dataOutputStream.writeChar(space);
           dataOutputStream.write(toBytes);
         }
       }
-
 
       case BROADCAST_MESSAGE -> {
         // pass in sender userName, message
