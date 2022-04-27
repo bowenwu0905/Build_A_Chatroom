@@ -4,14 +4,40 @@ package util;
  * The command class
  */
 public class Command {
+
+  /**
+   * logoff
+   */
   public static final String LOG_OFF = "logoff";
+
+  /**
+   * query users
+   */
   public static final String WHO = "who";
+
+  /**
+   * send user
+   */
   public static final char AT_USER ='@';
+
+  /**Group message
+   *
+   */
   public static final String AT_ALL = "@all";
+
+  /**
+   *  Send  Insult
+   */
   public static final char INSULT_USER = '!';
 
+  /**
+   * ask for help
+   */
   public static final String HELP = "?";
 
+  /**
+   * help menu
+   */
   public static final String HELP_MENU =
       """
         usage: Usage
