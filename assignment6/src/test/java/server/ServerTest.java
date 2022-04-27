@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -106,6 +109,32 @@ class ServerTest {
     assertEquals(server1, server);
     assertEquals(server1, server1);
     assertNotEquals(null, server1);
+  }
+
+  @Test
+  void testEquals2() throws FileNotFoundException {
+    Server server1 = new Server();
+    server1.setSemaphore(new Semaphore(5));
+    assertFalse(server1.equals(server));
+    Server server2 = new Server();
+    String filePath = new File("").getAbsolutePath();
+    String fileDestination = filePath.concat("/src/test/java/server/file.txt");
+    ConcurrentHashMap<String, DataOutputStream> outputStreamConcurrentHashMap = new ConcurrentHashMap<>();
+    outputStreamConcurrentHashMap.put("a", new DataOutputStream(new FileOutputStream(fileDestination)));
+    server2.setOutMap(outputStreamConcurrentHashMap);
+    assertFalse(server2.equals(server));
+  }
+
+  @Test
+  void testEquals3() throws IOException {
+    Server server1 = new Server();
+    server1.setServerSocket(new ServerSocket());
+    assertFalse(server1.equals(server));
+    Server server2 = new Server();
+    ConcurrentHashMap<String, Socket> map = new ConcurrentHashMap<>(1);
+    map.put("a", new Socket());
+    server2.setSocketMap(map);
+    assertFalse(server2.equals(server));
   }
 
   @Test
