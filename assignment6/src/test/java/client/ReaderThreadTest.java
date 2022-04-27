@@ -17,6 +17,7 @@ import protocol.MessageType;
 import protocol.Protocol;
 
 class ReaderThreadTest {
+
   ServerSocket serverSocket;
 
   Socket socket;
@@ -32,26 +33,26 @@ class ReaderThreadTest {
   private final PrintStream originalOut = System.out;
   private final PrintStream originalErr = System.err;
 
-@BeforeEach
-void setup() throws IOException {
-  serverSocket = new ServerSocket(12347);
-  socket = new Socket("127.0.0.1", 12347);
-  server = serverSocket.accept();
-  client = new Client();
-  readerLatch = new CountDownLatch(1);
-  r1 = new ReaderThread(client,readerLatch,socket);
-  serverOut = new DataOutputStream(server.getOutputStream());
-  System.setOut(new PrintStream(outContent));
-  System.setErr(new PrintStream(errContent));
-}
+  @BeforeEach
+  void setup() throws IOException {
+    serverSocket = new ServerSocket(12347);
+    socket = new Socket("127.0.0.1", 12347);
+    server = serverSocket.accept();
+    client = new Client();
+    readerLatch = new CountDownLatch(1);
+    r1 = new ReaderThread(client, readerLatch, socket);
+    serverOut = new DataOutputStream(server.getOutputStream());
+    System.setOut(new PrintStream(outContent));
+    System.setErr(new PrintStream(errContent));
+  }
 
-@AfterEach
-void clean() throws IOException {
-  socket.close();
-  serverSocket.close();
-  System.setOut(originalOut);
-  System.setErr(originalErr);
-}
+  @AfterEach
+  void clean() throws IOException {
+    socket.close();
+    serverSocket.close();
+    System.setOut(originalOut);
+    System.setErr(originalErr);
+  }
 
   @Test
   void run() throws IOException {
@@ -64,9 +65,10 @@ void clean() throws IOException {
     serverOut.write(message.getBytes(StandardCharsets.UTF_8));
     r1.run();
     assertTrue(client.isLogOff());
-    assertEquals(0,readerLatch.getCount());
+    assertEquals(0, readerLatch.getCount());
     socket.close();
   }
+
   @Test
   void testEquals() {
     assertTrue(r1.equals(r1));
@@ -81,25 +83,25 @@ void clean() throws IOException {
   void testEquals2() {
     assertFalse(r1.equals(null));
   }
+
   @Test
   void testEqual3() throws IOException {
-    ReaderThread i2 = new ReaderThread(new Client(),readerLatch,socket);
+    ReaderThread i2 = new ReaderThread(new Client(), readerLatch, socket);
     assertTrue(r1.equals(i2));
   }
 
   @Test
   void testHashCode() {
-    assertEquals(r1.hashCode(),r1.hashCode());
+    assertEquals(r1.hashCode(), r1.hashCode());
 
   }
 
   @Test
   void testHashCode1() throws IOException {
-    ReaderThread i2 = new ReaderThread(new Client(),readerLatch,socket);
-    assertTrue(i2.hashCode()==r1.hashCode());
+    ReaderThread i2 = new ReaderThread(new Client(), readerLatch, socket);
+    assertTrue(i2.hashCode() == r1.hashCode());
 
   }
-
 
 
   @Test
@@ -107,6 +109,6 @@ void clean() throws IOException {
 
     String result = "ReaderThread{}";
 
-    assertEquals(result,r1.toString());
+    assertEquals(result, r1.toString());
   }
 }
