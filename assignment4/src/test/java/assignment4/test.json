@@ -1,0 +1,10 @@
+{
+  "grammarTitle": "Poem Generator",
+  "grammarDesc": "A grammar that generates poems. ",
+  "start":[
+    "The <object> tonight."
+  ],
+  "object": [
+    "waves"
+  ]
+}
